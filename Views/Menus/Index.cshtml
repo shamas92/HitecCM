@@ -1,0 +1,143 @@
+@model IEnumerable<HitecCM.Models.tblMenus>
+@Html.AntiForgeryToken()
+
+@{
+    ViewBag.Title = "Manage Menus";
+}
+
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Menus</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Manage all menus and their details.</p>
+                    </div>
+                </div>
+                <div class="nk-block-head-content text-center">
+                    <div class="toggle-wrap nk-block-tools-toggle">
+                        <a href="@Url.Action("Create")" class="btn btn-primary">
+                            <em class="icon ni ni-plus"></em>
+                            <span>Add New Menu</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered card-stretch">
+                <div class="card-inner-group">
+                    <div class="card-inner">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Menu ID</th>
+                                        <th>Menu Name</th>
+                                        <th>Menu Link</th>
+                                        <th>Sorting Order</th>
+                                        <th>Parent Menu</th>
+                                        <th>Menu Type</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.MenuID</td>
+                                            <td>
+                                                <span class="tb-lead">@item.MenuName</span>
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.MenuLink))
+                                                {
+                                                    <a href="@item.MenuLink" target="_blank" class="text-primary">@item.MenuLink</a>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">-</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @(item.SortingOrder?.ToString() ?? "-")
+                                            </td>
+                                            <td>
+                                                @(item.ParentMenu?.MenuName ?? "-")
+                                            </td>
+                                            <td>
+                                                @(item.MenuType?.MenuTypeName ?? "-")
+                                            </td>
+                                            <td class="nk-tb-col nk-tb-col-tools">
+                                                <ul class="gx-1">
+                                                    <li>
+                                                        <div class="drodown">
+                                                            <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown">
+                                                                <em class="icon ni ni-more-h"></em>
+                                                            </a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <ul class="link-list-opt no-bdr">
+                                                                    <li>
+                                                                        <a href="@Url.Action("Edit", new { id = item.MenuID })">
+                                                                            <em class="icon ni ni-edit"></em>
+                                                                            <span>Edit</span>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="#" class="delete-menu" data-id="@item.MenuID">
+                                                                            <em class="icon ni ni-trash"></em>
+                                                                            <span>Delete</span>
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Handle delete functionality
+            $('.delete-menu').on('click', function (e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                var token = $('input[name="__RequestVerificationToken"]').val();
+                
+                if (confirm('Are you sure you want to delete this menu?')) {
+                    $.ajax({
+                        url: '@Url.Action("Delete")',
+                        type: 'POST',
+                        data: {
+                            id: id,
+                            __RequestVerificationToken: token
+                        },
+                        success: function (result) {
+                            if (result.success) {
+                                location.reload();
+                            } else {
+                                alert('Error deleting menu: ' + result.message);
+                            }
+                        },
+                        error: function () {
+                            alert('Error deleting menu.');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+} 

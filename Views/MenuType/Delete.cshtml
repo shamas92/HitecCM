@@ -1,0 +1,65 @@
+@model HitecCM.Models.tblMenuType
+
+@{
+    ViewBag.Title = "Delete Menu Type";
+}
+
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Delete Menu Type</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Are you sure you want to delete this menu type?</p>
+                    </div>
+                </div>
+                <div class="nk-block-head-content">
+                    <div class="toggle-wrap nk-block-tools-toggle">
+                        <a href="@Url.Action("Index")" class="btn btn-primary">
+                            <em class="icon ni ni-arrow-left"></em>
+                            <span>Back to List</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered">
+                <div class="card-inner">
+                    <div class="alert alert-warning">
+                        <em class="icon ni ni-alert-circle"></em>
+                        <span>This action cannot be undone. Please confirm that you want to delete this menu type.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Menu Type ID</label>
+                        <div class="form-control-plaintext">@Model.MenuTypeID</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Menu Type Name</label>
+                        <div class="form-control-plaintext">@Model.MenuTypeName</div>
+                    </div>
+
+                    @using (Html.BeginForm("Delete", "MenuType", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.MenuTypeID)
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-danger">
+                                <em class="icon ni ni-trash"></em>
+                                <span>Delete Menu Type</span>
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                                <em class="icon ni ni-cross"></em>
+                                <span>Cancel</span>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

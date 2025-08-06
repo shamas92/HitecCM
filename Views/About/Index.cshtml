@@ -1,0 +1,127 @@
+﻿@model HitecCM.Models.tblAbout
+@{
+    ViewBag.Title = "About";
+}
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">About</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Edit the About page information below. All fields are required.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered card-stretch">
+                <div class="card-inner">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["Success"]</div>
+                    }
+                    @using (Html.BeginForm("Index", "About", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-group mb-3">
+                            @Html.Label("Chairman's Image", htmlAttributes: new { @class = "form-label" })
+                            <div class="form-control-wrap">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="chairmanImageFile" name="chairman_image_file" accept="image/*" onchange="previewImage(this, 'chairmanImagePreview')">
+                                    <label class="custom-file-label" for="chairmanImageFile">Choose file</label>
+                                </div>
+                                <div class="mt-3">
+                                    <div id="chairmanImagePreview" style="width: 350px; height: 200px; border: 2px dashed #ccc; display: @(string.IsNullOrEmpty(Model.chairman_image) ? "none" : "block"); background-size: cover; background-position: center; background-repeat: no-repeat; @(!string.IsNullOrEmpty(Model.chairman_image) ? $"background-image:url('{Url.Content("~/Content/images/about/" + Model.chairman_image)}');" : "")">
+                                    </div>
+                                </div>
+                            </div>
+                            @* Optionally show validation message here *@
+                        </div>
+                        <div class="form-group mb-3">
+                            @Html.Label("Chairman's Message", htmlAttributes: new { @class = "form-label" })
+                            @Html.TextAreaFor(m => m.chairman_message, new { @class = "form-control w-100 summernote-minimal", placeholder = "Chairman's Message", style = "min-width: 100%;" })
+                            @Html.ValidationMessageFor(m => m.chairman_message, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group mb-3">
+                            @Html.Label("Vice Chancellor's Image", htmlAttributes: new { @class = "form-label" })
+                            <div class="form-control-wrap">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="vcImageFile" name="vc_image_file" accept="image/*" onchange="previewImage(this, 'vcImagePreview')">
+                                    <label class="custom-file-label" for="vcImageFile">Choose file</label>
+                                </div>
+                                <div class="mt-3">
+                                    <div id="vcImagePreview" style="width: 350px; height: 200px; border: 2px dashed #ccc; display: @(string.IsNullOrEmpty(Model.vc_image) ? "none" : "block"); background-size: cover; background-position: center; background-repeat: no-repeat; @(!string.IsNullOrEmpty(Model.vc_image) ? $"background-image:url('{Url.Content("~/Content/images/about/" + Model.vc_image)}');" : "")">
+                                    </div>
+                                </div>
+                            </div>
+                            @* Optionally show validation message here *@
+                        </div>
+                        <div class="form-group mb-3">
+                            @Html.Label("Vice Chancellor's Message", htmlAttributes: new { @class = "form-label" })
+                            @Html.TextAreaFor(m => m.vc_message, new { @class = "form-control w-100 summernote-minimal", placeholder = "VC's Message", style = "min-width: 100%;" })
+                            @Html.ValidationMessageFor(m => m.vc_message, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group mb-3">
+                            @Html.Label("Motto", htmlAttributes: new { @class = "form-label" })
+                            @Html.TextAreaFor(m => m.motto, new { @class = "form-control w-100 summernote-minimal", placeholder = "Motto", style = "min-width: 100%;" })
+                            @Html.ValidationMessageFor(m => m.motto, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group mb-3">
+                            @Html.Label("Vision", htmlAttributes: new { @class = "form-label" })
+                            @Html.TextAreaFor(m => m.vision, new { @class = "form-control w-100 summernote-minimal", placeholder = "Vision", style = "min-width: 100%;" })
+                            @Html.ValidationMessageFor(m => m.vision, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group mb-3">
+                            @Html.Label("Mission", htmlAttributes: new { @class = "form-label" })
+                            @Html.TextAreaFor(m => m.mission, new { @class = "form-control w-100 summernote-minimal", placeholder = "Mission", style = "min-width: 100%;" })
+                            @Html.ValidationMessageFor(m => m.mission, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group mb-3">
+                            @Html.Label("Emblem Description", htmlAttributes: new { @class = "form-label" })
+                            @Html.TextAreaFor(m => m.emblem, new { @class = "form-control w-100 summernote-minimal", placeholder = "Emblem", style = "min-width: 100%;" })
+                            @Html.ValidationMessageFor(m => m.emblem, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group mt-4 text-left">
+                            <button type="submit" class="btn btn-primary px-5">Save</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Content/js/editors.js")
+    <script>
+        NioApp.SummerNote();
+        function previewImage(input, previewId) {
+            var preview = document.getElementById(previewId);
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.style.backgroundImage = 'url(' + e.target.result + ')';
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.style.backgroundImage = '';
+                preview.style.display = 'none';
+            }
+        }
+    </script>
+}
+<!-- Image Preview Modal -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document" style="max-width: 1200px;">
+        <div class="modal-content" style="background: transparent; border: none; box-shadow: none;">
+            <button type="button" class="close position-absolute" style="right: 20px; top: 20px; z-index: 10; color: #fff; font-size: 2rem; opacity: 1;" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-body p-0 d-flex justify-content-center align-items-center" style="background: transparent;">
+                <img id="previewImage" src="" alt="Preview" style="max-width: 1150px; max-height: 600px; width: auto; height: auto; display: block; margin: 0 auto; border-radius: 8px; box-shadow: 0 2px 16px rgba(0,0,0,0.3);" />
+            </div>
+        </div>
+    </div>
+</div>

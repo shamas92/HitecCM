@@ -1,0 +1,245 @@
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\HitecCM.dll.config
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\HitecCM.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\HitecCM.pdb
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\csc.exe
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\csc.exe.config
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\csc.rsp
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\csi.exe
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\csi.exe.config
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\csi.rsp
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\Microsoft.CodeAnalysis.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\Microsoft.CSharp.Core.targets
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\Microsoft.Managed.Core.targets
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\Microsoft.VisualBasic.Core.targets
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\Microsoft.Win32.Primitives.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.AppContext.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Collections.Immutable.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Console.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Diagnostics.DiagnosticSource.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Diagnostics.FileVersionInfo.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Diagnostics.StackTrace.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Globalization.Calendars.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.IO.Compression.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.IO.Compression.ZipFile.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.IO.FileSystem.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.IO.FileSystem.Primitives.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Net.Http.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Net.Sockets.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Reflection.Metadata.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Runtime.InteropServices.RuntimeInformation.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Security.Cryptography.Algorithms.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Security.Cryptography.Encoding.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Security.Cryptography.Primitives.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Text.Encoding.CodePages.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Threading.Tasks.Extensions.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.ValueTuple.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Xml.ReaderWriter.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Xml.XmlDocument.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Xml.XPath.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\System.Xml.XPath.XDocument.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\vbc.exe
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\vbc.exe.config
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\vbc.rsp
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\VBCSCompiler.exe
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\roslyn\VBCSCompiler.exe.config
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\Antlr3.Runtime.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\Newtonsoft.Json.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\System.Web.Helpers.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\System.Web.Mvc.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\System.Web.Optimization.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\System.Web.Razor.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\System.Web.WebPages.Deployment.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\System.Web.WebPages.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\System.Web.WebPages.Razor.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\WebGrease.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\System.Web.Helpers.xml
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\System.Web.Mvc.xml
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\System.Web.Optimization.xml
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\System.Web.Razor.xml
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\System.Web.WebPages.xml
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\System.Web.WebPages.Deployment.xml
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\System.Web.WebPages.Razor.xml
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\Newtonsoft.Json.xml
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\Antlr3.Runtime.pdb
+C:\Users\Mr Laptop\source\repos\HitecCM\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\Mr Laptop\source\repos\HitecCM\obj\Debug\HitecCM.csproj.AssemblyReference.cache
+C:\Users\Mr Laptop\source\repos\HitecCM\obj\Debug\HitecCM.csproj.CoreCompileInputs.cache
+C:\Users\Mr Laptop\source\repos\HitecCM\obj\Debug\HitecCM.csproj.Up2Date
+C:\Users\Mr Laptop\source\repos\HitecCM\obj\Debug\HitecCM.dll
+C:\Users\Mr Laptop\source\repos\HitecCM\obj\Debug\HitecCM.pdb
+C:\Users\HP\source\repos\HitecCM\bin\HitecCM.dll.config
+C:\Users\HP\source\repos\HitecCM\bin\HitecCM.dll
+C:\Users\HP\source\repos\HitecCM\bin\HitecCM.pdb
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\csc.exe
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\csc.exe.config
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\csc.rsp
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\csi.exe
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\csi.exe.config
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\csi.rsp
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\Microsoft.CodeAnalysis.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\Microsoft.CSharp.Core.targets
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\Microsoft.Managed.Core.targets
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\Microsoft.VisualBasic.Core.targets
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\Microsoft.Win32.Primitives.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.AppContext.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Collections.Immutable.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Console.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Diagnostics.DiagnosticSource.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Diagnostics.FileVersionInfo.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Diagnostics.StackTrace.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Globalization.Calendars.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.IO.Compression.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.IO.Compression.ZipFile.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.IO.FileSystem.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.IO.FileSystem.Primitives.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Net.Http.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Net.Sockets.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Reflection.Metadata.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Runtime.InteropServices.RuntimeInformation.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Security.Cryptography.Algorithms.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Security.Cryptography.Encoding.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Security.Cryptography.Primitives.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Text.Encoding.CodePages.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Threading.Tasks.Extensions.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.ValueTuple.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Xml.ReaderWriter.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Xml.XmlDocument.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Xml.XPath.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\System.Xml.XPath.XDocument.dll
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\vbc.exe
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\vbc.exe.config
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\vbc.rsp
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\VBCSCompiler.exe
+C:\Users\HP\source\repos\HitecCM\bin\roslyn\VBCSCompiler.exe.config
+C:\Users\HP\source\repos\HitecCM\bin\Antlr3.Runtime.dll
+C:\Users\HP\source\repos\HitecCM\bin\EntityFramework.dll
+C:\Users\HP\source\repos\HitecCM\bin\EntityFramework.SqlServer.dll
+C:\Users\HP\source\repos\HitecCM\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\Users\HP\source\repos\HitecCM\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\HP\source\repos\HitecCM\bin\Newtonsoft.Json.dll
+C:\Users\HP\source\repos\HitecCM\bin\System.Web.Helpers.dll
+C:\Users\HP\source\repos\HitecCM\bin\System.Web.Mvc.dll
+C:\Users\HP\source\repos\HitecCM\bin\System.Web.Optimization.dll
+C:\Users\HP\source\repos\HitecCM\bin\System.Web.Razor.dll
+C:\Users\HP\source\repos\HitecCM\bin\System.Web.WebPages.Deployment.dll
+C:\Users\HP\source\repos\HitecCM\bin\System.Web.WebPages.dll
+C:\Users\HP\source\repos\HitecCM\bin\System.Web.WebPages.Razor.dll
+C:\Users\HP\source\repos\HitecCM\bin\WebGrease.dll
+C:\Users\HP\source\repos\HitecCM\bin\EntityFramework.xml
+C:\Users\HP\source\repos\HitecCM\bin\EntityFramework.SqlServer.xml
+C:\Users\HP\source\repos\HitecCM\bin\System.Web.Helpers.xml
+C:\Users\HP\source\repos\HitecCM\bin\System.Web.Mvc.xml
+C:\Users\HP\source\repos\HitecCM\bin\System.Web.Optimization.xml
+C:\Users\HP\source\repos\HitecCM\bin\System.Web.Razor.xml
+C:\Users\HP\source\repos\HitecCM\bin\System.Web.WebPages.xml
+C:\Users\HP\source\repos\HitecCM\bin\System.Web.WebPages.Deployment.xml
+C:\Users\HP\source\repos\HitecCM\bin\System.Web.WebPages.Razor.xml
+C:\Users\HP\source\repos\HitecCM\bin\Newtonsoft.Json.xml
+C:\Users\HP\source\repos\HitecCM\bin\Antlr3.Runtime.pdb
+C:\Users\HP\source\repos\HitecCM\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\HP\source\repos\HitecCM\obj\Debug\HitecCM.csproj.AssemblyReference.cache
+C:\Users\HP\source\repos\HitecCM\obj\Debug\HitecCM.csproj.CoreCompileInputs.cache
+C:\Users\HP\source\repos\HitecCM\obj\Debug\HitecCM.csproj.Up2Date
+C:\Users\HP\source\repos\HitecCM\obj\Debug\HitecCM.dll
+C:\Users\HP\source\repos\HitecCM\obj\Debug\HitecCM.pdb
+C:\Users\shama\source\repos\HitecCM\bin\HitecCM.dll.config
+C:\Users\shama\source\repos\HitecCM\bin\HitecCM.dll
+C:\Users\shama\source\repos\HitecCM\bin\HitecCM.pdb
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\csc.exe
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\csc.exe.config
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\csc.rsp
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\csi.exe
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\csi.exe.config
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\csi.rsp
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\Microsoft.CodeAnalysis.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\Microsoft.CSharp.Core.targets
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\Microsoft.Managed.Core.targets
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\Microsoft.VisualBasic.Core.targets
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\Microsoft.Win32.Primitives.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.AppContext.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Collections.Immutable.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Console.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Diagnostics.DiagnosticSource.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Diagnostics.FileVersionInfo.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Diagnostics.StackTrace.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Globalization.Calendars.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.IO.Compression.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.IO.Compression.ZipFile.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.IO.FileSystem.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.IO.FileSystem.Primitives.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Net.Http.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Net.Sockets.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Reflection.Metadata.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Runtime.InteropServices.RuntimeInformation.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Security.Cryptography.Algorithms.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Security.Cryptography.Encoding.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Security.Cryptography.Primitives.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Text.Encoding.CodePages.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Threading.Tasks.Extensions.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.ValueTuple.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Xml.ReaderWriter.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Xml.XmlDocument.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Xml.XPath.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\System.Xml.XPath.XDocument.dll
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\vbc.exe
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\vbc.exe.config
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\vbc.rsp
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\VBCSCompiler.exe
+C:\Users\shama\source\repos\HitecCM\bin\roslyn\VBCSCompiler.exe.config
+C:\Users\shama\source\repos\HitecCM\bin\Antlr3.Runtime.dll
+C:\Users\shama\source\repos\HitecCM\bin\EntityFramework.dll
+C:\Users\shama\source\repos\HitecCM\bin\EntityFramework.SqlServer.dll
+C:\Users\shama\source\repos\HitecCM\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\Users\shama\source\repos\HitecCM\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\shama\source\repos\HitecCM\bin\Newtonsoft.Json.dll
+C:\Users\shama\source\repos\HitecCM\bin\System.Web.Helpers.dll
+C:\Users\shama\source\repos\HitecCM\bin\System.Web.Mvc.dll
+C:\Users\shama\source\repos\HitecCM\bin\System.Web.Optimization.dll
+C:\Users\shama\source\repos\HitecCM\bin\System.Web.Razor.dll
+C:\Users\shama\source\repos\HitecCM\bin\System.Web.WebPages.Deployment.dll
+C:\Users\shama\source\repos\HitecCM\bin\System.Web.WebPages.dll
+C:\Users\shama\source\repos\HitecCM\bin\System.Web.WebPages.Razor.dll
+C:\Users\shama\source\repos\HitecCM\bin\WebGrease.dll
+C:\Users\shama\source\repos\HitecCM\bin\EntityFramework.xml
+C:\Users\shama\source\repos\HitecCM\bin\EntityFramework.SqlServer.xml
+C:\Users\shama\source\repos\HitecCM\bin\System.Web.Helpers.xml
+C:\Users\shama\source\repos\HitecCM\bin\System.Web.Mvc.xml
+C:\Users\shama\source\repos\HitecCM\bin\System.Web.Optimization.xml
+C:\Users\shama\source\repos\HitecCM\bin\System.Web.Razor.xml
+C:\Users\shama\source\repos\HitecCM\bin\System.Web.WebPages.xml
+C:\Users\shama\source\repos\HitecCM\bin\System.Web.WebPages.Deployment.xml
+C:\Users\shama\source\repos\HitecCM\bin\System.Web.WebPages.Razor.xml
+C:\Users\shama\source\repos\HitecCM\bin\Newtonsoft.Json.xml
+C:\Users\shama\source\repos\HitecCM\bin\Antlr3.Runtime.pdb
+C:\Users\shama\source\repos\HitecCM\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\shama\source\repos\HitecCM\obj\Debug\HitecCM.csproj.AssemblyReference.cache
+C:\Users\shama\source\repos\HitecCM\obj\Debug\HitecCM.csproj.CoreCompileInputs.cache
+C:\Users\shama\source\repos\HitecCM\obj\Debug\HitecCM.csproj.Up2Date
+C:\Users\shama\source\repos\HitecCM\obj\Debug\HitecCM.dll
+C:\Users\shama\source\repos\HitecCM\obj\Debug\HitecCM.pdb

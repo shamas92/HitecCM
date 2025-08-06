@@ -1,0 +1,55 @@
+@model HitecCM.Models.tblMenuType
+
+@{
+    ViewBag.Title = "Add New Menu Type";
+}
+
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Add New Menu Type</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Create a new menu type.</p>
+                    </div>
+                </div>
+                <div class="nk-block-head-content">
+                    <div class="toggle-wrap nk-block-tools-toggle">
+                        <a href="@Url.Action("Index")" class="btn btn-primary">
+                            <em class="icon ni ni-arrow-left"></em>
+                            <span>Back to List</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered">
+                <div class="card-inner">
+                    @using (Html.BeginForm("Create", "MenuType", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.MenuTypeName, "Menu Type Name", new { @class = "form-label" })
+                            @Html.TextBoxFor(model => model.MenuTypeName, new { @class = "form-control", placeholder = "Enter menu type name" })
+                            @Html.ValidationMessageFor(model => model.MenuTypeName, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <em class="icon ni ni-save"></em>
+                                <span>Save Menu Type</span>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+} 

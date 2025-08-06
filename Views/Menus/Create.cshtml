@@ -1,0 +1,79 @@
+@model HitecCM.Models.tblMenus
+
+@{
+    ViewBag.Title = "Add New Menu";
+}
+
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Add New Menu</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Create a new menu item.</p>
+                    </div>
+                </div>
+                <div class="nk-block-head-content">
+                    <div class="toggle-wrap nk-block-tools-toggle">
+                        <a href="@Url.Action("Index")" class="btn btn-primary">
+                            <em class="icon ni ni-arrow-left"></em>
+                            <span>Back to List</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered">
+                <div class="card-inner">
+                    @using (Html.BeginForm("Create", "Menus", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.MenuName, "Menu Name", new { @class = "form-label" })
+                            @Html.TextBoxFor(model => model.MenuName, new { @class = "form-control", placeholder = "Enter menu name" })
+                            @Html.ValidationMessageFor(model => model.MenuName, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.MenuLink, "Menu Link", new { @class = "form-label" })
+                            @Html.TextBoxFor(model => model.MenuLink, new { @class = "form-control", placeholder = "Enter menu link (optional)" })
+                            @Html.ValidationMessageFor(model => model.MenuLink, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SortingOrder, "Sorting Order", new { @class = "form-label" })
+                            @Html.TextBoxFor(model => model.SortingOrder, new { @class = "form-control", type = "number", placeholder = "Enter sorting order (optional)" })
+                            @Html.ValidationMessageFor(model => model.SortingOrder, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ParentMenuID, "Parent Menu", new { @class = "form-label" })
+                            @Html.DropDownListFor(model => model.ParentMenuID, ViewBag.ParentMenus as SelectList, "-- Select Parent Menu (Optional) --", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.ParentMenuID, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.MenuTypeID, "Menu Type *", new { @class = "form-label" })
+                            @Html.DropDownListFor(model => model.MenuTypeID, ViewBag.MenuTypes as SelectList, "-- Select Menu Type --", new { @class = "form-control", required = "required" })
+                            @Html.ValidationMessageFor(model => model.MenuTypeID, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <em class="icon ni ni-save"></em>
+                                <span>Save Menu</span>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+} 

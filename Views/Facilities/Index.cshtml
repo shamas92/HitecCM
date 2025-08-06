@@ -1,0 +1,188 @@
+@model IEnumerable<HitecCM.Models.tblFacilite>
+@Html.AntiForgeryToken()
+
+@{
+    ViewBag.Title = "Manage Facilities";
+}
+
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Facilities</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Manage all facilities and their details.</p>
+                    </div>
+                </div>
+                <div class="nk-block-head-content">
+                    <div class="toggle-wrap nk-block-tools-toggle">
+                        <a href="@Url.Action("Create")" class="btn btn-primary">
+                            <em class="icon ni ni-plus"></em>
+                            <span>Add New Facility</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered card-stretch">
+                <div class="card-inner-group">
+                    <div class="card-inner">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Facility ID</th>
+                                        <th>Department</th>
+                                        <th>Banner</th>
+                                        <th>Details</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.FacilityID</td>
+                                            <td>@(ViewBag.Departments != null && item.DepartmentID != null && ViewBag.Departments.ContainsKey((int)item.DepartmentID) ? ViewBag.Departments[(int)item.DepartmentID] : "N/A")</td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.Banner))
+                                                {
+                                                    <img src="@Url.Content("~/Content/images/facilities/" + item.Banner)" 
+                                                         alt="@item.Title" 
+                                                         class="img-thumbnail" 
+                                                         style="max-height: 100px; cursor: pointer;" 
+                                                         onclick="showImagePreview(this.src)" />
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="tb-lead">@Html.Raw(item.Details?.Length > 50 ? item.Details.Substring(0, 50) + "..." : item.Details)</span>
+                                            </td>
+                                            <td class="nk-tb-col nk-tb-col-tools">
+                                                <ul class="nk-tb-actions gx-1">
+                                                    <li>
+                                                        <div class="drodown">
+                                                            <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown">
+                                                                <em class="icon ni ni-more-h"></em>
+                                                            </a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <ul class="link-list-opt no-bdr">
+                                                                    <li>
+                                                                        <a href="@Url.Action("Edit", new { id = item.FacilityID })">
+                                                                            <em class="icon ni ni-edit"></em>
+                                                                            <span>Edit</span>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="#" class="delete-facility" data-id="@item.FacilityID">
+                                                                            <em class="icon ni ni-trash"></em>
+                                                                            <span>Delete</span>
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Image Preview Modal -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document" style="max-width: 1200px;">
+        <div class="modal-content" style="background: transparent; border: none; box-shadow: none;">
+            <button type="button" class="close position-absolute" style="right: 20px; top: 20px; z-index: 10; color: #fff; font-size: 2rem; opacity: 1;" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal-body p-0 d-flex justify-content-center align-items-center" style="background: transparent;">
+                <img id="previewImage" src="" alt="Facility Banner" style="max-width: 1150px; max-height: 600px; width: auto; height: auto; display: block; margin: 0 auto; border-radius: 8px; box-shadow: 0 2px 16px rgba(0,0,0,0.3);" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script>
+        $(document).ready(function () {
+            // Delete confirmation
+            $('.delete-facility').click(function (e) {
+                e.preventDefault();
+                var facilityId = $(this).data('id');
+                $('#deleteFacilityId').val(facilityId);
+                $('#deleteModalBody').text('Are you sure you want to delete this facility?');
+                $('#deleteConfirmationModal').modal('show');
+            });
+
+            // Confirm delete button AJAX
+            $('#confirmDeleteButton').click(function () {
+                var facilityId = $('#deleteFacilityId').val();
+                if (!facilityId) return;
+                $.ajax({
+                    url: '/Facilities/Delete/' + facilityId,
+                    type: 'POST',
+                    data: {
+                        __RequestVerificationToken: $('input[name=__RequestVerificationToken]').val(),
+                        id: facilityId
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#deleteConfirmationModal').modal('hide');
+                            // Optionally, remove the row from the table or reload
+                            location.reload();
+                        } else {
+                            alert(response.message || 'Delete failed.');
+                        }
+                    },
+                    error: function () {
+                        alert('An error occurred while deleting.');
+                    }
+                });
+            });
+
+            // Image preview function
+            window.showImagePreview = function(imageSrc) {
+                $('#previewImage').attr('src', imageSrc);
+                $('#imagePreviewModal').modal('show');
+            }
+
+            // Initialize dropdowns
+            $('.dropdown-toggle').dropdown();
+        });
+    </script>
+}
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" tabindex="-1" id="deleteConfirmationModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                <em class="icon ni ni-cross"></em>
+            </a>
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Confirmation</h5>
+            </div>
+            <div class="modal-body">
+                <p id="deleteModalBody"></p>
+                <input type="hidden" id="deleteFacilityId" />
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+            </div>
+        </div>
+    </div>
+</div> 

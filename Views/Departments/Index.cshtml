@@ -1,0 +1,125 @@
+@model IEnumerable<HitecCM.Models.tblDepartment>
+@Html.AntiForgeryToken()
+
+@{
+    ViewBag.Title = "Manage Departments";
+}
+
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Departments</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Manage all departments and their details.</p>
+                    </div>
+                </div>
+                <div class="nk-block-head-content text-center">
+                    <div class="toggle-wrap nk-block-tools-toggle">
+                        <a href="@Url.Action("Create")" class="btn btn-primary">
+                            <em class="icon ni ni-plus"></em>
+                            <span>Add New Department</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered card-stretch">
+                <div class="card-inner-group">
+                    <div class="card-inner">
+                        @if (TempData["Success"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>Success!</strong> @TempData["Success"]
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Code</th>
+                                        <th>Title</th>
+                                        <th>Banner</th>
+                                        <th>Order</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.DepartmentID</td>
+                                            <td>
+                                                <span class="tb-lead">@(item.Code ?? "-")</span>
+                                            </td>
+                                            <td>
+                                                <span class="tb-lead">@(item.Title ?? "-")</span>
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.Banner))
+                                                {
+                                                    <span class="text-primary">@item.Banner</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">-</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @(item.C_Order?.ToString() ?? "-")
+                                            </td>
+                                            <td class="nk-tb-col nk-tb-col-tools">
+                                                <ul class="gx-1">
+                                                    <li>
+                                                        <div class="drodown">
+                                                            <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown">
+                                                                <em class="icon ni ni-more-h"></em>
+                                                            </a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <ul class="link-list-opt no-bdr">
+                                                                    <li>
+                                                                        <a href="@Url.Action("Edit", new { id = item.DepartmentID })">
+                                                                            <em class="icon ni ni-edit"></em>
+                                                                            <span>Edit</span>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="@Url.Action("Delete", new { id = item.DepartmentID })">
+                                                                            <em class="icon ni ni-trash"></em>
+                                                                            <span>Delete</span>
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Auto-hide success messages after 5 seconds
+            setTimeout(function () {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+        });
+    </script>
+} 

@@ -1,0 +1,135 @@
+@model HitecCM.Models.tblDepartment
+
+@{
+    ViewBag.Title = "Add New Department";
+}
+
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Add New Department</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Create a new department.</p>
+                    </div>
+                </div>
+                <div class="nk-block-head-content">
+                    <div class="toggle-wrap nk-block-tools-toggle">
+                        <a href="@Url.Action("Index")" class="btn btn-primary">
+                            <em class="icon ni ni-arrow-left"></em>
+                            <span>Back to List</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered">
+                <div class="card-inner">
+                    @using (Html.BeginForm("Create", "Departments", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Code, "Department Code", new { @class = "form-label" })
+                            @Html.TextBoxFor(model => model.Code, new { @class = "form-control", placeholder = "Enter department code" })
+                            @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Title, "Department Title *", new { @class = "form-label" })
+                            @Html.TextBoxFor(model => model.Title, new { @class = "form-control", placeholder = "Enter department title", required = "required" })
+                            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Banner Image", new { @class = "form-label" })
+                            <div class="form-control-wrap">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="bannerFile" name="banner_file" accept="image/*" onchange="previewImage(this, 'bannerImagePreview')">
+                                    <label class="custom-file-label" for="bannerFile">Choose file</label>
+                                </div>
+                                <div class="mt-3">
+                                    <div id="bannerImagePreview" style="width: 350px; height: 200px; border: 2px dashed #ccc; display: none; background-size: cover; background-position: center; background-repeat: no-repeat;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.About, "About", new { @class = "form-label" })
+                            @Html.TextAreaFor(model => model.About, new { @class = "form-control", rows = "4", placeholder = "Enter department description" })
+                            @Html.ValidationMessageFor(model => model.About, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("HOD Photo", new { @class = "form-label" })
+                            <div class="form-control-wrap">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="hodPhotoFile" name="hod_photo_file" accept="image/*" onchange="previewImage(this, 'hodPhotoImagePreview')">
+                                    <label class="custom-file-label" for="hodPhotoFile">Choose file</label>
+                                </div>
+                                <div class="mt-3">
+                                    <div id="hodPhotoImagePreview" style="width: 200px; height: 200px; border: 2px dashed #ccc; display: none; background-size: cover; background-position: center; background-repeat: no-repeat; border-radius: 50%;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.HODMessage, "HOD Message", new { @class = "form-label" })
+                            @Html.TextAreaFor(model => model.HODMessage, new { @class = "form-control", rows = "4", placeholder = "Enter HOD message" })
+                            @Html.ValidationMessageFor(model => model.HODMessage, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Programs, "Programs", new { @class = "form-label" })
+                            @Html.TextAreaFor(model => model.Programs, new { @class = "form-control", rows = "4", placeholder = "Enter department programs" })
+                            @Html.ValidationMessageFor(model => model.Programs, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Contacts, "Contacts", new { @class = "form-label" })
+                            @Html.TextAreaFor(model => model.Contacts, new { @class = "form-control", rows = "4", placeholder = "Enter contact information" })
+                            @Html.ValidationMessageFor(model => model.Contacts, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.C_Order, "Display Order", new { @class = "form-label" })
+                            @Html.TextBoxFor(model => model.C_Order, new { @class = "form-control", type = "number", placeholder = "Enter display order (optional)" })
+                            @Html.ValidationMessageFor(model => model.C_Order, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <em class="icon ni ni-save"></em>
+                                <span>Save Department</span>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        function previewImage(input, previewId) {
+            var preview = document.getElementById(previewId);
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.style.backgroundImage = 'url(' + e.target.result + ')';
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.style.backgroundImage = '';
+                preview.style.display = 'none';
+            }
+        }
+    </script>
+} 

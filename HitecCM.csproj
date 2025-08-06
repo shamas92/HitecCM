@@ -1,0 +1,476 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BC299441-7EE3-48C9-B663-74DF431B071A}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HitecCM</RootNamespace>
+    <AssemblyName>HitecCM</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44357</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.Mvc.5.2.9\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.Razor.3.2.9\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AboutController.cs" />
+    <Compile Include="Controllers\AdvertisementController.cs" />
+    <Compile Include="Controllers\FacilitiesController.cs" />
+    <Compile Include="Controllers\FacultyController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\AcademicCalendarController.cs" />
+    <Compile Include="Controllers\MenusController.cs" />
+    <Compile Include="Controllers\MenuTypeController.cs" />
+    <Compile Include="Controllers\DepartmentsController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblMenus.cs" />
+    <Compile Include="Models\tblMenuType.cs" />
+    <Compile Include="Models\AcademicCalendar.cs" />
+    <Compile Include="Models\AcademicDeficiency.cs" />
+    <Compile Include="Models\AdverQsement.cs" />
+    <Compile Include="Models\BiomedicalEngineering.cs" />
+    <Compile Include="Models\BS_Islamic_Studies.cs" />
+    <Compile Include="Models\BS_MathemaQcs_AI.cs" />
+    <Compile Include="Models\Business_Programs.cs" />
+    <Compile Include="Models\Cafeteria_Info.cs" />
+    <Compile Include="Models\CivilEngineering.cs" />
+    <Compile Include="Models\ClassificaQon_Groups.cs" />
+    <Compile Include="Models\ComputerEngineering.cs" />
+    <Compile Include="Models\Computer_Science.cs" />
+    <Compile Include="Models\Conference_IncenQves.cs" />
+    <Compile Include="Models\ContactU.cs" />
+    <Compile Include="Models\Contributory_Fund_Accounts.cs" />
+    <Compile Include="Models\Contributory_Fund_Advances.cs" />
+    <Compile Include="Models\Contributory_Fund_ContribuQons.cs" />
+    <Compile Include="Models\Contributory_Fund_Members.cs" />
+    <Compile Include="Models\Contributory_Fund_NominaQon.cs" />
+    <Compile Include="Models\Contributory_Fund_Senngs.cs" />
+    <Compile Include="Models\Course_Learning_Outcomes.cs" />
+    <Compile Include="Models\Death_Gratuity.cs" />
+    <Compile Include="Models\Download_Categories.cs" />
+    <Compile Include="Models\Download_Items.cs" />
+    <Compile Include="Models\EducaQon_Subsidy.cs" />
+    <Compile Include="Models\ElectricalEngineering.cs" />
+    <Compile Include="Models\Employee_Appeals.cs" />
+    <Compile Include="Models\Employee_Appointment_Details.cs" />
+    <Compile Include="Models\Employee_Breach_Conduct.cs" />
+    <Compile Include="Models\Employee_Conduct_Rules.cs" />
+    <Compile Include="Models\Employee_Contracts.cs" />
+    <Compile Include="Models\Employee_Disciplinary_Cases.cs" />
+    <Compile Include="Models\Employee_Eligibility_Criteria.cs" />
+    <Compile Include="Models\Employee_Inquiry_Procedures.cs" />
+    <Compile Include="Models\Employee_Leave_Records.cs" />
+    <Compile Include="Models\Employee_PenalQes.cs" />
+    <Compile Include="Models\Employee_Transfers.cs" />
+    <Compile Include="Models\Employment_Types.cs" />
+    <Compile Include="Models\FeeStructureWithHostel.cs" />
+    <Compile Include="Models\Hostel_Info.cs" />
+    <Compile Include="Models\Hostel_Requests.cs" />
+    <Compile Include="Models\Leave_Approvals.cs" />
+    <Compile Include="Models\Leave_EnQtlement.cs" />
+    <Compile Include="Models\Leave_Types.cs" />
+    <Compile Include="Models\MechanicalEngineering.cs" />
+    <Compile Include="Models\Model1.cs" />
+    <Compile Include="Models\MSRulesAndRegulaQon.cs" />
+    <Compile Include="Models\MS_Islamic_Studies.cs" />
+    <Compile Include="Models\MS_MathemaQcs.cs" />
+    <Compile Include="Models\PEO_AVainment.cs" />
+    <Compile Include="Models\PEO_PLO_Mapping.cs" />
+    <Compile Include="Models\Personal_Loan.cs" />
+    <Compile Include="Models\PhDRulesAndRegulaQon.cs" />
+    <Compile Include="Models\PhD_Islamic_Studies.cs" />
+    <Compile Include="Models\PhD_MathemaQcs.cs" />
+    <Compile Include="Models\PLO_AVainment.cs" />
+    <Compile Include="Models\PLO_CLO_Mapping.cs" />
+    <Compile Include="Models\PosiQon_Details.cs" />
+    <Compile Include="Models\Program_EducaQonal_ObjecQves.cs" />
+    <Compile Include="Models\Program_Learning_Outcomes.cs" />
+    <Compile Include="Models\PublicaQons_IncenQves.cs" />
+    <Compile Include="Models\ResignaQon_TerminaQon_Process.cs" />
+    <Compile Include="Models\SelecQon_Board.cs" />
+    <Compile Include="Models\SelecQon_CommiVee.cs" />
+    <Compile Include="Models\Sport_Info.cs" />
+    <Compile Include="Models\tblAbout.cs" />
+    <Compile Include="Models\tblAccommodation.cs" />
+    <Compile Include="Models\tblAccommodationNote.cs" />
+    <Compile Include="Models\tblAccommodationRefundPolicy.cs" />
+    <Compile Include="Models\tblBMEOBECurriculum.cs" />
+    <Compile Include="Models\tblCsOBECurriculum.cs" />
+    <Compile Include="Models\tblDepartment.cs" />
+    <Compile Include="Models\tblDepartmentChairperson.cs" />
+    <Compile Include="Models\tblDepartmentContact.cs" />
+    <Compile Include="Models\tblDepartmentFacility.cs" />
+    <Compile Include="Models\tblDepartmentFacultyAbout.cs" />
+    <Compile Include="Models\tblDepartmentFAQ.cs" />
+    <Compile Include="Models\tblDepartmentPastEvent.cs" />
+    <Compile Include="Models\tblDepartmentProgram.cs" />
+    <Compile Include="Models\tblDepartmentProgramStudy.cs" />
+    <Compile Include="Models\tblDepartmentSchemeOfStudy.cs" />
+    <Compile Include="Models\tblDepartmentSuccessStory.cs" />
+    <Compile Include="Models\tblDepartmentTeachingFaculty.cs" />
+    <Compile Include="Models\tblDepartmentUpcomingEvent.cs" />
+    <Compile Include="Models\tblDesignation.cs" />
+    <Compile Include="Models\tblDownload.cs" />
+    <Compile Include="Models\tblEvent.cs" />
+    <Compile Include="Models\tblEventHead.cs" />
+    <Compile Include="Models\tblEventPhoto.cs" />
+    <Compile Include="Models\tblEventVideo.cs" />
+    <Compile Include="Models\tblFacilite.cs" />
+    <Compile Include="Models\tblFacilityPhoto.cs" />
+    <Compile Include="Models\tblFacultiesET.cs" />
+    <Compile Include="Models\tblFaculty.cs" />
+    <Compile Include="Models\tblFAQ.cs" />
+    <Compile Include="Models\tblFeeRefundPolicy.cs" />
+    <Compile Include="Models\tblFinancialAssistance.cs" />
+    <Compile Include="Models\tblLatePaymentPenalty.cs" />
+    <Compile Include="Models\tblMiscellaneousCharge.cs" />
+    <Compile Include="Models\tblMiscellaneousNote.cs" />
+    <Compile Include="Models\tblNew.cs" />
+    <Compile Include="Models\tblNewsHead.cs" />
+    <Compile Include="Models\tblNewsPhoto.cs" />
+    <Compile Include="Models\tblNoticeBoard.cs" />
+    <Compile Include="Models\tblPolicyCategory.cs" />
+    <Compile Include="Models\tblPolicyItem.cs" />
+    <Compile Include="Models\tblProgram.cs" />
+    <Compile Include="Models\tblQAC.cs" />
+    <Compile Include="Models\tblQACAccreditation.cs" />
+    <Compile Include="Models\tblQACAnnualActivityCalender.cs" />
+    <Compile Include="Models\tblQACContact.cs" />
+    <Compile Include="Models\tblQACIPE.cs" />
+    <Compile Include="Models\tblQACOrganogram.cs" />
+    <Compile Include="Models\tblQACPGPR.cs" />
+    <Compile Include="Models\tblQACSAR.cs" />
+    <Compile Include="Models\tblQACSurvay.cs" />
+    <Compile Include="Models\tblQAPolicy.cs" />
+    <Compile Include="Models\tblRefundPolicy.cs" />
+    <Compile Include="Models\tblSchemeOfStudy.cs" />
+    <Compile Include="Models\tblSeOBECurriculum.cs" />
+    <Compile Include="Models\tblSuccessStory.cs" />
+    <Compile Include="Models\tblTransport.cs" />
+    <Compile Include="Models\tblTransportNote.cs" />
+    <Compile Include="Models\tblTransportRefundPolicy.cs" />
+    <Compile Include="Models\tblUser.cs" />
+    <Compile Include="Models\Transport_Info.cs" />
+    <Compile Include="Models\UniversityDocument.cs" />
+    <Compile Include="Models\Wards_Fee_Concession.cs" />
+    <Compile Include="Models\Welfare_Fund.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap-grid.css" />
+    <Content Include="Content\bootstrap-grid.min.css" />
+    <Content Include="Content\bootstrap-grid.rtl.css" />
+    <Content Include="Content\bootstrap-grid.rtl.min.css" />
+    <Content Include="Content\bootstrap-reboot.css" />
+    <Content Include="Content\bootstrap-reboot.min.css" />
+    <Content Include="Content\bootstrap-reboot.rtl.css" />
+    <Content Include="Content\bootstrap-reboot.rtl.min.css" />
+    <Content Include="Content\bootstrap-utilities.css" />
+    <Content Include="Content\bootstrap-utilities.min.css" />
+    <Content Include="Content\bootstrap-utilities.rtl.css" />
+    <Content Include="Content\bootstrap-utilities.rtl.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrap.rtl.css" />
+    <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\css\dashlite.css" />
+    <Content Include="Content\css\dashlite.min.css" />
+    <Content Include="Content\css\dashlite.rtl.css" />
+    <Content Include="Content\css\dashlite.rtl.min.css" />
+    <Content Include="Content\css\libs\bootstrap-icons.css" />
+    <Content Include="Content\css\libs\fontawesome-icons.css" />
+    <Content Include="Content\css\libs\jstree.css" />
+    <Content Include="Content\css\libs\themify-icons.css" />
+    <Content Include="Content\css\style-email.css" />
+    <Content Include="Content\css\theme.css" />
+    <Content Include="Content\images\facilities\0b3bf106-a2ce-4061-b2ca-2a71777b493a.png" />
+    <Content Include="Content\images\facilities\24ad06b9-9cc6-446d-ae9a-65012f0a74d0.png" />
+    <Content Include="Content\images\facilities\468f9d90-7b58-43f9-a915-d80ac528f9bd.png" />
+    <Content Include="Content\images\facilities\56cc4ee3-ee29-4145-aa06-2c118eec8c05.png" />
+    <Content Include="Content\images\facilities\710b2e3d-77e1-459b-ae1a-1e05a56844ed.jpg" />
+    <Content Include="Content\images\facilities\8879b21e-45b6-437c-bc7f-7986b2242ad3.png" />
+    <Content Include="Content\images\facilities\972970e7-e201-4297-b1e2-c0f7e2c38f35.png" />
+    <Content Include="Content\images\facilities\c7897dcb-1e64-40b4-845c-0b5dfc8cf389.png" />
+    <Content Include="Content\images\facilities\c95aa1a5-89ed-4e66-91c4-9d88046308a3.png" />
+    <Content Include="Content\images\facilities\ce1e59ba-7ef9-4155-b424-9fc5a8bb7a94.png" />
+    <Content Include="Content\images\facilities\efc21173-ebcf-4ba1-b011-7da9e250d750.png" />
+    <Content Include="Content\images\jsTree\32px-dark.png" />
+    <Content Include="Content\images\jsTree\32px.png" />
+    <Content Include="Content\images\jsTree\40px-dark.png" />
+    <Content Include="Content\images\jsTree\40px.png" />
+    <Content Include="Content\images\jsTree\throbber-dark.gif" />
+    <Content Include="Content\images\jsTree\throbber.gif" />
+    <Content Include="Content\js\apps\calendar.js" />
+    <Content Include="Content\js\apps\chats.js" />
+    <Content Include="Content\js\apps\file-manager.js" />
+    <Content Include="Content\js\apps\inbox.js" />
+    <Content Include="Content\js\apps\kanban.js" />
+    <Content Include="Content\js\apps\messages.js" />
+    <Content Include="Content\js\bundle.js" />
+    <Content Include="Content\js\charts\gd-analytics.js" />
+    <Content Include="Content\js\charts\gd-default.js" />
+    <Content Include="Content\js\charts\gd-invest.js" />
+    <Content Include="Content\js\editors.js" />
+    <Content Include="Content\js\example-chart.js" />
+    <Content Include="Content\js\example-listbox.js" />
+    <Content Include="Content\js\example-sweetalert.js" />
+    <Content Include="Content\js\example-toastr.js" />
+    <Content Include="Content\js\example-tree.js" />
+    <Content Include="Content\js\libs\dual-listbox.js" />
+    <Content Include="Content\js\libs\editors\quill.js" />
+    <Content Include="Content\js\libs\editors\skins\content\default\content.css" />
+    <Content Include="Content\js\libs\editors\summernote.js" />
+    <Content Include="Content\js\libs\editors\tinymce.js" />
+    <Content Include="Content\js\libs\fullcalendar.js" />
+    <Content Include="Content\js\libs\jkanban.js" />
+    <Content Include="Content\js\libs\jqvmap.js" />
+    <Content Include="Content\js\libs\jstree.js" />
+    <Content Include="Content\js\libs\tagify.js" />
+    <Content Include="Content\js\scripts.js" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.esm.js" />
+    <Content Include="Scripts\bootstrap.esm.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Scripts\jquery-3.7.0.intellisense.js" />
+    <Content Include="Scripts\jquery-3.7.0.js" />
+    <Content Include="Scripts\jquery-3.7.0.min.js" />
+    <Content Include="Scripts\jquery-3.7.0.slim.js" />
+    <Content Include="Scripts\jquery-3.7.0.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Facilities\Create.cshtml" />
+    <Content Include="Views\Facilities\Delete.cshtml" />
+    <Content Include="Views\Facilities\Edit.cshtml" />
+    <Content Include="Views\Facilities\Index.cshtml" />
+    <Content Include="Views\About\Index.cshtml" />
+    <Content Include="Views\Advertisement\Index.cshtml" />
+    <Content Include="Views\AcademicCalendar\Index.cshtml" />
+    <Content Include="Views\MenuType\Create.cshtml" />
+    <Content Include="Views\MenuType\Delete.cshtml" />
+    <Content Include="Views\MenuType\Edit.cshtml" />
+    <Content Include="Views\MenuType\Index.cshtml" />
+    <Content Include="Views\Menus\Create.cshtml" />
+    <Content Include="Views\Menus\Delete.cshtml" />
+    <Content Include="Views\Menus\Edit.cshtml" />
+    <Content Include="Views\Menus\Index.cshtml" />
+    <Content Include="Views\Faculty\VisionMission.cshtml" />
+    <Content Include="Views\Departments\Create.cshtml" />
+    <Content Include="Views\Departments\Delete.cshtml" />
+    <Content Include="Views\Departments\Edit.cshtml" />
+    <Content Include="Views\Departments\Index.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Content\images\about\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap.rtl.min.css.map" />
+    <Content Include="Content\bootstrap.rtl.css.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-utilities.rtl.min.css.map" />
+    <Content Include="Content\bootstrap-utilities.rtl.css.map" />
+    <Content Include="Content\bootstrap-utilities.min.css.map" />
+    <Content Include="Content\bootstrap-utilities.css.map" />
+    <Content Include="Content\bootstrap-reboot.rtl.min.css.map" />
+    <Content Include="Content\bootstrap-reboot.rtl.css.map" />
+    <Content Include="Content\bootstrap-reboot.min.css.map" />
+    <Content Include="Content\bootstrap-reboot.css.map" />
+    <Content Include="Content\bootstrap-grid.rtl.min.css.map" />
+    <Content Include="Content\bootstrap-grid.rtl.css.map" />
+    <Content Include="Content\bootstrap-grid.min.css.map" />
+    <Content Include="Content\bootstrap-grid.css.map" />
+    <None Include="packages.config" />
+    <Content Include="Scripts\bootstrap.min.js.map" />
+    <Content Include="Scripts\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap.esm.min.js.map" />
+    <Content Include="Scripts\bootstrap.esm.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <Content Include="Scripts\jquery-3.7.0.slim.min.map" />
+    <Content Include="Scripts\jquery-3.7.0.min.map" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>49804</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44357</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>
