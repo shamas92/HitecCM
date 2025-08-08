@@ -291,6 +291,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\css\crop-modal.css" />
     <Content Include="Content\css\dashlite.css" />
     <Content Include="Content\css\dashlite.min.css" />
     <Content Include="Content\css\dashlite.rtl.css" />
@@ -328,6 +329,7 @@
     <Content Include="Content\js\charts\gd-analytics.js" />
     <Content Include="Content\js\charts\gd-default.js" />
     <Content Include="Content\js\charts\gd-invest.js" />
+    <Content Include="Content\js\crop-functionality.js" />
     <Content Include="Content\js\editors.js" />
     <Content Include="Content\js\example-chart.js" />
     <Content Include="Content\js\example-listbox.js" />

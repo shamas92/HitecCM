@@ -14,7 +14,8 @@ namespace HitecCM
                         "~/Content/js/editors.js",
                         "~/Content/js/libs/editors/summernote.js",
                         "~/Content/js/charts/gd-analytics.js",
-                        "~/Content/js/libs/jqvmap.js"
+                        "~/Content/js/libs/jqvmap.js",
+                        "~/Content/js/crop-functionality.js"
         ));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
@@ -25,7 +26,8 @@ namespace HitecCM
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/css/dashlite.css",
                       "~/Content/css/theme.css",
-                      "~/Content/css/editors/summernote.css"));
+                      "~/Content/css/editors/summernote.css",
+                      "~/Content/css/crop-modal.css"));
         }
     }
 }

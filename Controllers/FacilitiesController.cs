@@ -54,11 +54,36 @@ namespace HitecCM.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Create([Bind(Include = "FacilityID,DepartmentID,Title,Details,Active,C_Order")] tblFacilite facility, HttpPostedFileBase bannerFile)
+        public ActionResult Create([Bind(Include = "FacilityID,DepartmentID,Title,Details,Active,C_Order")] tblFacilite facility, HttpPostedFileBase bannerFile, string croppedImageData)
         {
             if (ModelState.IsValid)
             {
-                if (bannerFile != null && bannerFile.ContentLength > 0)
+                // Handle cropped image data first
+                if (!string.IsNullOrEmpty(croppedImageData) && croppedImageData.StartsWith("data:image"))
+                {
+                    try
+                    {
+                        // Extract base64 data
+                        string base64Data = croppedImageData.Split(',')[1];
+                        byte[] imageBytes = Convert.FromBase64String(base64Data);
+
+                        // Generate filename
+                        string fileName = Guid.NewGuid().ToString() + ".jpg";
+                        string path = Path.Combine(Server.MapPath("~/Content/images/facilities/"), fileName);
+                        Directory.CreateDirectory(Server.MapPath("~/Content/images/facilities/")); // Ensure directory exists
+
+                        // Save cropped image
+                        System.IO.File.WriteAllBytes(path, imageBytes);
+                        facility.Banner = fileName;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log error and fall back to regular file upload
+                        System.Diagnostics.Debug.WriteLine("Error processing cropped image: " + ex.Message);
+                    }
+                }
+                // Fall back to regular file upload if no cropped data
+                else if (bannerFile != null && bannerFile.ContentLength > 0)
                 {
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(bannerFile.FileName);
                     string path = Path.Combine(Server.MapPath("~/Content/images/facilities/"), fileName);
@@ -97,7 +122,7 @@ namespace HitecCM.Controllers
                 [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult Edit([Bind(Include = "FacilityID,DepartmentID,Title,Details,Active,C_Order")] tblFacilite facility, HttpPostedFileBase bannerFile)
+        public ActionResult Edit([Bind(Include = "FacilityID,DepartmentID,Title,Details,Active,C_Order")] tblFacilite facility, HttpPostedFileBase bannerFile, string croppedImageData)
         {
             if (ModelState.IsValid)
             {
@@ -117,8 +142,42 @@ namespace HitecCM.Controllers
                 existingFacility.Active = facility.Active;
                 existingFacility.C_Order = facility.C_Order;
 
-                // Handle banner image upload
-                if (bannerFile != null && bannerFile.ContentLength > 0)
+                // Handle cropped image data first
+                if (!string.IsNullOrEmpty(croppedImageData) && croppedImageData.StartsWith("data:image"))
+                {
+                    try
+                    {
+                        // Delete old banner if it exists (using the original filename)
+                        if (!string.IsNullOrEmpty(originalBannerFileName))
+                        {
+                            string oldPath = Path.Combine(Server.MapPath("~/Content/images/facilities/"), originalBannerFileName);
+                            if (System.IO.File.Exists(oldPath))
+                            {
+                                System.IO.File.Delete(oldPath);
+                            }
+                        }
+
+                        // Extract base64 data
+                        string base64Data = croppedImageData.Split(',')[1];
+                        byte[] imageBytes = Convert.FromBase64String(base64Data);
+
+                        // Generate filename
+                        string fileName = Guid.NewGuid().ToString() + ".jpg";
+                        string path = Path.Combine(Server.MapPath("~/Content/images/facilities/"), fileName);
+                        Directory.CreateDirectory(Server.MapPath("~/Content/images/facilities/")); // Ensure directory exists
+
+                        // Save cropped image
+                        System.IO.File.WriteAllBytes(path, imageBytes);
+                        existingFacility.Banner = fileName;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log error and fall back to regular file upload
+                        System.Diagnostics.Debug.WriteLine("Error processing cropped image: " + ex.Message);
+                    }
+                }
+                // Fall back to regular file upload if no cropped data
+                else if (bannerFile != null && bannerFile.ContentLength > 0)
                 {
                     // Delete old banner if it exists (using the original filename)
                     if (!string.IsNullOrEmpty(originalBannerFileName))
@@ -137,7 +196,7 @@ namespace HitecCM.Controllers
                     bannerFile.SaveAs(newPath);
                     existingFacility.Banner = newFileName; // Update banner on existing entity
                 }
-                // If bannerFile is null, existingFacility.Banner is not modified, thus retaining its old value.
+                // If neither croppedImageData nor bannerFile is provided, existingFacility.Banner is not modified, thus retaining its old value.
 
                 db.SaveChanges();
                 return RedirectToAction("Index");
