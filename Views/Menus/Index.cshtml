@@ -34,6 +34,7 @@
                                 <thead>
                                     <tr>
                                         <th>Menu ID</th>
+                                        <th>Icon</th>
                                         <th>Menu Name</th>
                                         <th>Menu Link</th>
                                         <th>Sorting Order</th>
@@ -47,6 +48,18 @@
                                     {
                                         <tr>
                                             <td>@item.MenuID</td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.SvgIcon))
+                                                {
+                                                    <div style="width: 24px; height: 24px;">
+                                                        <img src="@Url.Content("~/Content/img/menuicon/" + item.SvgIcon)" alt="Menu Icon" style="max-width: 100%; max-height: 100%;" />
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">-</span>
+                                                }
+                                            </td>
                                             <td>
                                                 <span class="tb-lead">@item.MenuName</span>
                                             </td>
@@ -140,4 +153,4 @@
             });
         });
     </script>
-} 
+}

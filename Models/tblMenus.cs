@@ -30,6 +30,8 @@ namespace HitecCM.Models
         [Required(ErrorMessage = "Menu Type is required")]
         public int MenuTypeID { get; set; }
 
+        public string SvgIcon { get; set; }
+
         // Navigation properties
         [ForeignKey("MenuTypeID")]
         public virtual tblMenuType MenuType { get; set; }
@@ -40,4 +42,4 @@ namespace HitecCM.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblMenus> ChildMenus { get; set; }
     }
-} 
+}

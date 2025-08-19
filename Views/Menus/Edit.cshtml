@@ -27,10 +27,11 @@
         <div class="nk-block">
             <div class="card card-bordered">
                 <div class="card-inner">
-                    @using (Html.BeginForm("Edit", "Menus", FormMethod.Post))
+                    @using (Html.BeginForm("Edit", "Menus", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(model => model.MenuID)
+                        @Html.HiddenFor(model => model.SvgIcon)
 
                         <div class="form-group">
                             @Html.LabelFor(model => model.MenuID, "Menu ID", new { @class = "form-label" })
@@ -68,6 +69,28 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="form-label">SVG Icon</label>
+                            @if (!string.IsNullOrEmpty(Model.SvgIcon))
+                            {
+                                <div class="mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <div style="width: 40px; height: 40px; margin-right: 10px;">
+                                            <img src="@Url.Content("~/Content/img/menuicon/" + Model.SvgIcon)" alt="Menu Icon" style="max-width: 100%; max-height: 100%;" />
+                                        </div>
+                                        <span>Current: @Model.SvgIcon</span>
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-control-wrap">
+                                <div class="custom-file">
+                                    <input type="file" name="svgIconFile" id="svgIconFile" class="custom-file-input" accept=".svg">
+                                    <label class="custom-file-label" for="svgIconFile">Choose new file</label>
+                                </div>
+                                <small class="form-text text-muted">Upload a new SVG icon for this menu (optional). Only SVG files are allowed.</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <button type="submit" class="btn btn-primary">
                                 <em class="icon ni ni-save"></em>
                                 <span>Update Menu</span>
@@ -82,4 +105,13 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-} 
+    <script>
+        $(document).ready(function() {
+            // Show selected filename in file input
+            $('.custom-file-input').on('change', function() {
+                var fileName = $(this).val().split('\\').pop();
+                $(this).siblings('.custom-file-label').addClass("selected").html(fileName);
+            });
+        });
+    </script>
+}
