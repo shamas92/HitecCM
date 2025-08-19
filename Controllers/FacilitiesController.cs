@@ -69,8 +69,8 @@ namespace HitecCM.Controllers
 
                         // Generate filename
                         string fileName = Guid.NewGuid().ToString() + ".jpg";
-                        string path = Path.Combine(Server.MapPath("~/Content/images/facilities/"), fileName);
-                        Directory.CreateDirectory(Server.MapPath("~/Content/images/facilities/")); // Ensure directory exists
+                        string path = Path.Combine(Server.MapPath("~/Content/img/facilities/"), fileName);
+                        Directory.CreateDirectory(Server.MapPath("~/Content/img/facilities/")); // Ensure directory exists
 
                         // Save cropped image
                         System.IO.File.WriteAllBytes(path, imageBytes);
@@ -86,8 +86,8 @@ namespace HitecCM.Controllers
                 else if (bannerFile != null && bannerFile.ContentLength > 0)
                 {
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(bannerFile.FileName);
-                    string path = Path.Combine(Server.MapPath("~/Content/images/facilities/"), fileName);
-                    Directory.CreateDirectory(Server.MapPath("~/Content/images/facilities/")); // Ensure directory exists
+                    string path = Path.Combine(Server.MapPath("~/Content/img/facilities/"), fileName);
+                    Directory.CreateDirectory(Server.MapPath("~/Content/img/facilities/")); // Ensure directory exists
                     bannerFile.SaveAs(path);
                     facility.Banner = fileName;
                 }
@@ -150,7 +150,7 @@ namespace HitecCM.Controllers
                         // Delete old banner if it exists (using the original filename)
                         if (!string.IsNullOrEmpty(originalBannerFileName))
                         {
-                            string oldPath = Path.Combine(Server.MapPath("~/Content/images/facilities/"), originalBannerFileName);
+                            string oldPath = Path.Combine(Server.MapPath("~/Content/img/facilities/"), originalBannerFileName);
                             if (System.IO.File.Exists(oldPath))
                             {
                                 System.IO.File.Delete(oldPath);
@@ -163,8 +163,8 @@ namespace HitecCM.Controllers
 
                         // Generate filename
                         string fileName = Guid.NewGuid().ToString() + ".jpg";
-                        string path = Path.Combine(Server.MapPath("~/Content/images/facilities/"), fileName);
-                        Directory.CreateDirectory(Server.MapPath("~/Content/images/facilities/")); // Ensure directory exists
+                        string path = Path.Combine(Server.MapPath("~/Content/img/facilities/"), fileName);
+                        Directory.CreateDirectory(Server.MapPath("~/Content/img/facilities/")); // Ensure directory exists
 
                         // Save cropped image
                         System.IO.File.WriteAllBytes(path, imageBytes);
@@ -182,7 +182,7 @@ namespace HitecCM.Controllers
                     // Delete old banner if it exists (using the original filename)
                     if (!string.IsNullOrEmpty(originalBannerFileName))
                     {
-                        string oldPath = Path.Combine(Server.MapPath("~/Content/images/facilities/"), originalBannerFileName);
+                        string oldPath = Path.Combine(Server.MapPath("~/Content/img/facilities/"), originalBannerFileName);
                         if (System.IO.File.Exists(oldPath))
                         {
                             System.IO.File.Delete(oldPath);
@@ -191,8 +191,8 @@ namespace HitecCM.Controllers
 
                     // Save new banner
                     string newFileName = Guid.NewGuid().ToString() + Path.GetExtension(bannerFile.FileName);
-                    string newPath = Path.Combine(Server.MapPath("~/Content/images/facilities/"), newFileName);
-                    Directory.CreateDirectory(Server.MapPath("~/Content/images/facilities/")); // Ensure directory exists
+                    string newPath = Path.Combine(Server.MapPath("~/Content/img/facilities/"), newFileName);
+                    Directory.CreateDirectory(Server.MapPath("~/Content/img/facilities/")); // Ensure directory exists
                     bannerFile.SaveAs(newPath);
                     existingFacility.Banner = newFileName; // Update banner on existing entity
                 }

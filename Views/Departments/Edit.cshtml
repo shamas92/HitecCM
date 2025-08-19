@@ -52,7 +52,7 @@
                                     <label class="custom-file-label" for="bannerFile">Choose file</label>
                                 </div>
                                 <div class="mt-3">
-                                    <div id="bannerImagePreview" style="width: 350px; height: 200px; border: 2px dashed #ccc; display: @(string.IsNullOrEmpty(Model.Banner) ? "none" : "block"); background-size: cover; background-position: center; background-repeat: no-repeat; @(!string.IsNullOrEmpty(Model.Banner) ? $"background-image:url('{Url.Content("~/Content/images/departments/" + Model.Banner)}');" : "")">
+                                    <div id="bannerImagePreview" style="width: 350px; height: 200px; border: 2px dashed #ccc; display: @(string.IsNullOrEmpty(Model.Banner) ? "none" : "block"); background-size: cover; background-position: center; background-repeat: no-repeat; @(!string.IsNullOrEmpty(Model.Banner) ? $"background-image:url('{Url.Content("~/Content/img/departments/" + Model.Banner)}');" : "")">
                                     </div>
                                 </div>
                             </div>
@@ -72,7 +72,7 @@
                                     <label class="custom-file-label" for="hodPhotoFile">Choose file</label>
                                 </div>
                                 <div class="mt-3">
-                                    <div id="hodPhotoImagePreview" style="width: 200px; height: 200px; border: 2px dashed #ccc; display: @(string.IsNullOrEmpty(Model.HODPhoto) ? "none" : "block"); background-size: cover; background-position: center; background-repeat: no-repeat; border-radius: 50%; @(!string.IsNullOrEmpty(Model.HODPhoto) ? $"background-image:url('{Url.Content("~/Content/images/departments/" + Model.HODPhoto)}');" : "")">
+                                    <div id="hodPhotoImagePreview" style="width: 200px; height: 200px; border: 2px dashed #ccc; display: @(string.IsNullOrEmpty(Model.HODPhoto) ? "none" : "block"); background-size: cover; background-position: center; background-repeat: no-repeat; border-radius: 50%; @(!string.IsNullOrEmpty(Model.HODPhoto) ? $"background-image:url('{Url.Content("~/Content/img/departments/" + Model.HODPhoto)}');" : "")">
                                     </div>
                                 </div>
                             </div>

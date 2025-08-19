@@ -45,7 +45,7 @@ namespace HitecCM.Controllers
                     if (image_file != null && image_file.ContentLength > 0)
                     {
                         var fileName = Path.GetFileName(image_file.FileName);
-                        var path = Path.Combine(Server.MapPath("~/Content/images/about/"), fileName);
+                        var path = Path.Combine(Server.MapPath("~/Content/img/about/"), fileName);
                         image_file.SaveAs(path);
                         ad.ImagePath = fileName;
                     }

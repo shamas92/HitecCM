@@ -48,7 +48,7 @@ namespace HitecCM.Controllers
                 if (banner_file != null && banner_file.ContentLength > 0)
                 {
                     var fileName = Path.GetFileName(banner_file.FileName);
-                    var path = Path.Combine(Server.MapPath("~/Content/images/departments/"), fileName);
+                    var path = Path.Combine(Server.MapPath("~/Content/img/departments/"), fileName);
                     banner_file.SaveAs(path);
                     department.Banner = fileName;
                 }
@@ -57,7 +57,7 @@ namespace HitecCM.Controllers
                 if (hod_photo_file != null && hod_photo_file.ContentLength > 0)
                 {
                     var fileName = Path.GetFileName(hod_photo_file.FileName);
-                    var path = Path.Combine(Server.MapPath("~/Content/images/departments/"), fileName);
+                    var path = Path.Combine(Server.MapPath("~/Content/img/departments/"), fileName);
                     hod_photo_file.SaveAs(path);
                     department.HODPhoto = fileName;
                 }
@@ -100,7 +100,7 @@ namespace HitecCM.Controllers
                     if (banner_file != null && banner_file.ContentLength > 0)
                     {
                         var fileName = Path.GetFileName(banner_file.FileName);
-                        var path = Path.Combine(Server.MapPath("~/Content/images/departments/"), fileName);
+                        var path = Path.Combine(Server.MapPath("~/Content/img/departments/"), fileName);
                         banner_file.SaveAs(path);
                         department.Banner = fileName;
                     }
@@ -114,7 +114,7 @@ namespace HitecCM.Controllers
                     if (hod_photo_file != null && hod_photo_file.ContentLength > 0)
                     {
                         var fileName = Path.GetFileName(hod_photo_file.FileName);
-                        var path = Path.Combine(Server.MapPath("~/Content/images/departments/"), fileName);
+                        var path = Path.Combine(Server.MapPath("~/Content/img/departments/"), fileName);
                         hod_photo_file.SaveAs(path);
                         department.HODPhoto = fileName;
                     }

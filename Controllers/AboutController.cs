@@ -51,7 +51,7 @@ namespace HitecCM.Controllers
                     if (chairman_image_file != null && chairman_image_file.ContentLength > 0)
                     {
                         var fileName = Path.GetFileName(chairman_image_file.FileName);
-                        var path = Path.Combine(Server.MapPath("~/Content/images/about/"), fileName);
+                        var path = Path.Combine(Server.MapPath("~/Content/img/about/"), fileName);
                         chairman_image_file.SaveAs(path);
                         about.chairman_image = fileName;
                     }
@@ -59,7 +59,7 @@ namespace HitecCM.Controllers
                     if (vc_image_file != null && vc_image_file.ContentLength > 0)
                     {
                         var fileName = Path.GetFileName(vc_image_file.FileName);
-                        var path = Path.Combine(Server.MapPath("~/Content/images/about/"), fileName);
+                        var path = Path.Combine(Server.MapPath("~/Content/img/about/"), fileName);
                         vc_image_file.SaveAs(path);
                         about.vc_image = fileName;
                     }
