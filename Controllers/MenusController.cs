@@ -5,12 +5,15 @@ using System.Net;
 using System.Web.Mvc;
 using HitecCM.Models;
 using System.Collections.Generic;
+using System.IO;
+using System.Web;
 
 namespace HitecCM.Controllers
 {
     public class MenusController : Controller
     {
         private Model1 db = new Model1();
+        private const string IconDirectory = "~/Content/img/menuicon/";
 
         // GET: Menus
         public ActionResult Index()
@@ -62,10 +65,32 @@ namespace HitecCM.Controllers
         // POST: Menus/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MenuName,MenuLink,SortingOrder,ParentMenuID,MenuTypeID")] tblMenus menu)
+        public ActionResult Create([Bind(Include = "MenuName,MenuLink,SortingOrder,ParentMenuID,MenuTypeID")] tblMenus menu, HttpPostedFileBase svgIconFile)
         {
             if (ModelState.IsValid)
             {
+                // Handle SVG icon upload if provided
+                if (svgIconFile != null && svgIconFile.ContentLength > 0)
+                {
+                    if (Path.GetExtension(svgIconFile.FileName).ToLower() == ".svg")
+                    {
+                        string fileName = Path.GetFileName(svgIconFile.FileName);
+                        string filePath = Server.MapPath(IconDirectory + fileName);
+                        
+                        // Save the file to the menuicon directory
+                        svgIconFile.SaveAs(filePath);
+                        
+                        // Store the filename in the SvgIcon property
+                        menu.SvgIcon = fileName;
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("svgIconFile", "Only SVG files are allowed.");
+                        PopulateDropdowns(menu);
+                        return View(menu);
+                    }
+                }
+
                 db.tblMenus.Add(menu);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -103,10 +128,32 @@ namespace HitecCM.Controllers
         // POST: Menus/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "MenuID,MenuName,MenuLink,SortingOrder,ParentMenuID,MenuTypeID")] tblMenus menu)
+        public ActionResult Edit([Bind(Include = "MenuID,MenuName,MenuLink,SortingOrder,ParentMenuID,MenuTypeID,SvgIcon")] tblMenus menu, HttpPostedFileBase svgIconFile)
         {
             if (ModelState.IsValid)
             {
+                // Handle SVG icon upload if provided
+                if (svgIconFile != null && svgIconFile.ContentLength > 0)
+                {
+                    if (Path.GetExtension(svgIconFile.FileName).ToLower() == ".svg")
+                    {
+                        string fileName = Path.GetFileName(svgIconFile.FileName);
+                        string filePath = Server.MapPath(IconDirectory + fileName);
+                        
+                        // Save the file to the menuicon directory
+                        svgIconFile.SaveAs(filePath);
+                        
+                        // Store the filename in the SvgIcon property
+                        menu.SvgIcon = fileName;
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("svgIconFile", "Only SVG files are allowed.");
+                        PopulateDropdowns(menu);
+                        return View(menu);
+                    }
+                }
+
                 db.Entry(menu).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -149,6 +196,23 @@ namespace HitecCM.Controllers
             if (childMenus.Any())
             {
                 return Json(new { success = false, message = "Cannot delete menu because it has child menus. Please delete child menus first." });
+            }
+
+            // Delete associated SVG icon file if it exists
+            if (!string.IsNullOrEmpty(menu.SvgIcon))
+            {
+                string filePath = Server.MapPath(IconDirectory + menu.SvgIcon);
+                if (System.IO.File.Exists(filePath))
+                {
+                    try
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log the exception but continue with deletion of menu record
+                    }
+                }
             }
 
             db.tblMenus.Remove(menu);
@@ -238,4 +302,4 @@ namespace HitecCM.Controllers
             base.Dispose(disposing);
         }
     }
-} 
+}
