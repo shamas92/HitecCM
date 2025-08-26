@@ -1,0 +1,125 @@
+@model HitecCM.Models.tblEvent
+@{
+    ViewBag.Title = "Delete Event";
+    var deptTitle = Model.DepartmentID.HasValue ? ViewBag.DepartmentTitle : null;
+}
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Delete Event</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Are you sure you want to delete this event?</p>
+                    </div>
+                </div>
+                <div class="nk-block-head-content">
+                    <div class="toggle-wrap nk-block-tools-toggle">
+                        <a href="@Url.Action("Index")" class="btn btn-outline-light">
+                            <em class="icon ni ni-arrow-left"></em>
+                            <span>Back to List</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nk-block">
+            <div class="card card-bordered">
+                <div class="card-inner">
+                    <div class="row g-5">
+                        <div class="col-lg-6">
+                            <div class="profile-ud-list">
+                                <div class="profile-ud-item">
+                                    <div class="profile-ud-label">Event ID</div>
+                                    <div class="profile-ud-value">@Model.EventID</div>
+                                </div>
+                                <div class="profile-ud-item">
+                                    <div class="profile-ud-label">Title</div>
+                                    <div class="profile-ud-value">@Model.Title</div>
+                                </div>
+                                <div class="profile-ud-item">
+                                    <div class="profile-ud-label">Event Date</div>
+                                    <div class="profile-ud-value">@Model.EventDate?.ToString("dd-MMM-yyyy")</div>
+                                </div>
+                                <div class="profile-ud-item">
+                                    <div class="profile-ud-label">Created Date</div>
+                                    <div class="profile-ud-value">@Model.Date.ToString("dd-MMM-yyyy")</div>
+                                </div>
+                                <div class="profile-ud-item">
+                                    <div class="profile-ud-label">Venue</div>
+                                    <div class="profile-ud-value">@Model.Venue</div>
+                                </div>
+                                <div class="profile-ud-item">
+                                    <div class="profile-ud-label">Event Head</div>
+                                    <div class="profile-ud-value">@(Model.tblEventHead?.Title ?? "-")</div>
+                                </div>
+                                <div class="profile-ud-item">
+                                    <div class="profile-ud-label">Department</div>
+                                    <div class="profile-ud-value">
+                                        @(ViewBag.DepartmentTitle ?? "-")
+                                    </div>
+                                </div>
+                                <div class="profile-ud-item">
+                                    <div class="profile-ud-label">Status</div>
+                                    <div class="profile-ud-value">
+                                        @if (Model.Active == true)
+                                        {
+                                            <span class="badge badge-dim bg-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-dim bg-danger">Inactive</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            @if (!string.IsNullOrEmpty(Model.Banner))
+                            {
+                                <div class="profile-ud-item">
+                                    <div class="profile-ud-label">Banner Image</div>
+                                    <div class="profile-ud-value">
+                                        <img src="@Url.Content("~/Content/img/events/" + Model.Banner)" alt="@Model.Title" class="img-fluid rounded" style="max-height: 200px;" />
+                                        <div class="mt-1 text-muted">@Model.Banner</div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="profile-ud-item">
+                                <div class="profile-ud-label">Details</div>
+                                <div class="profile-ud-value">
+                                    <div class="text-wrap">
+                                        @Html.Raw(Model.Details)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            @using (Html.BeginForm())
+                            {
+                                @Html.AntiForgeryToken()
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-danger">
+                                        <em class="icon ni ni-trash"></em>
+                                        <span>Delete</span>
+                                    </button>
+                                    <a href="@Url.Action("Index")" class="btn btn-secondary">
+                                        <em class="icon ni ni-cross"></em>
+                                        <span>Cancel</span>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
