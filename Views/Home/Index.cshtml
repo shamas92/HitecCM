@@ -1,277 +1,958 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "HITEC CM Dashboard";
+    // Safely extract QuickStats dynamic values to avoid RuntimeBinderException when properties are missing
+    int qsTotalAcademicPrograms = 0, qsTotalContent = 0, qsTotalQAPolicies = 0, qsTotalStudentServices = 0;
+    var quickStats = ViewBag.QuickStats;
+    if (quickStats != null)
+    {
+        Func<string, int> getInt = name => {
+            try
+            {
+                var prop = quickStats.GetType().GetProperty(name);
+                if (prop != null)
+                {
+                    var val = prop.GetValue(quickStats, null);
+                    if (val != null)
+                    {
+                        int parsed;
+                        if (int.TryParse(val.ToString(), out parsed)) return parsed;
+                    }
+                }
+            }
+            catch { }
+            return 0;
+        };
+        qsTotalAcademicPrograms = getInt("TotalAcademicPrograms");
+        qsTotalContent = getInt("TotalContent");
+        qsTotalQAPolicies = getInt("TotalQAPolicies");
+        qsTotalStudentServices = getInt("TotalStudentServices");
+    }
+
+    // Helper utilities for safely reading anonymous/dynamic objects (avoids RuntimeBinderException)
+    Func<object, string, string> dynStr = (obj, prop) => {
+        try
+        {
+            if (obj == null) return string.Empty;
+            var p = obj.GetType().GetProperty(prop);
+            if (p == null) return string.Empty;
+            var v = p.GetValue(obj, null);
+            return v == null ? string.Empty : v.ToString();
+        }
+        catch { return string.Empty; }
+    };
+    Func<object, string, int?> dynInt = (obj, prop) => {
+        try
+        {
+            var s = dynStr(obj, prop);
+            if (string.IsNullOrWhiteSpace(s)) return null;
+            int val; if (int.TryParse(s, out val)) return val; return null;
+        }
+        catch { return null; }
+    };
+    Func<object, string, DateTime?> dynDate = (obj, prop) => {
+        try
+        {
+            if (obj == null) return null;
+            var p = obj.GetType().GetProperty(prop);
+            if (p == null) return null;
+            var v = p.GetValue(obj, null);
+            if (v == null) return null;
+            if (v is DateTime) return (DateTime)v;
+            DateTime dt; if (DateTime.TryParse(v.ToString(), out dt)) return dt; return null;
+        }
+        catch { return null; }
+    };
 }
-<div class="container-fluid">
-    <div class="nk-content-inner">
-        <div class="nk-content-body">
-            <div class="nk-block-head nk-block-head-sm">
-                <div class="nk-block-between g-3">
-                    <div class="nk-block-head-content">
-                        <h3 class="nk-block-title page-title">Users / <strong class="text-primary small">Abu Bin Ishtiyak</strong></h3>
-                        <div class="nk-block-des text-soft">
-                            <ul class="list-inline">
-                                <li>User ID: <span class="text-base">UD003054</span></li>
-                                <li>Last Login: <span class="text-base">15 Feb, 2019 01:02 PM</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="nk-block-head-content">
-                        <a href="html/user-list-regular.html" class="btn btn-outline-light bg-white d-none d-sm-inline-flex"><em class="icon ni ni-arrow-left"></em><span>Back</span></a>
-                        <a href="html/user-list-regular.html" class="btn btn-icon btn-outline-light bg-white d-inline-flex d-sm-none"><em class="icon ni ni-arrow-left"></em></a>
+
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <!-- Dashboard Header -->
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between g-3">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">
+                        <span class="real-time-indicator"></span>
+                        HITEC Content Management <strong class="text-primary">Dashboard</strong>
+                    </h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Welcome to your comprehensive content management dashboard. Monitor key metrics, track performance, and manage university content effectively.</p>
+                        @if (ViewBag.ErrorMessage != null) {
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <strong>Data Loading Notice:</strong> @ViewBag.ErrorMessage
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
+                        <ul class="nk-block-tools g-2 flex-wrap">
+                            <li class="badge badge-dim badge-pill bg-outline-success">
+                                <em class="icon ni ni-clock"></em>
+                                <span>Last updated: @DateTime.Now.ToString("MMM dd, HH:mm")</span>
+                            </li>
+                            <li class="badge badge-dim badge-pill bg-outline-info">
+                                <em class="icon ni ni-growth"></em>
+                                <span>@(ViewBag.ActiveEvents ?? 0) Active Events</span>
+                            </li>
+                            <li class="badge badge-dim badge-pill bg-outline-warning">
+                                <em class="icon ni ni-users"></em>
+                                <span>@(ViewBag.TotalFaculties ?? 0) Faculty Members</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            </div><!-- .nk-block-head -->
-            <div class="nk-block">
-                <div class="card card-bordered">
-                    <div class="card-aside-wrap">
-                        <div class="card-content">
-                            <ul class="nav nav-tabs nav-tabs-mb-icon nav-tabs-card">
-                                <li class="nav-item">
-                                    <a class="nav-link active" href="#"><em class="icon ni ni-user-circle"></em><span>Personal</span></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><em class="icon ni ni-repeat"></em><span>Transactions</span></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><em class="icon ni ni-file-text"></em><span>Documents</span></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><em class="icon ni ni-bell"></em><span>Notifications</span></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#"><em class="icon ni ni-activity"></em><span>Activities</span></a>
-                                </li>
-                                <li class="nav-item nav-item-trigger d-xxl-none">
-                                    <a href="#" class="toggle btn btn-icon btn-trigger" data-target="userAside"><em class="icon ni ni-user-list-fill"></em></a>
-                                </li>
-                            </ul><!-- .nav-tabs -->
-                            <div class="card-inner">
-                                <div class="nk-block">
-                                    <div class="nk-block-head">
-                                        <h5 class="title">Personal Information</h5>
-                                        <p>Basic info, like your name and address, that you use on Nio Platform.</p>
-                                    </div><!-- .nk-block-head -->
-                                    <div class="profile-ud-list">
-                                        <div class="profile-ud-item">
-                                            <div class="profile-ud wider">
-                                                <span class="profile-ud-label">Title</span>
-                                                <span class="profile-ud-value">Mr.</span>
-                                            </div>
+                <div class="nk-block-head-content">
+                    <ul class="nk-block-tools g-3">
+                        <li>
+                            <div class="drodown">
+                                <a href="#" class="dropdown-toggle btn btn-icon btn-primary" data-toggle="dropdown">
+                                    <em class="icon ni ni-plus"></em>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <ul class="link-list-opt no-bdr">
+                                        <li><a href="@Url.Action("Create", "Events")"><em class="icon ni ni-calendar"></em><span>Add Event</span></a></li>
+                                        <li><a href="#"><em class="icon ni ni-news"></em><span>Add News</span></a></li>
+                                        <li><a href="@Url.Action("Create", "Menus")"><em class="icon ni ni-menu"></em><span>Add Menu</span></a></li>
+                                        <li><a href="@Url.Action("Index", "Facilities")"><em class="icon ni ni-building"></em><span>Manage Facilities</span></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#" class="btn btn-outline-light" onclick="location.reload();">
+                                <em class="icon ni ni-reload"></em>
+                                <span>Refresh</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Performance Indicators -->
+        <div class="nk-block">
+            <div class="row g-gs">
+                <div class="col-lg-3 col-sm-6">
+                    <div class="card card-bordered metric-card card-fade-in">
+                        <div class="card-inner">
+                            <div class="card-title-group align-start mb-2">
+                                <div class="card-title">
+                                    <h6 class="title">Active Events</h6>
+                                </div>
+                                <div class="card-tools">
+                                    <em class="card-hint icon ni ni-help-fill" data-toggle="tooltip" data-placement="left" title="Currently active events"></em>
+                                </div>
+                            </div>
+                            <div class="card-amount">
+                                <span class="amount count-animation" data-target="@(ViewBag.ActiveEvents ?? 0)">0</span>
+                                <span class="change up text-success">
+                                    <em class="icon ni ni-arrow-long-up"></em>
+                                    @{
+                                        var eventsGrowth = "0";
+                                        try {
+                                            if (ViewBag.GrowthMetrics != null) {
+                                                var growthMetrics = ViewBag.GrowthMetrics;
+                                                var thisMonth = growthMetrics.EventsThisMonth ?? 0;
+                                                var lastMonth = growthMetrics.EventsLastMonth ?? 0;
+                                                if (thisMonth > 0) {
+                                                    eventsGrowth = ((thisMonth - lastMonth) * 100.0 / thisMonth).ToString("F1");
+                                                }
+                                            }
+                                        } catch {
+                                            eventsGrowth = "0";
+                                        }
+                                    }
+                                    @eventsGrowth%
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="card card-bordered metric-card card-fade-in">
+                        <div class="card-inner">
+                            <div class="card-title-group align-start mb-2">
+                                <div class="card-title">
+                                    <h6 class="title">Total Departments</h6>
+                                </div>
+                                <div class="card-tools">
+                                    <em class="card-hint icon ni ni-help-fill" data-toggle="tooltip" data-placement="left" title="University departments"></em>
+                                </div>
+                            </div>
+                            <div class="card-amount">
+                                <span class="amount count-animation" data-target="@(ViewBag.TotalDepartments ?? 0)">0</span>
+                                <span class="change neutral text-soft">
+                                    <em class="icon ni ni-building"></em>
+                                    Active
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="card card-bordered metric-card card-fade-in">
+                        <div class="card-inner">
+                            <div class="card-title-group align-start mb-2">
+                                <div class="card-title">
+                                    <h6 class="title">Faculty Members</h6>
+                                </div>
+                                <div class="card-tools">
+                                    <em class="card-hint icon ni ni-help-fill" data-toggle="tooltip" data-placement="left" title="Total faculty members"></em>
+                                </div>
+                            </div>
+                            <div class="card-amount">
+                                <span class="amount count-animation" data-target="@(ViewBag.TotalFaculties ?? 0)">0</span>
+                                <span class="change neutral text-soft">
+                                    <em class="icon ni ni-users"></em>
+                                    Teaching
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="card card-bordered metric-card card-fade-in">
+                        <div class="card-inner">
+                            <div class="card-title-group align-start mb-2">
+                                <div class="card-title">
+                                    <h6 class="title">Academic Programs</h6>
+                                </div>
+                                <div class="card-tools">
+                                    <em class="card-hint icon ni ni-help-fill" data-toggle="tooltip" data-placement="left" title="Total academic programs"></em>
+                                </div>
+                            </div>
+                            <div class="card-amount">
+                                <span class="amount count-animation" data-target="@(qsTotalAcademicPrograms)">0</span>
+                                <span class="change neutral text-soft">
+                                    <em class="icon ni ni-book"></em>
+                                    Programs
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts and Analytics Row -->
+        <div class="nk-block">
+            <div class="row g-gs">
+                <!-- Monthly Activity Chart -->
+                <div class="col-xxl-6 col-md-6">
+                    <div class="card card-bordered card-full">
+                        <div class="card-inner">
+                            <div class="card-title-group align-start mb-3">
+                                <div class="card-title">
+                                    <h6 class="title">Monthly Activity Trends</h6>
+                                    <p>Events and news publication trends over the year</p>
+                                </div>
+                                <div class="card-tools">
+                                    <em class="card-hint icon ni ni-help-fill" data-toggle="tooltip" data-placement="left" title="Monthly activity comparison"></em>
+                                </div>
+                            </div>
+                            <div class="nk-order-ovv">
+                                <div class="row g-4 align-end">
+                                    <div class="col-xxl-12">
+                                        <div class="nk-order-ovv-ck">
+                                            <canvas class="line-chart-s1" id="monthlyActivityChart"></canvas>
                                         </div>
-                                        <div class="profile-ud-item">
-                                            <div class="profile-ud wider">
-                                                <span class="profile-ud-label">Full Name</span>
-                                                <span class="profile-ud-value">Abu Bin Ishtiyak</span>
-                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Department Performance Chart -->
+                <div class="col-xxl-6 col-md-6">
+                    <div class="card card-bordered card-full">
+                        <div class="card-inner">
+                            <div class="card-title-group align-start mb-3">
+                                <div class="card-title">
+                                    <h6 class="title">Department Performance</h6>
+                                    <p>Events and faculty distribution by department</p>
+                                </div>
+                                <div class="card-tools">
+                                    <em class="card-hint icon ni ni-help-fill" data-toggle="tooltip" data-placement="left" title="Department activity metrics"></em>
+                                </div>
+                            </div>
+                            <div class="nk-order-ovv">
+                                <canvas class="bar-chart-s1" id="departmentChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Management Stats -->
+        <div class="nk-block">
+            <div class="row g-gs">
+                <div class="col-md-3 col-sm-6">
+                    <div class="card">
+                        <div class="card-inner">
+                            <div class="card-title-group align-start mb-2">
+                                <div class="card-title">
+                                    <h6 class="title">Content Items</h6>
+                                </div>
+                                <div class="card-tools">
+                                    <em class="icon ni ni-growth text-primary"></em>
+                                </div>
+                            </div>
+                            <div class="align-end flex-sm-wrap g-4 flex-md-nowrap">
+                                <div class="nk-sale-data">
+                                    <span class="amount count-animation" data-target="@(qsTotalContent)">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card">
+                        <div class="card-inner">
+                            <div class="card-title-group align-start mb-2">
+                                <div class="card-title">
+                                    <h6 class="title">QA & Policies</h6>
+                                </div>
+                                <div class="card-tools">
+                                    <em class="icon ni ni-shield-star text-success"></em>
+                                </div>
+                            </div>
+                            <div class="align-end flex-sm-wrap g-4 flex-md-nowrap">
+                                <div class="nk-sale-data">
+                                    <span class="amount count-animation" data-target="@(qsTotalQAPolicies)">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card">
+                        <div class="card-inner">
+                            <div class="card-title-group align-start mb-2">
+                                <div class="card-title">
+                                    <h6 class="title">Student Services</h6>
+                                </div>
+                                <div class="card-tools">
+                                    <em class="icon ni ni-home text-info"></em>
+                                </div>
+                            </div>
+                            <div class="align-end flex-sm-wrap g-4 flex-md-nowrap">
+                                <div class="nk-sale-data">
+                                    <span class="amount count-animation" data-target="@(qsTotalStudentServices)">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card">
+                        <div class="card-inner">
+                            <div class="card-title-group align-start mb-2">
+                                <div class="card-title">
+                                    <h6 class="title">Total Facilities</h6>
+                                </div>
+                                <div class="card-tools">
+                                    <em class="icon ni ni-building text-warning"></em>
+                                </div>
+                            </div>
+                            <div class="align-end flex-sm-wrap g-4 flex-md-nowrap">
+                                <div class="nk-sale-data">
+                                    <span class="amount count-animation" data-target="@(ViewBag.TotalFacilities ?? 0)">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities and Upcoming Events -->
+        <div class="nk-block">
+            <div class="row g-gs">
+                <!-- Recent Events -->
+                <div class="col-xxl-6">
+                    <div class="card card-bordered card-full">
+                        <div class="card-inner">
+                            <div class="card-title-group">
+                                <div class="card-title">
+                                    <h6 class="title">Recent Events</h6>
+                                </div>
+                                <div class="card-tools">
+                                    <a href="@Url.Action("Index", "Events")" class="link">View All</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nk-tb-list">
+                            <div class="nk-tb-item nk-tb-head">
+                                <div class="nk-tb-col"><span>Event</span></div>
+                                <div class="nk-tb-col tb-col-sm"><span>Date</span></div>
+                                <div class="nk-tb-col tb-col-sm"><span>Views</span></div>
+                            </div>
+                            @{
+                                var recentEvents = ViewBag.RecentEvents as IEnumerable<object> ?? Enumerable.Empty<object>();
+                                foreach (var eventItem in recentEvents)
+                                {
+                                    var eTitle = dynStr(eventItem, "Title");
+                                    var eVenue = dynStr(eventItem, "Venue");
+                                    var eViews = dynInt(eventItem, "Views") ?? 0;
+                                    var eDate = dynDate(eventItem, "EventDate");
+                            <div class="nk-tb-item">
+                                <div class="nk-tb-col">
+                                    <div class="user-card">
+                                        <div class="user-avatar xs bg-primary-dim">
+                                            <em class="icon ni ni-calendar"></em>
                                         </div>
-                                        <div class="profile-ud-item">
-                                            <div class="profile-ud wider">
-                                                <span class="profile-ud-label">Date of Birth</span>
-                                                <span class="profile-ud-value">10 Aug, 1980</span>
-                                            </div>
+                                        <div class="user-name">
+                                            <span class="tb-lead">@eTitle</span>
+                                            <span class="tb-sub">@eVenue</span>
                                         </div>
-                                        <div class="profile-ud-item">
-                                            <div class="profile-ud wider">
-                                                <span class="profile-ud-label">Surname</span>
-                                                <span class="profile-ud-value">IO</span>
-                                            </div>
+                                    </div>
+                                </div>
+                                <div class="nk-tb-col tb-col-sm">
+                                    <span class="tb-sub text-primary">@(eDate.HasValue ? eDate.Value.ToString("MMM dd") : "")</span>
+                                </div>
+                                <div class="nk-tb-col tb-col-sm">
+                                    <span class="tb-lead">@eViews</span>
+                                </div>
+                            </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Events -->
+                <div class="col-xxl-6">
+                    <div class="card card-bordered card-full">
+                        <div class="card-inner">
+                            <div class="card-title-group">
+                                <div class="card-title">
+                                    <h6 class="title">Upcoming Events</h6>
+                                </div>
+                                <div class="card-tools">
+                                    <a href="@Url.Action("Create", "Events")" class="link">Add Event</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nk-tb-list">
+                            <div class="nk-tb-item nk-tb-head">
+                                <div class="nk-tb-col"><span>Event</span></div>
+                                <div class="nk-tb-col tb-col-sm"><span>Date</span></div>
+                                <div class="nk-tb-col tb-col-sm"><span>Venue</span></div>
+                            </div>
+                            @{
+                                var upcomingEvents = ViewBag.UpcomingEvents as IEnumerable<object> ?? Enumerable.Empty<object>();
+                                foreach (var eventItem in upcomingEvents)
+                                {
+                                    var uTitle = dynStr(eventItem, "Title");
+                                    var uVenue = dynStr(eventItem, "Venue");
+                                    var uDate = dynDate(eventItem, "EventDate");
+                            <div class="nk-tb-item">
+                                <div class="nk-tb-col">
+                                    <div class="user-card">
+                                        <div class="user-avatar xs bg-success-dim">
+                                            <em class="icon ni ni-calendar-check"></em>
                                         </div>
-                                        <div class="profile-ud-item">
-                                            <div class="profile-ud wider">
-                                                <span class="profile-ud-label">Mobile Number</span>
-                                                <span class="profile-ud-value">01713040400</span>
-                                            </div>
+                                        <div class="user-name">
+                                            <span class="tb-lead">@uTitle</span>
                                         </div>
-                                        <div class="profile-ud-item">
-                                            <div class="profile-ud wider">
-                                                <span class="profile-ud-label">Email Address</span>
-                                                <span class="profile-ud-value">info@softnio.com</span>
-                                            </div>
+                                    </div>
+                                </div>
+                                <div class="nk-tb-col tb-col-sm">
+                                    <span class="tb-sub text-success">@(uDate.HasValue ? uDate.Value.ToString("MMM dd") : "")</span>
+                                </div>
+                                <div class="nk-tb-col tb-col-sm">
+                                    <span class="tb-lead">@uVenue</span>
+                                </div>
+                            </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department Activity Overview -->
+        <div class="nk-block">
+            <div class="card card-bordered">
+                <div class="card-inner">
+                    <div class="card-title-group">
+                        <div class="card-title">
+                            <h6 class="title">Department Activity Overview</h6>
+                            <p>Current activity levels and performance metrics by department</p>
+                        </div>
+                        <div class="card-tools">
+                            <a href="#" class="link">View Departments</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="nk-tb-list">
+                    <div class="nk-tb-item nk-tb-head">
+                        <div class="nk-tb-col"><span>Department</span></div>
+                        <div class="nk-tb-col tb-col-sm"><span>Faculty</span></div>
+                        <div class="nk-tb-col tb-col-sm"><span>Programs</span></div>
+                        <div class="nk-tb-col tb-col-sm"><span>Events</span></div>
+                        <div class="nk-tb-col tb-col-sm"><span>Activity Level</span></div>
+                    </div>
+                    @{
+                        var deptActivity = ViewBag.DepartmentActivity as IEnumerable<object> ?? Enumerable.Empty<object>();
+                        foreach (var dept in deptActivity)
+                        {
+                            var dTitle = dynStr(dept, "Title");
+                            var dCode = dynStr(dept, "Code");
+                            var dFaculty = dynInt(dept, "TotalFaculty") ?? 0;
+                            var dPrograms = dynInt(dept, "TotalPrograms") ?? 0;
+                            var dRecent = dynInt(dept, "RecentActivity") ?? 0;
+                            var activityLevel = dRecent + dFaculty;
+                    <div class="nk-tb-item">
+                        <div class="nk-tb-col">
+                            <div class="user-card">
+                                <div class="user-avatar sq bg-purple-dim">
+                                    <span>@(string.IsNullOrEmpty(dCode) ? "--" : dCode.Substring(0, Math.Min(2, dCode.Length)))</span>
+                                </div>
+                                <div class="user-name">
+                                    <span class="tb-lead">@dTitle</span>
+                                    <span class="tb-sub">@dCode</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nk-tb-col tb-col-sm">
+                            <span class="tb-lead">@dFaculty</span>
+                            <span class="tb-sub">members</span>
+                        </div>
+                        <div class="nk-tb-col tb-col-sm">
+                            <span class="tb-lead">@dPrograms</span>
+                            <span class="tb-sub">programs</span>
+                        </div>
+                        <div class="nk-tb-col tb-col-sm">
+                            <span class="tb-lead">@dRecent</span>
+                            <span class="tb-sub">recent</span>
+                        </div>
+                        <div class="nk-tb-col tb-col-sm">
+                            <span class="badge badge-sm @(activityLevel > 5 ? "badge-success" : activityLevel > 2 ? "badge-warning" : "badge-gray")">@(activityLevel > 5 ? "High" : activityLevel > 2 ? "Medium" : "Low")</span>
+                        </div>
+                    </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Content -->
+        <div class="nk-block">
+            <div class="row g-gs">
+                <div class="col-xxl-6">
+                    <div class="card card-bordered card-full">
+                        <div class="card-inner">
+                            <div class="card-title-group">
+                                <div class="card-title">
+                                    <h6 class="title">Most Popular Events</h6>
+                                    <p>Events with highest view counts</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nk-tb-list">
+                            @{
+                                var popularEvents = ViewBag.PopularEvents as IEnumerable<object> ?? Enumerable.Empty<object>();
+                                foreach (var pe in popularEvents)
+                                {
+                                    var pTitle = dynStr(pe, "Title");
+                                    var pViews = dynInt(pe, "Views") ?? 0;
+                            <div class="nk-tb-item">
+                                <div class="nk-tb-col">
+                                    <div class="user-card">
+                                        <div class="user-avatar xs bg-warning-dim">
+                                            <em class="icon ni ni-eye"></em>
                                         </div>
-                                    </div><!-- .profile-ud-list -->
-                                </div><!-- .nk-block -->
-                                <div class="nk-block">
-                                    <div class="nk-block-head nk-block-head-line">
-                                        <h6 class="title overline-title text-base">Additional Information</h6>
-                                    </div><!-- .nk-block-head -->
-                                    <div class="profile-ud-list">
-                                        <div class="profile-ud-item">
-                                            <div class="profile-ud wider">
-                                                <span class="profile-ud-label">Joining Date</span>
-                                                <span class="profile-ud-value">08-16-2018 09:04PM</span>
-                                            </div>
+                                        <div class="user-name">
+                                            <span class="tb-lead">@pTitle</span>
+                                            <span class="tb-sub text-success">@pViews views</span>
                                         </div>
-                                        <div class="profile-ud-item">
-                                            <div class="profile-ud wider">
-                                                <span class="profile-ud-label">Reg Method</span>
-                                                <span class="profile-ud-value">Email</span>
-                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xxl-6">
+                    <div class="card card-bordered card-full">
+                        <div class="card-inner">
+                            <div class="card-title-group">
+                                <div class="card-title">
+                                    <h6 class="title">Recent News</h6>
+                                    <p>Latest news and announcements</p>
+                                </div>
+                                <div class="card-tools">
+                                    <a href="#" class="link">View All</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nk-tb-list">
+                            @{
+                                var recentNews = ViewBag.RecentNews as IEnumerable<object> ?? Enumerable.Empty<object>();
+                                foreach (var n in recentNews)
+                                {
+                                    var nTitle = dynStr(n, "Title");
+                                    var nViews = dynInt(n, "Views") ?? 0;
+                                    var nDate = dynDate(n, "Date");
+                            <div class="nk-tb-item">
+                                <div class="nk-tb-col">
+                                    <div class="user-card">
+                                        <div class="user-avatar xs bg-info-dim">
+                                            <em class="icon ni ni-news"></em>
                                         </div>
-                                        <div class="profile-ud-item">
-                                            <div class="profile-ud wider">
-                                                <span class="profile-ud-label">Country</span>
-                                                <span class="profile-ud-value">United State</span>
-                                            </div>
+                                        <div class="user-name">
+                                            <span class="tb-lead">@nTitle</span>
+                                            <span class="tb-sub">@(nDate.HasValue ? nDate.Value.ToString("MMM dd, yyyy") : "") • @nViews views</span>
                                         </div>
-                                        <div class="profile-ud-item">
-                                            <div class="profile-ud wider">
-                                                <span class="profile-ud-label">Nationality</span>
-                                                <span class="profile-ud-value">United State</span>
-                                            </div>
-                                        </div>
-                                    </div><!-- .profile-ud-list -->
-                                </div><!-- .nk-block -->
-                                <div class="nk-divider divider md"></div>
-                                <div class="nk-block">
-                                    <div class="nk-block-head nk-block-head-sm nk-block-between">
-                                        <h5 class="title">Admin Note</h5>
-                                        <a href="#" class="link link-sm">+ Add Note</a>
-                                    </div><!-- .nk-block-head -->
-                                    <div class="bq-note">
-                                        <div class="bq-note-item">
-                                            <div class="bq-note-text">
-                                                <p>Aproin at metus et dolor tincidunt feugiat eu id quam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean sollicitudin non nunc vel pharetra. </p>
-                                            </div>
-                                            <div class="bq-note-meta">
-                                                <span class="bq-note-added">Added on <span class="date">November 18, 2019</span> at <span class="time">5:34 PM</span></span>
-                                                <span class="bq-note-sep sep">|</span>
-                                                <span class="bq-note-by">By <span>Softnio</span></span>
-                                                <a href="#" class="link link-sm link-danger">Delete Note</a>
-                                            </div>
-                                        </div><!-- .bq-note-item -->
-                                        <div class="bq-note-item">
-                                            <div class="bq-note-text">
-                                                <p>Aproin at metus et dolor tincidunt feugiat eu id quam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean sollicitudin non nunc vel pharetra. </p>
-                                            </div>
-                                            <div class="bq-note-meta">
-                                                <span class="bq-note-added">Added on <span class="date">November 18, 2019</span> at <span class="time">5:34 PM</span></span>
-                                                <span class="bq-note-sep sep">|</span>
-                                                <span class="bq-note-by">By <span>Softnio</span></span>
-                                                <a href="#" class="link link-sm link-danger">Delete Note</a>
-                                            </div>
-                                        </div><!-- .bq-note-item -->
-                                    </div><!-- .bq-note -->
-                                </div><!-- .nk-block -->
-                            </div><!-- .card-inner -->
-                        </div><!-- .card-content -->
-                        <div class="card-aside card-aside-right user-aside toggle-slide toggle-slide-right toggle-break-xxl toggle-screen-xxl" data-content="userAside" data-toggle-screen="xxl" data-toggle-overlay="true" data-toggle-body="true">
-                            <div class="card-inner-group" data-simplebar="init">
-                                <div class="simplebar-wrapper" style="margin: 0px;">
-                                    <div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask">
-                                        <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
-                                            <div class="simplebar-content-wrapper" style="height: auto; overflow: hidden scroll;">
-                                                <div class="simplebar-content" style="padding: 0px;">
-                                                    <div class="card-inner">
-                                                        <div class="user-card user-card-s2">
-                                                            <div class="user-avatar lg bg-primary">
-                                                                <span>AB</span>
-                                                            </div>
-                                                            <div class="user-info">
-                                                                <div class="badge badge-outline-light badge-pill ucap">Investor</div>
-                                                                <h5>Abu Bin Ishtiyak</h5>
-                                                                <span class="sub-text">info@softnio.com</span>
-                                                            </div>
-                                                        </div>
-                                                    </div><!-- .card-inner -->
-                                                    <div class="card-inner card-inner-sm">
-                                                        <ul class="btn-toolbar justify-center gx-1">
-                                                            <li><a href="#" class="btn btn-trigger btn-icon"><em class="icon ni ni-shield-off"></em></a></li>
-                                                            <li><a href="#" class="btn btn-trigger btn-icon"><em class="icon ni ni-mail"></em></a></li>
-                                                            <li><a href="#" class="btn btn-trigger btn-icon"><em class="icon ni ni-download-cloud"></em></a></li>
-                                                            <li><a href="#" class="btn btn-trigger btn-icon"><em class="icon ni ni-bookmark"></em></a></li>
-                                                            <li><a href="#" class="btn btn-trigger btn-icon text-danger"><em class="icon ni ni-na"></em></a></li>
-                                                        </ul>
-                                                    </div><!-- .card-inner -->
-                                                    <div class="card-inner">
-                                                        <div class="overline-title-alt mb-2">In Account</div>
-                                                        <div class="profile-balance">
-                                                            <div class="profile-balance-group gx-4">
-                                                                <div class="profile-balance-sub">
-                                                                    <div class="profile-balance-amount">
-                                                                        <div class="number">2,500.00 <small class="currency currency-usd">USD</small></div>
-                                                                    </div>
-                                                                    <div class="profile-balance-subtitle">Invested Amount</div>
-                                                                </div>
-                                                                <div class="profile-balance-sub">
-                                                                    <span class="profile-balance-plus text-soft"><em class="icon ni ni-plus"></em></span>
-                                                                    <div class="profile-balance-amount">
-                                                                        <div class="number">1,643.76</div>
-                                                                    </div>
-                                                                    <div class="profile-balance-subtitle">Profit Earned</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div><!-- .card-inner -->
-                                                    <div class="card-inner">
-                                                        <div class="row text-center">
-                                                            <div class="col-4">
-                                                                <div class="profile-stats">
-                                                                    <span class="amount">23</span>
-                                                                    <span class="sub-text">Total Order</span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <div class="profile-stats">
-                                                                    <span class="amount">20</span>
-                                                                    <span class="sub-text">Complete</span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <div class="profile-stats">
-                                                                    <span class="amount">3</span>
-                                                                    <span class="sub-text">Progress</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div><!-- .card-inner -->
-                                                    <div class="card-inner">
-                                                        <h6 class="overline-title-alt mb-2">Additional</h6>
-                                                        <div class="row g-3">
-                                                            <div class="col-6">
-                                                                <span class="sub-text">User ID:</span>
-                                                                <span>UD003054</span>
-                                                            </div>
-                                                            <div class="col-6">
-                                                                <span class="sub-text">Last Login:</span>
-                                                                <span>15 Feb, 2019 01:02 PM</span>
-                                                            </div>
-                                                            <div class="col-6">
-                                                                <span class="sub-text">KYC Status:</span>
-                                                                <span class="lead-text text-success">Approved</span>
-                                                            </div>
-                                                            <div class="col-6">
-                                                                <span class="sub-text">Register At:</span>
-                                                                <span>Nov 24, 2019</span>
-                                                            </div>
-                                                        </div>
-                                                    </div><!-- .card-inner -->
-                                                    <div class="card-inner">
-                                                        <h6 class="overline-title-alt mb-3">Groups</h6>
-                                                        <ul class="g-1">
-                                                            <li class="btn-group">
-                                                                <a class="btn btn-xs btn-light btn-dim" href="#">investor</a>
-                                                                <a class="btn btn-xs btn-icon btn-light btn-dim" href="#"><em class="icon ni ni-cross"></em></a>
-                                                            </li>
-                                                            <li class="btn-group">
-                                                                <a class="btn btn-xs btn-light btn-dim" href="#">support</a>
-                                                                <a class="btn btn-xs btn-icon btn-light btn-dim" href="#"><em class="icon ni ni-cross"></em></a>
-                                                            </li>
-                                                            <li class="btn-group">
-                                                                <a class="btn btn-xs btn-light btn-dim" href="#">another tag</a>
-                                                                <a class="btn btn-xs btn-icon btn-light btn-dim" href="#"><em class="icon ni ni-cross"></em></a>
-                                                            </li>
-                                                        </ul>
-                                                    </div><!-- .card-inner -->
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div><div class="simplebar-placeholder" style="width: auto; height: 868px;"></div>
-                                </div><div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="width: 0px; display: none;"></div></div><div class="simplebar-track simplebar-vertical" style="visibility: visible;"><div class="simplebar-scrollbar" style="height: 164px; transform: translate3d(0px, 0px, 0px); display: block;"></div></div>
-                            </div><!-- .card-inner -->
-                        </div><!-- .card-aside -->
-                    </div><!-- .card-aside-wrap -->
-                </div><!-- .card -->
-            </div><!-- .nk-block -->
+                                    </div>
+                                </div>
+                            </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script src="~/Content/js/charts/gd-default.js"></script>
+<script>
+    // Initialize count animations
+    document.addEventListener('DOMContentLoaded', function() {
+        // Count up animation for numbers
+        const countElements = document.querySelectorAll('.count-animation');
+        countElements.forEach(function(element) {
+            const targetAttr = element.getAttribute('data-target');
+            const target = parseInt(targetAttr) || 0; // Default to 0 if parsing fails
+            let current = 0;
+            
+            if (target > 0) {
+                const increment = target / 50; // Animate over 50 steps
+                const timer = setInterval(function() {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    element.textContent = Math.floor(current);
+                }, 20);
+            } else {
+                element.textContent = '0';
+            }
+        });
+
+        // Add staggered animation to cards
+        const cards = document.querySelectorAll('.card-fade-in');
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.animation = `fadeInUp 0.6s ease-out forwards`;
+            }, index * 100);
+        });
+
+        // Monthly Activity Chart
+        const monthlyData = @Html.Raw(Json.Encode(ViewBag.MonthlyEventStats ?? new List<object>()));
+        if (monthlyData && monthlyData.length > 0 && document.getElementById('monthlyActivityChart')) {
+            const ctx = document.getElementById('monthlyActivityChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: monthlyData.map(m => m.MonthName),
+                    datasets: [{
+                        label: 'Events',
+                        data: monthlyData.map(m => m.EventCount),
+                        borderColor: '#798bff',
+                        backgroundColor: 'rgba(121, 139, 255, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#798bff',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }, {
+                        label: 'News',
+                        data: monthlyData.map(m => m.NewsCount),
+                        borderColor: '#ff6b9d',
+                        backgroundColor: 'rgba(255, 107, 157, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#ff6b9d',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)',
+                                lineWidth: 1
+                            },
+                            ticks: {
+                                color: '#8fa8b2',
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#8fa8b2',
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: {
+                                    size: 13
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            titleColor: '#364a63',
+                            bodyColor: '#8fa8b2',
+                            borderColor: '#e5e9f2',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            displayColors: true,
+                            padding: 12
+                        }
+                    },
+                    animation: {
+                        duration: 2000,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+        }
+
+        // Department Performance Chart
+        const deptData = @Html.Raw(Json.Encode(ViewBag.DepartmentStats ?? new List<object>()));
+        if (deptData && deptData.length > 0 && document.getElementById('departmentChart')) {
+            const ctx2 = document.getElementById('departmentChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: deptData.map(d => d.Code || d.DepartmentName.substring(0,8)),
+                    datasets: [{
+                        label: 'Events',
+                        data: deptData.map(d => d.EventCount),
+                        backgroundColor: '#798bff',
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        maxBarThickness: 50
+                    }, {
+                        label: 'Faculty',
+                        data: deptData.map(d => d.FacultyCount),
+                        backgroundColor: '#ff9f43',
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        maxBarThickness: 50
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)',
+                                lineWidth: 1
+                            },
+                            ticks: {
+                                color: '#8fa8b2',
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#8fa8b2',
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: {
+                                    size: 13
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            titleColor: '#364a63',
+                            bodyColor: '#8fa8b2',
+                            borderColor: '#e5e9f2',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            displayColors: true,
+                            padding: 12
+                        }
+                    },
+                    animation: {
+                        duration: 1500,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+        }
+
+        // Add real-time indicator animation
+        const realTimeIndicator = document.querySelector('.real-time-indicator');
+        if (realTimeIndicator) {
+            setInterval(() => {
+                realTimeIndicator.style.opacity = realTimeIndicator.style.opacity === '0.3' ? '1' : '0.3';
+            }, 1500);
+        }
+
+        // Enhanced hover effects for tables
+        const tableRows = document.querySelectorAll('.nk-tb-item');
+        tableRows.forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(5px)';
+                this.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            });
+            row.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+                this.style.boxShadow = 'none';
+            });
+        });
+
+        // Activity level progress bars
+        const activityBadges = document.querySelectorAll('.badge');
+        activityBadges.forEach(badge => {
+            const parent = badge.closest('.nk-tb-col');
+            if (parent && badge.textContent.includes('High')) {
+                parent.insertAdjacentHTML('beforeend', '<div class="activity-progress"><div class="activity-progress-bar activity-high" style="width: 85%"></div></div>');
+            } else if (parent && badge.textContent.includes('Medium')) {
+                parent.insertAdjacentHTML('beforeend', '<div class="activity-progress"><div class="activity-progress-bar activity-medium" style="width: 60%"></div></div>');
+            } else if (parent && badge.textContent.includes('Low')) {
+                parent.insertAdjacentHTML('beforeend', '<div class="activity-progress"><div class="activity-progress-bar activity-low" style="width: 30%"></div></div>');
+            }
+        });
+
+        // Initialize tooltips with enhanced styling
+        $('[data-toggle="tooltip"]').tooltip({
+            animation: true,
+            delay: { show: 300, hide: 100 },
+            html: true,
+            placement: 'auto'
+        });
+
+        // Add loading animation to charts while they render
+        const chartContainers = ['monthlyActivityChart', 'departmentChart'];
+        chartContainers.forEach(chartId => {
+            const chartElement = document.getElementById(chartId);
+            if (chartElement) {
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'chart-loading';
+                loadingDiv.textContent = 'Loading chart...';
+                chartElement.parentNode.insertBefore(loadingDiv, chartElement);
+                
+                // Remove loading animation after charts are rendered
+                setTimeout(() => {
+                    if (loadingDiv.parentNode) {
+                        loadingDiv.parentNode.removeChild(loadingDiv);
+                    }
+                }, 2500);
+            }
+        });
+
+        // Add shimmer effect to metric cards
+        setTimeout(() => {
+            const metricCards = document.querySelectorAll('.metric-card');
+            metricCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('loading-shimmer');
+                    setTimeout(() => {
+                        card.classList.remove('loading-shimmer');
+                    }, 1000);
+                }, index * 200);
+            });
+        }, 500);
+
+        // Auto-refresh data every 5 minutes (for demo purposes)
+        setTimeout(() => {
+            const refreshIndicator = document.createElement('div');
+            refreshIndicator.innerHTML = '<span class="real-time-indicator"></span><small>Data refreshed</small>';
+            refreshIndicator.className = 'alert alert-success alert-dismissible fade show position-fixed';
+            refreshIndicator.style.cssText = 'top: 20px; right: 20px; z-index: 1050; padding: 8px 12px;';
+            document.body.appendChild(refreshIndicator);
+            
+            setTimeout(() => {
+                refreshIndicator.remove();
+            }, 3000);
+        }, 2000);
+    });
+
+    // Function to format numbers with commas
+    function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    // Enhanced metrics update function
+    function updateMetrics() {
+        const metrics = document.querySelectorAll('.count-animation');
+        metrics.forEach(metric => {
+            const currentValue = parseInt(metric.textContent);
+            const targetValue = parseInt(metric.getAttribute('data-target'));
+            if (currentValue !== targetValue) {
+                metric.textContent = formatNumber(targetValue);
+            }
+        });
+    }
+
+    // Call updateMetrics after initial load
+    setTimeout(updateMetrics, 3000);
+</script>
+}

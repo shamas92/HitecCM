@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - HITEC CM</title>
     @Styles.Render("~/Content/css")
+    <link href="~/Content/css/dashboard.css" rel="stylesheet" type="text/css" />
     @Scripts.Render("~/bundles/modernizr")
 
 </head>
@@ -27,8 +28,8 @@
                                     <em class="icon ni ni-dashlite bg-purple-dim"></em>
                                 </div>
                                 <div class="nk-header-app-info">
-                                    <span class="sub-text">DashLite</span>
-                                    <span class="lead-text">Dashboard</span>
+                                    <span class="sub-text">HITEC</span>
+                                    <span class="lead-text">Content Management</span>
                                 </div>
                             </div>
                             <div class="nk-header-menu is-light">
@@ -379,6 +380,12 @@
                     <div class="nk-sidebar-inner" data-simplebar>
                         <ul class="nk-menu nk-menu-md">
                             <li class="nk-menu-item">
+                                <a href="@Url.Action("Index", "Home")" class="nk-menu-link">
+                                    <span class="nk-menu-icon"><em class="icon ni ni-dashboard"></em></span>
+                                    <span class="nk-menu-text">Dashboard</span>
+                                </a>
+                            </li><!-- .nk-menu-item -->
+                            <li class="nk-menu-item">
                                 <a href="@Url.Action("Index", "About")" class="nk-menu-link">
                                     <span class="nk-menu-icon"><em class="icon ni ni-info"></em></span>
                                     <span class="nk-menu-text">About</span>
@@ -404,9 +411,6 @@
                                     <li class="nk-menu-item">
                                         <a href="@Url.Action("Index", "Facilities")" class="nk-menu-link"><span class="nk-menu-text">Manage Facilities</span></a>
                                     </li>
-                                    @*<li class="nk-menu-item">
-                    <a href="@Url.Action("Index", "FacilityPhotos")" class="nk-menu-link"><span class="nk-menu-text">Facility Photos</span></a>
-                </li>*@
                                 </ul><!-- .nk-menu-sub -->
                             </li><!-- .nk-menu-item -->
 
@@ -466,9 +470,6 @@
                                     <li class="nk-menu-item">
                                         <a href="@Url.Action("Index", "Events")" class="nk-menu-link"><span class="nk-menu-text">Manage Events</span></a>
                                     </li>
-                                    @*                                    <li class="nk-menu-item">
-                    <a href="@Url.Action("Index", "MenuType")" class="nk-menu-link"><span class="nk-menu-text">Menu Type</span></a>
-                </li>*@
                                 </ul><!-- .nk-menu-sub -->
                             </li><!-- .nk-menu-item -->
 
