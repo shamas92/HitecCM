@@ -65,69 +65,10 @@
 }
 
 <div class="nk-content-inner">
-    <div class="nk-content-body">
-        <!-- Dashboard Header -->
-        <div class="nk-block-head nk-block-head-sm">
-            <div class="nk-block-between g-3">
-                <div class="nk-block-head-content">
-                    <h3 class="nk-block-title page-title">
-                        <span class="real-time-indicator"></span>
-                        HITEC Content Management <strong class="text-primary">Dashboard</strong>
-                    </h3>
-                    <div class="nk-block-des text-soft">
-                        <p>Welcome to your comprehensive content management dashboard. Monitor key metrics, track performance, and manage university content effectively.</p>
-                        @if (ViewBag.ErrorMessage != null) {
-                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                <strong>Data Loading Notice:</strong> @ViewBag.ErrorMessage
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        }
-                        <ul class="nk-block-tools g-2 flex-wrap">
-                            <li class="badge badge-dim badge-pill bg-outline-success">
-                                <em class="icon ni ni-clock"></em>
-                                <span>Last updated: @DateTime.Now.ToString("MMM dd, HH:mm")</span>
-                            </li>
-                            <li class="badge badge-dim badge-pill bg-outline-info">
-                                <em class="icon ni ni-growth"></em>
-                                <span>@(ViewBag.ActiveEvents ?? 0) Active Events</span>
-                            </li>
-                            <li class="badge badge-dim badge-pill bg-outline-warning">
-                                <em class="icon ni ni-users"></em>
-                                <span>@(ViewBag.TotalFaculties ?? 0) Faculty Members</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="nk-block-head-content">
-                    <ul class="nk-block-tools g-3">
-                        <li>
-                            <div class="drodown">
-                                <a href="#" class="dropdown-toggle btn btn-icon btn-primary" data-toggle="dropdown">
-                                    <em class="icon ni ni-plus"></em>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <ul class="link-list-opt no-bdr">
-                                        <li><a href="@Url.Action("Create", "Events")"><em class="icon ni ni-calendar"></em><span>Add Event</span></a></li>
-                                        <li><a href="#"><em class="icon ni ni-news"></em><span>Add News</span></a></li>
-                                        <li><a href="@Url.Action("Create", "Menus")"><em class="icon ni ni-menu"></em><span>Add Menu</span></a></li>
-                                        <li><a href="@Url.Action("Index", "Facilities")"><em class="icon ni ni-building"></em><span>Manage Facilities</span></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <a href="#" class="btn btn-outline-light" onclick="location.reload();">
-                                <em class="icon ni ni-reload"></em>
-                                <span>Refresh</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
+    <div class="nk-content-body" id="content-section">
+        <!-- Analytics Partial Injected -->
+        @Html.Partial("_AnalyticsDashboard")
+        
         <!-- Key Performance Indicators -->
         <div class="nk-block">
             <div class="row g-gs">
@@ -146,7 +87,7 @@
                                 <span class="amount count-animation" data-target="@(ViewBag.ActiveEvents ?? 0)">0</span>
                                 <span class="change up text-success">
                                     <em class="icon ni ni-arrow-long-up"></em>
-                                    @{
+                                    @{ 
                                         var eventsGrowth = "0";
                                         try {
                                             if (ViewBag.GrowthMetrics != null) {
@@ -157,9 +98,7 @@
                                                     eventsGrowth = ((thisMonth - lastMonth) * 100.0 / thisMonth).ToString("F1");
                                                 }
                                             }
-                                        } catch {
-                                            eventsGrowth = "0";
-                                        }
+                                        } catch { eventsGrowth = "0"; }
                                     }
                                     @eventsGrowth%
                                 </span>
@@ -667,7 +606,7 @@
                 type: 'line',
                 data: {
                     labels: monthlyData.map(m => m.MonthName),
-                    datasets: [{
+                    datasets: [ {
                         label: 'Events',
                         data: monthlyData.map(m => m.EventCount),
                         borderColor: '#798bff',
@@ -693,7 +632,7 @@
                         pointBorderWidth: 2,
                         pointRadius: 5,
                         pointHoverRadius: 7
-                    }]
+                    } ]
                 },
                 options: {
                     responsive: true,
@@ -767,7 +706,7 @@
                 type: 'bar',
                 data: {
                     labels: deptData.map(d => d.Code || d.DepartmentName.substring(0,8)),
-                    datasets: [{
+                    datasets: [ {
                         label: 'Events',
                         data: deptData.map(d => d.EventCount),
                         backgroundColor: '#798bff',
@@ -781,7 +720,7 @@
                         borderRadius: 6,
                         borderSkipped: false,
                         maxBarThickness: 50
-                    }]
+                    } ]
                 },
                 options: {
                     responsive: true,
@@ -938,6 +877,7 @@
     // Function to format numbers with commas
     function formatNumber(num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
     }
 
     // Enhanced metrics update function

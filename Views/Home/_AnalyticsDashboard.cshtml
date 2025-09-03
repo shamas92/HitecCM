@@ -1,0 +1,506 @@
+@using Newtonsoft.Json
+@{
+    var summary = ViewBag.AnalyticsSummary ?? new { TotalSessions = 0, TotalPageViews = 0, AvgPagesPerSession = 0d, BounceRatePct = 0d, AvgSessionDurationSec = 0d };
+    var traffic = ViewBag.TrafficSeries as IEnumerable<object> ?? Enumerable.Empty<object>();
+    var topPages = ViewBag.TopPages as IEnumerable<object> ?? Enumerable.Empty<object>();
+    var hourly = ViewBag.HourlyViews as IEnumerable<object> ?? Enumerable.Empty<object>();
+    string trafficJson = JsonConvert.SerializeObject(traffic);
+    string hourlyJson = JsonConvert.SerializeObject(hourly);
+    string topPagesJson = JsonConvert.SerializeObject(topPages);
+    Func<object, string, object> getProp = (obj, name) => { try { return obj.GetType().GetProperty(name)?.GetValue(obj, null) ?? 0; } catch { return 0; } };
+    // Helpers
+    Func<dynamic, string, string> getStringProp = (obj, propName) => { try { var prop = obj.GetType().GetProperty(propName); if (prop != null) { var value = prop.GetValue(obj); return value != null ? value.ToString() : string.Empty; } } catch {} return string.Empty; };
+    Func<dynamic, string, int> getIntProp = (obj, propName) => { try { var prop = obj.GetType().GetProperty(propName); if (prop != null) { var value = prop.GetValue(obj); if (value != null) { int result; if (int.TryParse(value.ToString(), out result)) { return result; } } } } catch {} return 0; };
+}
+
+<!-- Unified Analytics Section -->
+<div id="analytics-section" class="nk-block dashboard-section pb-0">
+    <div class="nk-block-head nk-block-head-sm mt-4 pt-2">
+        <div class="nk-block-between g-3">
+            <div class="nk-block-head-content">
+                <h3 class="nk-block-title page-title d-flex align-items-center">
+                    HITEC Content Management <strong class="text-primary ml-1">Dashboard</strong>
+                </h3>
+                <div class="nk-block-des text-soft">
+                    <p class="mb-1">Unified operational and traffic intelligence workspace. Manage and monitor institutional digital presence.</p>
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <strong>Data Loading Notice:</strong> @ViewBag.ErrorMessage
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    }
+                    <ul class="nk-block-tools g-2 flex-wrap mt-2">
+                        <li class="badge badge-dim badge-pill bg-outline-success">
+                            <em class="icon ni ni-clock"></em>
+                            <span>Last updated: @DateTime.Now.ToString("MMM dd, HH:mm")</span>
+                        </li>
+                        <li class="badge badge-dim badge-pill bg-outline-info">
+                            <em class="icon ni ni-growth"></em>
+                            <span>@(ViewBag.ActiveEvents ?? 0) Active Events</span>
+                        </li>
+                        <li class="badge badge-dim badge-pill bg-outline-warning">
+                            <em class="icon ni ni-users"></em>
+                            <span>@(ViewBag.TotalFaculties ?? 0) Faculty Members</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="nk-block-head-content">
+                <ul class="nk-block-tools g-3">
+                    <li>
+                        <div class="drodown">
+                            <a href="#" class="dropdown-toggle btn btn-icon btn-primary" data-toggle="dropdown">
+                                <em class="icon ni ni-plus"></em>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <ul class="link-list-opt no-bdr">
+                                    <li><a href="@Url.Action("Create", "Events")"><em class="icon ni ni-calendar"></em><span>Add Event</span></a></li>
+                                    <li><a href="#"><em class="icon ni ni-news"></em><span>Add News</span></a></li>
+                                    <li><a href="@Url.Action("Create", "Menus")"><em class="icon ni ni-menu"></em><span>Add Menu</span></a></li>
+                                    <li><a href="@Url.Action("Index", "Facilities")"><em class="icon ni ni-building"></em><span>Manage Facilities</span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#" class="btn btn-outline-light" onclick="location.reload();">
+                            <em class="icon ni ni-reload"></em>
+                            <span>Refresh</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Overview Cards -->
+    <div class="row g-gs">
+        <div class="col-xxl-3 col-md-6 col-lg-4">
+            <div class="card card-bordered h-100 analytics-card gradient-card gradient-primary">
+                <div class="card-inner">
+                    <div class="card-title-group align-items-start mb-1">
+                        <div class="card-title"><h6 class="title">Total Sessions</h6></div>
+                        <div class="card-tools"><em class="card-hint icon ni ni-help-fill" data-toggle="tooltip" title="Unique user sessions (bots excluded)"></em></div>
+                    </div>
+                    <div class="align-items-center">
+                        <div class="amount-wrap"><div class="amount h2 fw-bold text-primary mb-0">@getProp(summary, "TotalSessions")</div><span class="subtitle text-soft fs-13px">Non-bot</span></div>
+                        <div class="analytics-icon"><em class="icon ni ni-users text-primary"></em></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-3 col-md-6 col-lg-4">
+            <div class="card card-bordered h-100 analytics-card gradient-card gradient-success">
+                <div class="card-inner">
+                    <div class="card-title-group align-items-start mb-1">
+                        <div class="card-title"><h6 class="title">Page Views</h6></div>
+                        <div class="card-tools"><em class="card-hint icon ni ni-help-fill" data-toggle="tooltip" title="Total pages viewed"></em></div>
+                    </div>
+                    <div class="align-items-center">
+                        <div class="amount-wrap"><div class="amount h2 fw-bold text-success mb-0">@getProp(summary, "TotalPageViews")</div><span class="subtitle text-soft fs-13px">Total</span></div>
+                        <div class="analytics-icon"><em class="icon ni ni-file-docs text-success"></em></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-3 col-md-6 col-lg-4">
+            <div class="card card-bordered h-100 analytics-card gradient-card gradient-info">
+                <div class="card-inner">
+                    <div class="card-title-group align-items-start mb-1">
+                        <div class="card-title"><h6 class="title">Engagement</h6></div>
+                        <div class="card-tools"><em class="card-hint icon ni ni-help-fill" data-toggle="tooltip" title="Pages per session"></em></div>
+                    </div>
+                    <div class="align-items-center">
+                        <div class="amount-wrap"><div class="amount h2 fw-bold text-info mb-0">@getProp(summary, "AvgPagesPerSession")</div><span class="subtitle text-soft fs-13px">Pages / Session</span></div>
+                        <div class="analytics-icon"><em class="icon ni ni-bar-chart text-info"></em></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-3 col-md-6 col-lg-4">
+            <div class="card card-bordered h-100 analytics-card gradient-card gradient-warning">
+                <div class="card-inner">
+                    <div class="card-title-group align-items-start mb-1">
+                        <div class="card-title"><h6 class="title">Bounce Rate</h6></div>
+                        <div class="card-tools"><em class="card-hint icon ni ni-help-fill" data-toggle="tooltip" title="Single-page sessions %"></em></div>
+                    </div>
+                    <div class="align-items-center">
+                        <div class="amount-wrap">
+                            <div class="amount h2 fw-bold @(((double)getProp(summary, "BounceRatePct")) > 50 ? "text-danger" : "text-success") mb-0">@getProp(summary, "BounceRatePct")%</div>
+                            <span class="subtitle text-soft fs-13px">Lower is better</span>
+                        </div>
+                        <div class="analytics-icon"><em class="icon ni ni-activity @(((double)getProp(summary, "BounceRatePct")) > 50 ? "text-danger" : "text-success")"></em></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-3 col-md-6 col-lg-4">
+            <div class="card card-bordered h-100 analytics-card gradient-card gradient-secondary">
+                <div class="card-inner">
+                    <div class="card-title-group align-items-start mb-1">
+                        <div class="card-title"><h6 class="title">Avg Session</h6></div>
+                        <div class="card-tools"><em class="card-hint icon ni ni-help-fill" data-toggle="tooltip" title="Average session duration"></em></div>
+                    </div>
+                    <div class="align-items-center">
+                        <div class="amount-wrap">
+                            <div class="amount h2 fw-bold text-warning mb-0">
+                                @{ var seconds = (double)getProp(summary, "AvgSessionDurationSec"); var formatted = seconds >= 60 ? $"{Math.Floor(seconds/60)}m {Math.Floor(seconds%60)}s" : $"{seconds}s"; } @formatted
+                            </div>
+                            <span class="subtitle text-soft fs-13px">Time on site</span>
+                        </div>
+                        <div class="analytics-icon"><em class="icon ni ni-clock text-warning"></em></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts & Page Stats Row -->
+    <div class="row g-gs mt-2">
+        <div class="col-xxl-8 col-lg-7">
+            <div class="card card-bordered card-full h-100 smooth-card">
+                <div class="card-inner border-bottom pb-2">
+                    <div class="card-title-group align-items-center">
+                        <div class="card-title"><h6 class="title mb-0">Traffic Overview (30 days)</h6></div>
+                        <div class="card-tools"><ul class="card-tools-nav small-tabs"><li class="active"><a href="#">Sessions</a></li><li><a href="#">Page Views</a></li></ul></div>
+                    </div>
+                </div>
+                <div class="card-inner pt-2">
+                    <div id="traffic-chart-container" style="height: 320px;"><canvas id="trafficChart"></canvas></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-4 col-lg-5">
+            <div class="card card-bordered card-full h-100 smooth-card">
+                <div class="card-inner border-bottom pb-2">
+                    <div class="card-title-group"><div class="card-title"><h6 class="title mb-0">Most Viewed Pages</h6></div></div>
+                </div>
+                <div class="nk-tb-list compact-table">
+                    <div class="nk-tb-item nk-tb-head">
+                        <div class="nk-tb-col"><span>Page</span></div>
+                        <div class="nk-tb-col text-right"><span>Views</span></div>
+                    </div>
+                    @{
+                        if (!topPages.Any()) {
+                            <div class="nk-tb-item"><div class="nk-tb-col"><span class="tb-lead text-soft">No data</span></div><div class="nk-tb-col text-right"><span class="tb-sub">-</span></div></div> }
+                        else {
+                            foreach (dynamic p in topPages) { string path = getStringProp(p, "Path"); int views = getIntProp(p, "Views");
+                                <div class="nk-tb-item">
+                                    <div class="nk-tb-col"><span class="tb-lead" title="@path" style="display:inline-block;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><em class="icon ni ni-link text-soft mr-1"></em>@path</span></div>
+                                    <div class="nk-tb-col text-right"><span class="tb-sub tb-amount"><span>@views</span></span></div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hourly Stats Row -->
+    <div class="row g-gs mt-2">
+        <div class="col-lg-12">
+            <div class="card card-bordered h-100 smooth-card">
+                <div class="card-inner pb-2">
+                    <div class="card-title-group align-items-center mb-1">
+                        <div class="card-title"><h6 class="title mb-0">Hourly Traffic (Last 24h)</h6></div>
+                    </div>
+                </div>
+                <div class="card-inner pt-0">
+                    <div class="nk-order-ovwg">
+                        <div class="row g-4 align-end">
+                            <div class="col-xxl-8"><div class="nk-order-ovwg-ck"><canvas id="hourlyChart" height="110"></canvas></div></div>
+                            <div class="col-xxl-4">
+                                <div class="row g-3">
+                                    <div class="col-sm-6 col-xxl-12"><div class="nk-order-ovwg-data buy"><div class="amount">@hourly.Sum(h => getIntProp(h, "Views")) <small>views</small></div><div class="info">Last 24h</div></div></div>
+                                    <div class="col-sm-6 col-xxl-12"><div class="nk-order-ovwg-data sell"><div class="amount">@{ var peakHour = hourly.OrderByDescending(h => getIntProp(h, "Views")).FirstOrDefault(); string peakHourLabel = peakHour != null ? getStringProp(peakHour, "HourLabel") : "--"; int peakViews = peakHour != null ? getIntProp(peakHour, "Views") : 0; } @peakViews <small>views</small></div><div class="info">Peak @peakHourLabel</div></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Divider / Connector to Content Dashboard -->
+    <div class="section-connector text-center mt-4 mb-2">
+        <a href="#content-section" class="btn btn-outline-primary btn-sm">Continue to Content Metrics <em class="icon ni ni-arrow-down"></em></a>
+    </div>
+</div>
+
+<style>
+/* Unification / Cohesive styling */
+.dashboard-anchor-nav .nav-link { padding: .375rem .75rem; font-size: .75rem; }
+.dashboard-section { position: relative; }
+.gradient-card { position: relative; overflow: hidden; }
+.gradient-card:before { content: ""; position:absolute; inset:0; opacity:.08; background:linear-gradient(135deg,var(--grad-start,#6576ff),var(--grad-end,#1ee0ac)); }
+.gradient-primary { --grad-start:#6576ff; --grad-end:#5b93ff; }
+.gradient-success { --grad-start:#1ee0ac; --grad-end:#17c995; }
+.gradient-info { --grad-start:#559bfb; --grad-end:#6576ff; }
+.gradient-warning { --grad-start:#ff9f43; --grad-end:#ffc163; }
+.gradient-secondary { --grad-start:#8b8bff; --grad-end:#a6b8ff; }
+.gradient-card .card-inner { backdrop-filter: blur(0px); }
+.small-tabs li a { font-size:.65rem; letter-spacing:.5px; }
+.smooth-card { transition: box-shadow .25s, transform .25s; }
+.smooth-card:hover { box-shadow:0 4px 18px rgba(0,0,0,.08); transform:translateY(-2px); }
+.section-connector { position:relative; }
+.section-connector:before { content:""; position:absolute; left:10%; right:10%; top:50%; height:1px; background:linear-gradient(90deg,transparent,#6576ff 40%,#1ee0ac 60%,transparent); z-index:-1; }
+.compact-table .nk-tb-item { padding-top:.25rem; padding-bottom:.25rem; }
+media (max-width: 767px){ .section-connector:before{display:none;} }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    // Smooth scroll for anchor links inside dashboard nav
+    document.querySelectorAll('a[href^="#analytics-section"], a[href^="#content-section"]').forEach(function(a){
+        a.addEventListener('click', function(e){
+            const targetId = this.getAttribute('href').substring(1);
+            const targetEl = document.getElementById(targetId);
+            if(targetEl){ e.preventDefault(); window.scrollTo({ top: targetEl.offsetTop - 70, behavior: 'smooth'}); }
+        });
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var traffic = @Html.Raw(trafficJson);
+    var hourly = @Html.Raw(hourlyJson);
+    
+    // Set chart defaults
+    Chart.defaults.font.family = "'DM Sans', 'Helvetica', sans-serif";
+    Chart.defaults.font.size = 12;
+    Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+    Chart.defaults.plugins.tooltip.titleColor = '#364a63';
+    Chart.defaults.plugins.tooltip.bodyColor = '#8094ae';
+    Chart.defaults.plugins.tooltip.borderColor = '#e5e9f2';
+    Chart.defaults.plugins.tooltip.borderWidth = 1;
+    Chart.defaults.plugins.tooltip.cornerRadius = 4;
+    Chart.defaults.plugins.tooltip.padding = 10;
+    Chart.defaults.plugins.tooltip.displayColors = false;
+    
+    // Traffic chart
+    if (traffic && traffic.length && document.getElementById('trafficChart')) {
+        var ctx = document.getElementById('trafficChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: traffic.map(function(x) { return x.Date; }),
+                datasets: [
+                    { 
+                        label: 'Sessions', 
+                        data: traffic.map(function(x) { return x.Sessions; }), 
+                        backgroundColor: 'rgba(101, 118, 255, 0.2)',
+                        borderColor: '#6576ff',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#6576ff',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#6576ff',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 0,
+                        pointHoverRadius: 4
+                    },
+                    { 
+                        label: 'Page Views', 
+                        data: traffic.map(function(x) { return x.PageViews; }), 
+                        backgroundColor: 'rgba(30, 224, 172, 0.2)',
+                        borderColor: '#1ee0ac',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#1ee0ac',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#1ee0ac',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 0,
+                        pointHoverRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += context.parsed.y;
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0,
+                            color: '#8094ae'
+                        },
+                        grid: {
+                            color: '#e5e9f2',
+                            drawBorder: false,
+                            borderDash: [5, 5]
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: '#8094ae',
+                            font: {
+                                size: 11
+                            },
+                            maxRotation: 30,
+                            minRotation: 30
+                        }
+                    }
+                },
+                animations: {
+                    tension: {
+                        duration: 1000,
+                        easing: 'linear',
+                        from: 0.4,
+                        to: 0.4,
+                        loop: false
+                    }
+                }
+            }
+        });
+    }
+
+    // Hourly chart
+    if (hourly && hourly.length && document.getElementById('hourlyChart')) {
+        var ctx2 = document.getElementById('hourlyChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: hourly.map(function(x) { return x.HourLabel; }),
+                datasets: [{
+                    label: 'Page Views',
+                    data: hourly.map(function(x) { return x.Views; }),
+                    backgroundColor: function(context) {
+                        var index = context.dataIndex;
+                        var value = context.dataset.data[index];
+                        var maxValue = Math.max.apply(null, context.dataset.data);
+                        if (value === maxValue) {
+                            return '#ff9933'; // Highlight peak hour
+                        }
+                        return '#6576ff';
+                    },
+                    borderRadius: 4,
+                    maxBarThickness: 40
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                return tooltipItems[0].label + ' hour';
+                            },
+                            label: function(context) {
+                                return context.parsed.y + ' page views';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0,
+                            color: '#8094ae'
+                        },
+                        grid: {
+                            color: '#e5e9f2',
+                            drawBorder: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Page Views',
+                            color: '#8094ae',
+                            font: {
+                                size: 12,
+                                weight: 'normal'
+                            },
+                            padding: {bottom: 10}
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: '#8094ae',
+                            font: {
+                                size: 11
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Hour of Day',
+                            color: '#8094ae',
+                            font: {
+                                size: 12,
+                                weight: 'normal'
+                            },
+                            padding: {top: 10}
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    }
+    
+    // Add Export functionality
+    document.getElementById('exportPDF').addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('PDF Export functionality would go here in a production environment');
+    });
+    
+    document.getElementById('exportCSV').addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('CSV Export functionality would go here in a production environment');
+    });
+    
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, {
+            container: 'body',
+            boundary: document.body
+        });
+    });
+});
+</script>

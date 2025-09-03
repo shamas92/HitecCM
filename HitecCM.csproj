@@ -142,6 +142,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AnalyticsModels.cs" />
     <Compile Include="Models\tblMenus.cs" />
     <Compile Include="Models\tblMenuType.cs" />
     <Compile Include="Models\AcademicCalendar.cs" />
@@ -433,6 +434,7 @@
     <Content Include="Views\Events\Create.cshtml" />
     <Content Include="Views\Events\Edit.cshtml" />
     <Content Include="Views\Events\Delete.cshtml" />
+    <Content Include="Views\Home\_AnalyticsDashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

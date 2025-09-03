@@ -117,7 +117,7 @@ namespace HitecCM.Controllers
                     })
                     .ToList();
 
-                // Department activity levels - optimize to avoid complex navigation queries
+                // Department activity levels
                 var departmentActivityData = db.tblDepartments
                     .Select(d => new {
                         d.Title,
@@ -128,7 +128,6 @@ namespace HitecCM.Controllers
                     })
                     .ToList();
 
-                // Calculate recent activity separately to avoid EF translation issues
                 ViewBag.DepartmentActivity = departmentActivityData
                     .Select(d => new {
                         d.Title,
@@ -140,7 +139,7 @@ namespace HitecCM.Controllers
                     })
                     .ToList();
 
-                // Menu usage statistics - simplified to avoid navigation property issues
+                // Menu usage statistics
                 ViewBag.MenuStats = db.tblMenuTypes
                     .ToList()
                     .Select(mt => new {
@@ -180,7 +179,7 @@ namespace HitecCM.Controllers
                     TotalAcademicPrograms = db.tblDepartmentPrograms.Count()
                 };
 
-                // Growth metrics (comparing current month with previous month)
+                // Growth metrics
                 ViewBag.GrowthMetrics = new {
                     EventsThisMonth = db.tblEvents.Count(e => e.Date.HasValue && 
                         e.Date.Value.Month == currentMonth && e.Date.Value.Year == currentYear),
@@ -191,6 +190,92 @@ namespace HitecCM.Controllers
                     NewsLastMonth = db.tblNews.Count(n => n.Date.HasValue && 
                         n.Date.Value.Month == lastMonth && n.Date.Value.Year == lastMonthYear)
                 };
+
+                // ===================== Web Analytics Section (Sessions & Page Views) =====================
+                try
+                {
+                    var utcNow = DateTime.UtcNow;
+                    var from30 = utcNow.Date.AddDays(-29); // last 30 days including today
+                    var from24h = utcNow.AddHours(-23); // last 24 hours (hour buckets)
+
+                    // Get sessions in window
+                    var rawSessions = db.tblVisitSessions
+                        .Where(s => s.FirstSeenUtc >= from30 && s.FirstSeenUtc <= utcNow)
+                        .Select(s => new { s.VisitSessionId, s.FirstSeenUtc, s.LastSeenUtc, s.PageViews, s.IsBot })
+                        .ToList();
+
+                    // Filter bots
+                    var userSessions = rawSessions.Where(s => !s.IsBot).ToList();
+                    var sessionIds = new HashSet<long>(userSessions.Select(s => (long)s.VisitSessionId));
+
+                    // Page views in window (filter by sessions)
+                    var rawPageViews = db.tblPageViews
+                        .Where(p => p.ViewUtc >= from30 && p.ViewUtc <= utcNow)
+                        .Select(p => new { p.ViewUtc, p.Path, p.VisitSessionId, p.StatusCode })
+                        .ToList()
+                        .Where(p => sessionIds.Contains(p.VisitSessionId))
+                        .ToList();
+
+                    // Aggregate per day
+                    var daily = userSessions
+                        .GroupBy(s => s.FirstSeenUtc.Date)
+                        .Select(g => new { Date = g.Key, Sessions = g.Count(), PageViews = g.Sum(x => x.PageViews) })
+                        .ToList();
+
+                    var filledDaily = new List<object>();
+                    for (var d = from30.Date; d <= utcNow.Date; d = d.AddDays(1))
+                    {
+                        var existing = daily.FirstOrDefault(x => x.Date == d);
+                        filledDaily.Add(new { Date = d.ToString("yyyy-MM-dd"), Sessions = existing?.Sessions ?? 0, PageViews = existing?.PageViews ?? 0 });
+                    }
+
+                    // Top pages (strip query)
+                    var topPages = rawPageViews
+                        .GroupBy(p => (p.Path ?? string.Empty).Split('?')[0])
+                        .Select(g => new { Path = g.Key, Views = g.Count() })
+                        .OrderByDescending(g => g.Views)
+                        .Take(10)
+                        .ToList();
+
+                    // Hourly (last 24h)
+                    var last24Views = db.tblPageViews
+                        .Where(p => p.ViewUtc >= from24h && p.ViewUtc <= utcNow)
+                        .Select(p => p.ViewUtc)
+                        .ToList();
+                    var hourly = new List<object>();
+                    for (int i = 0; i < 24; i++)
+                    {
+                        var hour = from24h.AddHours(i);
+                        var cnt = last24Views.Count(v => v.Year == hour.Year && v.Month == hour.Month && v.Day == hour.Day && v.Hour == hour.Hour);
+                        hourly.Add(new { HourLabel = hour.ToString("HH:00"), Views = cnt });
+                    }
+
+                    // Summary numbers
+                    int totalSessions = userSessions.Count;
+                    int totalPageViews = rawPageViews.Count;
+                    double avgPagesPerSession = totalSessions > 0 ? (double)totalPageViews / totalSessions : 0d;
+                    double bounceRate = totalSessions > 0 ? (double)userSessions.Count(s => s.PageViews <= 1) / totalSessions * 100d : 0d;
+                    double avgSessionDuration = userSessions.Count > 0 ? userSessions.Where(s => s.LastSeenUtc >= s.FirstSeenUtc).Average(s => (s.LastSeenUtc - s.FirstSeenUtc).TotalSeconds) : 0d;
+
+                    ViewBag.AnalyticsSummary = new {
+                        TotalSessions = totalSessions,
+                        TotalPageViews = totalPageViews,
+                        AvgPagesPerSession = Math.Round(avgPagesPerSession, 2),
+                        BounceRatePct = Math.Round(bounceRate, 1),
+                        AvgSessionDurationSec = Math.Round(avgSessionDuration, 1)
+                    };
+                    ViewBag.TrafficSeries = filledDaily; // 30-day trend
+                    ViewBag.TopPages = topPages;
+                    ViewBag.HourlyViews = hourly;
+                }
+                catch (Exception)
+                {
+                    ViewBag.AnalyticsSummary = new { TotalSessions = 0, TotalPageViews = 0, AvgPagesPerSession = 0d, BounceRatePct = 0d, AvgSessionDurationSec = 0d };
+                    ViewBag.TrafficSeries = new List<object>();
+                    ViewBag.TopPages = new List<object>();
+                    ViewBag.HourlyViews = new List<object>();
+                }
+                // =========================================================================================
 
                 return View();
             }
@@ -248,6 +333,11 @@ namespace HitecCM.Controllers
                     NewsThisMonth = 0,
                     NewsLastMonth = 0
                 };
+
+                ViewBag.AnalyticsSummary = new { TotalSessions = 0, TotalPageViews = 0, AvgPagesPerSession = 0d, BounceRatePct = 0d, AvgSessionDurationSec = 0d };
+                ViewBag.TrafficSeries = new List<object>();
+                ViewBag.TopPages = new List<object>();
+                ViewBag.HourlyViews = new List<object>();
 
                 ViewBag.ErrorMessage = "Unable to load dashboard data. Please check database connectivity.";
                 return View();

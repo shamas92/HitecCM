@@ -5,6 +5,10 @@ using System.Linq;
 
 namespace HitecCM.Models
 {
+    // Forward declarations to ensure compiler knows these types (if file order issues in tooling)
+    public partial class tblVisitSession { }
+    public partial class tblPageView { }
+
     public partial class Model1 : DbContext
     {
         public Model1()
@@ -142,6 +146,8 @@ namespace HitecCM.Models
         public virtual DbSet<tblNewsHead> tblNewsHeads { get; set; }
         public virtual DbSet<tblNewsPhoto> tblNewsPhotos { get; set; }
         public virtual DbSet<tblProgram> tblPrograms { get; set; }
+        public virtual DbSet<tblVisitSession> tblVisitSessions { get; set; }
+        public virtual DbSet<tblPageView> tblPageViews { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -1043,6 +1049,8 @@ namespace HitecCM.Models
             modelBuilder.Entity<Welfare_Fund>()
                 .Property(e => e.Amount_Granted)
                 .HasPrecision(10, 2);
+
+            // Analytics mapping already handled by DataAnnotations; explicit relation not necessary here to avoid duplicate definitions.
         }
     }
 }
