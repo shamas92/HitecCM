@@ -5,9 +5,8 @@ using System.Linq;
 
 namespace HitecCM.Models
 {
-    // Forward declarations to ensure compiler knows these types (if file order issues in tooling)
-    public partial class tblVisitSession { }
-    public partial class tblPageView { }
+    // Forward declarations removed - they were causing duplicate definition errors
+    // The actual classes are defined in their own files: tblVisitSession.cs and tblPageView.cs
 
     public partial class Model1 : DbContext
     {

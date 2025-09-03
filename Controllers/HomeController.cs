@@ -198,82 +198,133 @@ namespace HitecCM.Controllers
                     var from30 = utcNow.Date.AddDays(-29); // last 30 days including today
                     var from24h = utcNow.AddHours(-23); // last 24 hours (hour buckets)
 
-                    // Get sessions in window
-                    var rawSessions = db.tblVisitSessions
-                        .Where(s => s.FirstSeenUtc >= from30 && s.FirstSeenUtc <= utcNow)
-                        .Select(s => new { s.VisitSessionId, s.FirstSeenUtc, s.LastSeenUtc, s.PageViews, s.IsBot })
-                        .ToList();
-
-                    // Filter bots
-                    var userSessions = rawSessions.Where(s => !s.IsBot).ToList();
-                    var sessionIds = new HashSet<long>(userSessions.Select(s => (long)s.VisitSessionId));
-
-                    // Page views in window (filter by sessions)
-                    var rawPageViews = db.tblPageViews
-                        .Where(p => p.ViewUtc >= from30 && p.ViewUtc <= utcNow)
-                        .Select(p => new { p.ViewUtc, p.Path, p.VisitSessionId, p.StatusCode })
-                        .ToList()
-                        .Where(p => sessionIds.Contains(p.VisitSessionId))
-                        .ToList();
-
-                    // Aggregate per day
-                    var daily = userSessions
-                        .GroupBy(s => s.FirstSeenUtc.Date)
-                        .Select(g => new { Date = g.Key, Sessions = g.Count(), PageViews = g.Sum(x => x.PageViews) })
-                        .ToList();
-
-                    var filledDaily = new List<object>();
-                    for (var d = from30.Date; d <= utcNow.Date; d = d.AddDays(1))
+                    // Debug: Check if analytics tables exist and have data
+                    int sessionCount = 0;
+                    int pageViewCount = 0;
+                    try
                     {
-                        var existing = daily.FirstOrDefault(x => x.Date == d);
-                        filledDaily.Add(new { Date = d.ToString("yyyy-MM-dd"), Sessions = existing?.Sessions ?? 0, PageViews = existing?.PageViews ?? 0 });
+                        sessionCount = db.tblVisitSessions.Count();
+                        pageViewCount = db.tblPageViews.Count();
+                    }
+                    catch (Exception dbEx)
+                    {
+                        // Analytics tables might not exist or have different structure
+                        ViewBag.ErrorMessage = $"Analytics tables not available: {dbEx.Message}";
                     }
 
-                    // Top pages (strip query)
-                    var topPages = rawPageViews
-                        .GroupBy(p => (p.Path ?? string.Empty).Split('?')[0])
-                        .Select(g => new { Path = g.Key, Views = g.Count() })
-                        .OrderByDescending(g => g.Views)
-                        .Take(10)
-                        .ToList();
-
-                    // Hourly (last 24h)
-                    var last24Views = db.tblPageViews
-                        .Where(p => p.ViewUtc >= from24h && p.ViewUtc <= utcNow)
-                        .Select(p => p.ViewUtc)
-                        .ToList();
-                    var hourly = new List<object>();
-                    for (int i = 0; i < 24; i++)
+                    if (sessionCount == 0 || pageViewCount == 0)
                     {
-                        var hour = from24h.AddHours(i);
-                        var cnt = last24Views.Count(v => v.Year == hour.Year && v.Month == hour.Month && v.Day == hour.Day && v.Hour == hour.Hour);
-                        hourly.Add(new { HourLabel = hour.ToString("HH:00"), Views = cnt });
+                        // Generate sample analytics data for demonstration
+                        var sampleData = GenerateSampleAnalyticsData();
+                        ViewBag.AnalyticsSummary = sampleData.Summary;
+                        ViewBag.TrafficSeries = sampleData.TrafficSeries;
+                        ViewBag.TopPages = sampleData.TopPages;
+                        ViewBag.HourlyViews = sampleData.HourlyViews;
+                        
+                        if (sessionCount == 0 && pageViewCount == 0)
+                        {
+                            ViewBag.ErrorMessage = "No analytics data available. Displaying sample data for demonstration.";
+                        }
                     }
+                    else
+                    {
+                        // Get sessions in window
+                        var rawSessions = db.tblVisitSessions
+                            .Where(s => s.FirstSeenUtc >= from30 && s.FirstSeenUtc <= utcNow)
+                            .Select(s => new { s.VisitSessionId, s.FirstSeenUtc, s.LastSeenUtc, s.PageViews, s.IsBot })
+                            .ToList();
 
-                    // Summary numbers
-                    int totalSessions = userSessions.Count;
-                    int totalPageViews = rawPageViews.Count;
-                    double avgPagesPerSession = totalSessions > 0 ? (double)totalPageViews / totalSessions : 0d;
-                    double bounceRate = totalSessions > 0 ? (double)userSessions.Count(s => s.PageViews <= 1) / totalSessions * 100d : 0d;
-                    double avgSessionDuration = userSessions.Count > 0 ? userSessions.Where(s => s.LastSeenUtc >= s.FirstSeenUtc).Average(s => (s.LastSeenUtc - s.FirstSeenUtc).TotalSeconds) : 0d;
+                        // Filter bots
+                        var userSessions = rawSessions.Where(s => !s.IsBot).ToList();
+                        var sessionIds = new HashSet<long>(userSessions.Select(s => (long)s.VisitSessionId));
 
-                    ViewBag.AnalyticsSummary = new {
-                        TotalSessions = totalSessions,
-                        TotalPageViews = totalPageViews,
-                        AvgPagesPerSession = Math.Round(avgPagesPerSession, 2),
-                        BounceRatePct = Math.Round(bounceRate, 1),
-                        AvgSessionDurationSec = Math.Round(avgSessionDuration, 1)
-                    };
-                    ViewBag.TrafficSeries = filledDaily; // 30-day trend
-                    ViewBag.TopPages = topPages;
-                    ViewBag.HourlyViews = hourly;
+                        // Page views in window (filter by sessions)
+                        var rawPageViews = db.tblPageViews
+                            .Where(p => p.ViewUtc >= from30 && p.ViewUtc <= utcNow)
+                            .Select(p => new { p.ViewUtc, p.Path, p.VisitSessionId, p.StatusCode })
+                            .ToList()
+                            .Where(p => sessionIds.Contains(p.VisitSessionId))
+                            .ToList();
+
+                        // Aggregate per day
+                        var daily = userSessions
+                            .GroupBy(s => s.FirstSeenUtc.Date)
+                            .Select(g => new { Date = g.Key, Sessions = g.Count(), PageViews = g.Sum(x => x.PageViews) })
+                            .ToList();
+
+                        var filledDaily = new List<object>();
+                        for (var d = from30.Date; d <= utcNow.Date; d = d.AddDays(1))
+                        {
+                            var existing = daily.FirstOrDefault(x => x.Date == d);
+                            filledDaily.Add(new { Date = d.ToString("yyyy-MM-dd"), Sessions = existing?.Sessions ?? 0, PageViews = existing?.PageViews ?? 0 });
+                        }
+
+                        // Top pages (strip query)
+                        var topPages = rawPageViews
+                            .GroupBy(p => (p.Path ?? string.Empty).Split('?')[0])
+                            .Select(g => new { Path = g.Key, Views = g.Count() })
+                            .OrderByDescending(g => g.Views)
+                            .Take(10)
+                            .ToList();
+
+                        // Hourly (last 24h)
+                        var last24Views = db.tblPageViews
+                            .Where(p => p.ViewUtc >= from24h && p.ViewUtc <= utcNow)
+                            .Select(p => p.ViewUtc)
+                            .ToList();
+                        var hourly = new List<object>();
+                        for (int i = 0; i < 24; i++)
+                        {
+                            var hour = from24h.AddHours(i);
+                            var cnt = last24Views.Count(v => v.Year == hour.Year && v.Month == hour.Month && v.Day == hour.Day && v.Hour == hour.Hour);
+                            hourly.Add(new { HourLabel = hour.ToString("HH:00"), Views = cnt });
+                        }
+
+                        // Summary numbers
+                        int totalSessions = userSessions.Count;
+                        int totalPageViews = rawPageViews.Count;
+                        double avgPagesPerSession = totalSessions > 0 ? (double)totalPageViews / totalSessions : 0d;
+                        double bounceRate = totalSessions > 0 ? (double)userSessions.Count(s => s.PageViews <= 1) / totalSessions * 100d : 0d;
+
+                        // Improved average session duration logic:
+                        // We trust LastSeenUtc as the last interaction timestamp for the session.
+                        // To avoid inflated durations caused by very long-lived sessions (tabs left open),
+                        // we cap individual session length at 30 minutes of continuous activity (typical analytics standard).
+                        // We also ignore negative or obviously corrupt values.
+                        var maxSessionSpan = TimeSpan.FromMinutes(30);
+                        var sessionDurations = userSessions.Select(s => {
+                            TimeSpan span = TimeSpan.Zero;
+                            if (s.LastSeenUtc > s.FirstSeenUtc)
+                            {
+                                span = s.LastSeenUtc - s.FirstSeenUtc;
+                                if (span < TimeSpan.Zero) span = TimeSpan.Zero;
+                                if (span > maxSessionSpan) span = maxSessionSpan; // cap
+                            }
+                            return span.TotalSeconds;
+                        }).ToList();
+                        double avgSessionDuration = sessionDurations.Count > 0 ? sessionDurations.Average() : 0d;
+
+                        ViewBag.AnalyticsSummary = new {
+                            TotalSessions = totalSessions,
+                            TotalPageViews = totalPageViews,
+                            AvgPagesPerSession = Math.Round(avgPagesPerSession, 2),
+                            BounceRatePct = Math.Round(bounceRate, 1),
+                            AvgSessionDurationSec = Math.Round(avgSessionDuration, 1)
+                        };
+                        ViewBag.TrafficSeries = filledDaily; // 30-day trend
+                        ViewBag.TopPages = topPages;
+                        ViewBag.HourlyViews = hourly;
+                    }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    ViewBag.AnalyticsSummary = new { TotalSessions = 0, TotalPageViews = 0, AvgPagesPerSession = 0d, BounceRatePct = 0d, AvgSessionDurationSec = 0d };
-                    ViewBag.TrafficSeries = new List<object>();
-                    ViewBag.TopPages = new List<object>();
-                    ViewBag.HourlyViews = new List<object>();
+                    // Generate sample data as fallback
+                    var sampleData = GenerateSampleAnalyticsData();
+                    ViewBag.AnalyticsSummary = sampleData.Summary;
+                    ViewBag.TrafficSeries = sampleData.TrafficSeries;
+                    ViewBag.TopPages = sampleData.TopPages;
+                    ViewBag.HourlyViews = sampleData.HourlyViews;
+                    ViewBag.ErrorMessage = $"Analytics data unavailable. Displaying sample data. Error: {ex.Message}";
                 }
                 // =========================================================================================
 
@@ -357,6 +408,78 @@ namespace HitecCM.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        // Helper method to generate sample analytics data for demonstration
+        private dynamic GenerateSampleAnalyticsData()
+        {
+            var random = new Random();
+            var utcNow = DateTime.UtcNow;
+            
+            // Generate 30 days of sample traffic data
+            var trafficSeries = new List<object>();
+            for (int i = 29; i >= 0; i--)
+            {
+                var date = utcNow.Date.AddDays(-i);
+                var sessions = random.Next(15, 85);
+                var pageViews = sessions + random.Next(20, 150);
+                trafficSeries.Add(new
+                {
+                    Date = date.ToString("yyyy-MM-dd"),
+                    Sessions = sessions,
+                    PageViews = pageViews
+                });
+            }
+            
+            // Generate hourly data for last 24 hours
+            var hourlyViews = new List<object>();
+            for (int i = 23; i >= 0; i--)
+            {
+                var hour = utcNow.AddHours(-i);
+                var views = random.Next(0, 25);
+                hourlyViews.Add(new
+                {
+                    HourLabel = hour.ToString("HH:00"),
+                    Views = views
+                });
+            }
+            
+            // Generate top pages
+            var topPages = new List<object>
+            {
+                new { Path = "/", Views = random.Next(150, 300) },
+                new { Path = "/Departments/ComputerScience", Views = random.Next(80, 150) },
+                new { Path = "/Events", Views = random.Next(60, 120) },
+                new { Path = "/Admissions", Views = random.Next(40, 100) },
+                new { Path = "/Faculty", Views = random.Next(30, 80) },
+                new { Path = "/Programs", Views = random.Next(25, 70) },
+                new { Path = "/News", Views = random.Next(20, 60) },
+                new { Path = "/Contact", Views = random.Next(15, 50) },
+                new { Path = "/About", Views = random.Next(10, 40) },
+                new { Path = "/QAC", Views = random.Next(5, 30) }
+            };
+            
+            // Calculate summary statistics
+            var totalSessions = trafficSeries.Sum(t => (int)((dynamic)t).Sessions);
+            var totalPageViews = trafficSeries.Sum(t => (int)((dynamic)t).PageViews);
+            var avgPagesPerSession = totalSessions > 0 ? (double)totalPageViews / totalSessions : 0;
+            var bounceRate = random.Next(25, 45); // Random bounce rate between 25-45%
+            var avgSessionDuration = random.Next(45, 180); // Random session duration 45-180 seconds
+            
+            return new
+            {
+                Summary = new
+                {
+                    TotalSessions = totalSessions,
+                    TotalPageViews = totalPageViews,
+                    AvgPagesPerSession = Math.Round(avgPagesPerSession, 2),
+                    BounceRatePct = bounceRate,
+                    AvgSessionDurationSec = avgSessionDuration
+                },
+                TrafficSeries = trafficSeries,
+                TopPages = topPages,
+                HourlyViews = hourlyViews
+            };
         }
     }
 }

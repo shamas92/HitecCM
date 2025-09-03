@@ -11,6 +11,37 @@
     // Helpers
     Func<dynamic, string, string> getStringProp = (obj, propName) => { try { var prop = obj.GetType().GetProperty(propName); if (prop != null) { var value = prop.GetValue(obj); return value != null ? value.ToString() : string.Empty; } } catch {} return string.Empty; };
     Func<dynamic, string, int> getIntProp = (obj, propName) => { try { var prop = obj.GetType().GetProperty(propName); if (prop != null) { var value = prop.GetValue(obj); if (value != null) { int result; if (int.TryParse(value.ToString(), out result)) { return result; } } } } catch {} return 0; };
+
+    // Growth metrics (events/news) from controller
+    dynamic growth = ViewBag.GrowthMetrics;
+    int eventsThisMonth = 0, eventsLastMonth = 0, newsThisMonth = 0, newsLastMonth = 0;
+    if (growth != null)
+    {
+        try { eventsThisMonth = growth.EventsThisMonth ?? 0; } catch {}
+        try { eventsLastMonth = growth.EventsLastMonth ?? 0; } catch {}
+        try { newsThisMonth = growth.NewsThisMonth ?? 0; } catch {}
+        try { newsLastMonth = growth.NewsLastMonth ?? 0; } catch {}
+    }
+    string EventsDeltaPct()
+    {
+        if (eventsLastMonth == 0) return eventsThisMonth > 0 ? "+100%" : "0%";
+        return ((eventsThisMonth - eventsLastMonth) * 100.0 / eventsLastMonth).ToString("+0.0;-0.0") + "%";
+    }
+    string NewsDeltaPct()
+    {
+        if (newsLastMonth == 0) return newsThisMonth > 0 ? "+100%" : "0%";
+        return ((newsThisMonth - newsLastMonth) * 100.0 / newsLastMonth).ToString("+0.0;-0.0") + "%";
+    }
+    
+    // Debug: Let's see what data we actually have
+    var debugInfo = new {
+        SummaryType = summary?.GetType().Name ?? "null",
+        TotalSessions = getProp(summary, "TotalSessions"),
+        TotalPageViews = getProp(summary, "TotalPageViews"),
+        TrafficCount = traffic.Count(),
+        TopPagesCount = topPages.Count(),
+        HourlyCount = hourly.Count()
+    };
 }
 
 <!-- Unified Analytics Section -->
@@ -146,8 +177,19 @@
                     </div>
                     <div class="align-items-center">
                         <div class="amount-wrap">
-                            <div class="amount h2 fw-bold text-warning mb-0">
-                                @{ var seconds = (double)getProp(summary, "AvgSessionDurationSec"); var formatted = seconds >= 60 ? $"{Math.Floor(seconds/60)}m {Math.Floor(seconds%60)}s" : $"{seconds}s"; } @formatted
+                            <div class="amount h2 fw-bold text-warning mb-0" title="Raw: @(getProp(summary, "AvgSessionDurationSec"))s">
+                                @{ 
+                                    var sessionSecondsVal = 0d; 
+                                    try { sessionSecondsVal = (double)getProp(summary, "AvgSessionDurationSec"); } catch { }
+                                    var totalSeconds = (int)Math.Round(sessionSecondsVal);
+                                    int hrs = totalSeconds / 3600;
+                                    int mins = (totalSeconds % 3600) / 60;
+                                    int secs = totalSeconds % 60;
+                                    string formatted;
+                                    if (hrs > 0) { formatted = string.Format("{0}h {1}m {2}s", hrs, mins, secs); }
+                                    else if (mins > 0) { formatted = string.Format("{0}m {1}s", mins, secs); }
+                                    else { formatted = string.Format("{0}s", secs); }
+                                } @formatted
                             </div>
                             <span class="subtitle text-soft fs-13px">Time on site</span>
                         </div>
@@ -158,52 +200,11 @@
         </div>
     </div>
 
-    <!-- Charts & Page Stats Row -->
+    <!-- Performance & Page Stats Row (replaces Traffic Overview) -->
     <div class="row g-gs mt-2">
         <div class="col-xxl-8 col-lg-7">
+            <!-- Replace the existing System Status card with this Web Analytics Performance card -->
             <div class="card card-bordered card-full h-100 smooth-card">
-                <div class="card-inner border-bottom pb-2">
-                    <div class="card-title-group align-items-center">
-                        <div class="card-title"><h6 class="title mb-0">Traffic Overview (30 days)</h6></div>
-                        <div class="card-tools"><ul class="card-tools-nav small-tabs"><li class="active"><a href="#">Sessions</a></li><li><a href="#">Page Views</a></li></ul></div>
-                    </div>
-                </div>
-                <div class="card-inner pt-2">
-                    <div id="traffic-chart-container" style="height: 320px;"><canvas id="trafficChart"></canvas></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xxl-4 col-lg-5">
-            <div class="card card-bordered card-full h-100 smooth-card">
-                <div class="card-inner border-bottom pb-2">
-                    <div class="card-title-group"><div class="card-title"><h6 class="title mb-0">Most Viewed Pages</h6></div></div>
-                </div>
-                <div class="nk-tb-list compact-table">
-                    <div class="nk-tb-item nk-tb-head">
-                        <div class="nk-tb-col"><span>Page</span></div>
-                        <div class="nk-tb-col text-right"><span>Views</span></div>
-                    </div>
-                    @{
-                        if (!topPages.Any()) {
-                            <div class="nk-tb-item"><div class="nk-tb-col"><span class="tb-lead text-soft">No data</span></div><div class="nk-tb-col text-right"><span class="tb-sub">-</span></div></div> }
-                        else {
-                            foreach (dynamic p in topPages) { string path = getStringProp(p, "Path"); int views = getIntProp(p, "Views");
-                                <div class="nk-tb-item">
-                                    <div class="nk-tb-col"><span class="tb-lead" title="@path" style="display:inline-block;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><em class="icon ni ni-link text-soft mr-1"></em>@path</span></div>
-                                    <div class="nk-tb-col text-right"><span class="tb-sub tb-amount"><span>@views</span></span></div>
-                                </div>
-                            }
-                        }
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Hourly Stats Row -->
-    <div class="row g-gs mt-2">
-        <div class="col-lg-12">
-            <div class="card card-bordered h-100 smooth-card">
                 <div class="card-inner pb-2">
                     <div class="card-title-group align-items-center mb-1">
                         <div class="card-title"><h6 class="title mb-0">Hourly Traffic (Last 24h)</h6></div>
@@ -223,13 +224,41 @@
                     </div>
                 </div>
             </div>
+
+
+        </div>
+        <div class="col-xxl-4 col-lg-5">
+            <div class="card card-bordered card-full h-100 smooth-card">
+                <div class="card-inner border-bottom pb-2">
+                    <div class="card-title-group"><div class="card-title"><h6 class="title mb-0">Top 5 Most Viewed Pages</h6></div></div>
+                </div>
+                <div class="nk-tb-list compact-table">
+                    <div class="nk-tb-item nk-tb-head">
+                        <div class="nk-tb-col"><span>Page</span></div>
+                        <div class="nk-tb-col text-right"><span>Views</span></div>
+                    </div>
+                    @{
+                        if (!topPages.Any())
+                        {
+                            <div class="nk-tb-item"><div class="nk-tb-col"><span class="tb-lead text-soft">No data</span></div><div class="nk-tb-col text-right"><span class="tb-sub">-</span></div></div> }
+                        else
+                        {
+                            foreach (dynamic p in topPages.Take(5))
+                            {
+                                string path = getStringProp(p, "Path");
+                                int views = getIntProp(p, "Views");
+                                <div class="nk-tb-item">
+                                    <div class="nk-tb-col"><span class="tb-lead" title="@path" style="display:inline-block;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><em class="icon ni ni-link text-soft mr-1"></em>@path</span></div>
+                                    <div class="nk-tb-col text-right"><span class="tb-sub tb-amount"><span>@views</span></span></div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Section Divider / Connector to Content Dashboard -->
-    <div class="section-connector text-center mt-4 mb-2">
-        <a href="#content-section" class="btn btn-outline-primary btn-sm">Continue to Content Metrics <em class="icon ni ni-arrow-down"></em></a>
-    </div>
 </div>
 
 <style>
@@ -251,6 +280,15 @@
 .section-connector:before { content:""; position:absolute; left:10%; right:10%; top:50%; height:1px; background:linear-gradient(90deg,transparent,#6576ff 40%,#1ee0ac 60%,transparent); z-index:-1; }
 .compact-table .nk-tb-item { padding-top:.25rem; padding-bottom:.25rem; }
 media (max-width: 767px){ .section-connector:before{display:none;} }
+.performance-card .perf-metric { position:relative; padding:.5rem .75rem .75rem; background:#f5f6fa; border-radius:6px; overflow:hidden; }
+.performance-card .perf-metric .label { font-size:.7rem; text-transform:uppercase; letter-spacing:.5px; }
+.performance-card .perf-metric .value { display:block; font-size:1.15rem; font-weight:700; line-height:1.1; }
+.performance-card .perf-metric .delta { font-size:.75rem; font-weight:600; display:inline-block; margin-bottom:.25rem; }
+.performance-card .perf-metric .delta.up { color:#28a745; }
+.performance-card .perf-metric .delta.down { color:#e85347; }
+.performance-card canvas { width:100%; }
+.performance-card .progress.small { height:4px; background:#e5e9f2; }
+.performance-card .progress-bar { transition: width .6s ease; }
 </style>
 
 <script>
@@ -270,7 +308,7 @@ document.addEventListener('DOMContentLoaded', function(){
 document.addEventListener('DOMContentLoaded', function() {
     var traffic = @Html.Raw(trafficJson);
     var hourly = @Html.Raw(hourlyJson);
-    
+
     // Set chart defaults
     Chart.defaults.font.family = "'DM Sans', 'Helvetica', sans-serif";
     Chart.defaults.font.size = 12;
@@ -282,111 +320,31 @@ document.addEventListener('DOMContentLoaded', function() {
     Chart.defaults.plugins.tooltip.cornerRadius = 4;
     Chart.defaults.plugins.tooltip.padding = 10;
     Chart.defaults.plugins.tooltip.displayColors = false;
-    
-    // Traffic chart
-    if (traffic && traffic.length && document.getElementById('trafficChart')) {
-        var ctx = document.getElementById('trafficChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: traffic.map(function(x) { return x.Date; }),
-                datasets: [
-                    { 
-                        label: 'Sessions', 
-                        data: traffic.map(function(x) { return x.Sessions; }), 
-                        backgroundColor: 'rgba(101, 118, 255, 0.2)',
-                        borderColor: '#6576ff',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#6576ff',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#6576ff',
-                        tension: 0.4,
-                        fill: true,
-                        pointRadius: 0,
-                        pointHoverRadius: 4
-                    },
-                    { 
-                        label: 'Page Views', 
-                        data: traffic.map(function(x) { return x.PageViews; }), 
-                        backgroundColor: 'rgba(30, 224, 172, 0.2)',
-                        borderColor: '#1ee0ac',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#1ee0ac',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#1ee0ac',
-                        tension: 0.4,
-                        fill: true,
-                        pointRadius: 0,
-                        pointHoverRadius: 4
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: true,
-                        callbacks: {
-                            label: function(context) {
-                                var label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                label += context.parsed.y;
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            precision: 0,
-                            color: '#8094ae'
-                        },
-                        grid: {
-                            color: '#e5e9f2',
-                            drawBorder: false,
-                            borderDash: [5, 5]
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false,
-                            drawBorder: false
-                        },
-                        ticks: {
-                            color: '#8094ae',
-                            font: {
-                                size: 11
-                            },
-                            maxRotation: 30,
-                            minRotation: 30
-                        }
-                    }
-                },
-                animations: {
-                    tension: {
-                        duration: 1000,
-                        easing: 'linear',
-                        from: 0.4,
-                        to: 0.4,
-                        loop: false
-                    }
-                }
-            }
-        });
+
+    // KPI deltas for sessions & page views (last 7 days vs previous 7)
+    if(Array.isArray(traffic) && traffic.length){
+        const last7 = traffic.slice(-7);
+        const prev7 = traffic.slice(-14, -7);
+        const sum = (arr, f) => arr.reduce((a,b)=>a+(b[f]||0),0);
+        const sessionsLast7 = sum(last7,'Sessions');
+        const sessionsPrev7 = prev7.length ? sum(prev7,'Sessions') : 0;
+        const viewsLast7 = sum(last7,'PageViews');
+        const viewsPrev7 = prev7.length ? sum(prev7,'PageViews') : 0;
+        const pct = (cur,prev)=> prev===0 ? (cur>0?100:0) : ((cur-prev)/prev*100);
+        const sDelta = pct(sessionsLast7, sessionsPrev7);
+        const vDelta = pct(viewsLast7, viewsPrev7);
+        const fmt = v => (v>=0?'+':'') + v.toFixed(1) + '%';
+        const sessionsDeltaEl = document.getElementById('kpiSessionsDelta');
+        const viewsDeltaEl = document.getElementById('kpiViewsDelta');
+        if(sessionsDeltaEl){ sessionsDeltaEl.textContent = fmt(sDelta); sessionsDeltaEl.classList.add(sDelta>=0?'up':'down'); }
+        if(viewsDeltaEl){ viewsDeltaEl.textContent = fmt(vDelta); viewsDeltaEl.classList.add(vDelta>=0?'up':'down'); }
+
+        // Sparklines
+        const sparkCfg = (ctx, data, color) => new Chart(ctx, { type:'line', data:{ labels:data.map(_=>''), datasets:[{ data:data, borderColor:color, backgroundColor:color+'22', borderWidth:2, fill:true, tension:.4, pointRadius:0 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{enabled:false}}, scales:{ x:{display:false}, y:{display:false} }, elements:{ line:{borderJoinStyle:'round'} } } });
+        const sessionsSeries = traffic.slice(-30).map(x=>x.Sessions||0);
+        const pageViewSeries = traffic.slice(-30).map(x=>x.PageViews||0);
+        if(document.getElementById('sparkSessions')){ sparkCfg(document.getElementById('sparkSessions').getContext('2d'), sessionsSeries, '#6576ff'); }
+        if(document.getElementById('sparkPageViews')){ sparkCfg(document.getElementById('sparkPageViews').getContext('2d'), pageViewSeries, '#1ee0ac'); }
     }
 
     // Hourly chart
@@ -403,9 +361,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         var index = context.dataIndex;
                         var value = context.dataset.data[index];
                         var maxValue = Math.max.apply(null, context.dataset.data);
-                        if (value === maxValue) {
-                            return '#ff9933'; // Highlight peak hour
-                        }
+                        if (value === maxValue) { return '#ff9933'; }
                         return '#6576ff';
                     },
                     borderRadius: 4,
@@ -416,91 +372,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            title: function(tooltipItems) {
-                                return tooltipItems[0].label + ' hour';
-                            },
-                            label: function(context) {
-                                return context.parsed.y + ' page views';
-                            }
-                        }
-                    }
+                    legend: { display: false },
+                    tooltip: { callbacks: { title: function(tooltipItems) { return tooltipItems[0].label + ' hour'; }, label: function(context) { return context.parsed.y + ' page views'; } } }
                 },
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            precision: 0,
-                            color: '#8094ae'
-                        },
-                        grid: {
-                            color: '#e5e9f2',
-                            drawBorder: false
-                        },
-                        title: {
-                            display: true,
-                            text: 'Page Views',
-                            color: '#8094ae',
-                            font: {
-                                size: 12,
-                                weight: 'normal'
-                            },
-                            padding: {bottom: 10}
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false,
-                            drawBorder: false
-                        },
-                        ticks: {
-                            color: '#8094ae',
-                            font: {
-                                size: 11
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: 'Hour of Day',
-                            color: '#8094ae',
-                            font: {
-                                size: 12,
-                                weight: 'normal'
-                            },
-                            padding: {top: 10}
-                        }
-                    }
+                    y: { beginAtZero: true, ticks: { precision: 0, color: '#8094ae' }, grid: { color: '#e5e9f2', drawBorder: false }, title: { display: true, text: 'Page Views', color: '#8094ae', font: { size: 12, weight: 'normal' }, padding: {bottom: 10} } },
+                    x: { grid: { display: false, drawBorder: false }, ticks: { color: '#8094ae', font: { size: 11 } }, title: { display: true, text: 'Hour of Day', color: '#8094ae', font: { size: 12, weight: 'normal' }, padding: {top: 10} } }
                 },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                }
+                animation: { duration: 1000, easing: 'easeOutQuart' }
             }
         });
     }
-    
-    // Add Export functionality
-    document.getElementById('exportPDF').addEventListener('click', function(e) {
-        e.preventDefault();
-        alert('PDF Export functionality would go here in a production environment');
-    });
-    
-    document.getElementById('exportCSV').addEventListener('click', function(e) {
-        e.preventDefault();
-        alert('CSV Export functionality would go here in a production environment');
-    });
-    
-    // Initialize tooltips
+
+    // Initialize tooltips (guard if bootstrap available)
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl, {
-            container: 'body',
-            boundary: document.body
-        });
-    });
+    if(window.bootstrap && bootstrap.Tooltip){
+        tooltipTriggerList.map(function (el) { return new bootstrap.Tooltip(el, { container: 'body', boundary: document.body }); });
+    }
 });
 </script>
+
+
