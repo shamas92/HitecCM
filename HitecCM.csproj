@@ -139,6 +139,7 @@
     <Compile Include="Controllers\MenusController.cs" />
     <Compile Include="Controllers\MenuTypeController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
+    <Compile Include="Controllers\QACController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -436,6 +437,18 @@
     <Content Include="Views\Events\Edit.cshtml" />
     <Content Include="Views\Events\Delete.cshtml" />
     <Content Include="Views\Home\_AnalyticsDashboard.cshtml" />
+    <Content Include="Views\QAC\Contacts.cshtml" />
+    <Content Include="Views\QAC\Accreditation.cshtml" />
+    <Content Include="Views\QAC\Surveys.cshtml" />
+    <Content Include="Views\QAC\SARs.cshtml" />
+    <Content Include="Views\QAC\PGPR.cshtml" />
+    <Content Include="Views\QAC\RIPE.cshtml" />
+    <Content Include="Views\QAC\IPE.cshtml" />
+    <Content Include="Views\QAC\Organogram.cshtml" />
+    <Content Include="Views\QAC\AnnualActivityCalendar.cshtml" />
+    <Content Include="Views\QAC\Policy.cshtml" />
+    <Content Include="Views\QAC\About.cshtml" />
+    <Content Include="Views\QAC\Statement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

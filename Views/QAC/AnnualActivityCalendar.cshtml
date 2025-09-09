@@ -1,0 +1,52 @@
+@model HitecCM.Models.tblQACAnnualActivityCalender
+@{
+    ViewBag.Title = ViewBag.Title ?? "Annual Activity Calendar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Annual Activity Calendar</h3>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered">
+                <div class="card-inner">
+                    @using (Html.BeginForm("AnnualActivityCalendar", "QAC", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+                        <div class="form-group">
+                            <label class="form-label">Upload Calendar PDF</label>
+                            <div class="custom-file">
+                                <input type="file" name="pdfFile" class="custom-file-input" accept="application/pdf">
+                                <label class="custom-file-label">Choose PDF</label>
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model?.PdfFilePath))
+                            {
+                                <p class="mt-2">Current: <a href="@Url.Content(Model.PdfFilePath)" target="_blank">@Model.PdfFileName</a></p>
+                            }
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(function () {
+            $(document).on('change', '.custom-file-input', function () {
+                var fileName = $(this).val().split('\\').pop();
+                $(this).siblings('.custom-file-label').addClass("selected").html(fileName || 'Choose PDF');
+            });
+        });
+    </script>
+}
