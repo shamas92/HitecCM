@@ -235,7 +235,7 @@
         <div class="nk-block">
             <div class="row g-gs">
                 <!-- Recent Events -->
-                <div class="col-xxl-6">
+                <div class="col-xxl-6 col-md-6">
                     <div class="card card-bordered card-full" data-table="recent-events">
                         <div class="card-inner">
                             <div class="card-title-group">
@@ -261,75 +261,32 @@
                                     var eVenue = dynStr(eventItem, "Venue");
                                     var eViews = dynInt(eventItem, "Views") ?? 0;
                                     var eDate = dynDate(eventItem, "EventDate");
-                            <div class="nk-tb-item" role="row">
-                                <div class="nk-tb-col" role="cell">
-                                    <div class="user-card">
-                                        <div class="user-avatar xs bg-primary-dim">
-                                            <em class="icon ni ni-calendar"></em>
+                                    <div class="nk-tb-item" role="row">
+                                        <div class="nk-tb-col" role="cell">
+                                            <div class="user-card">
+                                                <div class="user-avatar xs bg-primary-dim">
+                                                    <em class="icon ni ni-calendar"></em>
+                                                </div>
+                                                <div class="user-name">
+                                                    <span class="tb-lead">@eTitle</span>
+                                                    <span class="tb-sub">@eVenue</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="user-name">
-                                            <span class="tb-lead">@eTitle</span>
-                                            <span class="tb-sub">@eVenue</span>
+                                        <div class="nk-tb-col tb-col-sm" role="cell">
+                                            <span class="tb-sub text-primary">@(eDate.HasValue ? eDate.Value.ToString("MMM dd") : "")</span>
+                                        </div>
+                                        <div class="nk-tb-col tb-col-sm" role="cell">
+                                            <span class="tb-lead">@eViews</span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="nk-tb-col tb-col-sm" role="cell">
-                                    <span class="tb-sub text-primary">@(eDate.HasValue ? eDate.Value.ToString("MMM dd") : "")</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-sm" role="cell">
-                                    <span class="tb-lead">@eViews</span>
-                                </div>
-                            </div>
                                 }
                             }
                         </div>
                     </div>
                 </div>
-                
-            </div>
-        </div>
-
-
-        <!-- Popular Content -->
-        <div class="nk-block">
-            <div class="row g-gs">
-                <div class="col-xxl-6">
-                    <div class="card card-bordered card-full" data-table="popular-events">
-                        <div class="card-inner">
-                            <div class="card-title-group">
-                                <div class="card-title">
-                                    <h6 class="title">Most Popular Events</h6>
-                                    <p>Events with highest view counts</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="nk-tb-list" role="table" aria-label="Popular events table">
-                            @{
-                                var popularEvents = ViewBag.PopularEvents as IEnumerable<object> ?? Enumerable.Empty<object>();
-                                foreach (var pe in popularEvents)
-                                {
-                                    var pTitle = dynStr(pe, "Title");
-                                    var pViews = dynInt(pe, "Views") ?? 0;
-                            <div class="nk-tb-item" role="row">
-                                <div class="nk-tb-col" role="cell">
-                                    <div class="user-card">
-                                        <div class="user-avatar xs bg-warning-dim">
-                                            <em class="icon ni ni-eye"></em>
-                                        </div>
-                                        <div class="user-name">
-                                            <span class="tb-lead">@pTitle</span>
-                                            <span class="tb-sub text-success">@pViews views</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                                }
-                            }
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-6">
+                <!-- Recent News -->
+                <div class="col-xxl-6 col-md-6">
                     <div class="card card-bordered card-full" data-table="recent-news">
                         <div class="card-inner">
                             <div class="card-title-group">
@@ -350,26 +307,30 @@
                                     var nTitle = dynStr(n, "Title");
                                     var nViews = dynInt(n, "Views") ?? 0;
                                     var nDate = dynDate(n, "Date");
-                            <div class="nk-tb-item" role="row">
-                                <div class="nk-tb-col" role="cell">
-                                    <div class="user-card">
-                                        <div class="user-avatar xs bg-info-dim">
-                                            <em class="icon ni ni-news"></em>
-                                        </div>
-                                        <div class="user-name">
-                                            <span class="tb-lead">@nTitle</span>
-                                            <span class="tb-sub">@(nDate.HasValue ? nDate.Value.ToString("MMM dd, yyyy") : "") • @nViews views</span>
+                                    <div class="nk-tb-item" role="row">
+                                        <div class="nk-tb-col" role="cell">
+                                            <div class="user-card">
+                                                <div class="user-avatar xs bg-info-dim">
+                                                    <em class="icon ni ni-news"></em>
+                                                </div>
+                                                <div class="user-name">
+                                                    <span class="tb-lead">@nTitle</span>
+                                                    <span class="tb-sub">@(nDate.HasValue ? nDate.Value.ToString("MMM dd, yyyy") : "") • @nViews views</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
                                 }
                             }
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
+
+
+
     </div>
 </div>
 

@@ -151,23 +151,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xxl-3 col-md-6 col-lg-4">
-            <div class="card card-bordered h-100 analytics-card gradient-card gradient-warning">
-                <div class="card-inner">
-                    <div class="card-title-group align-items-start mb-1">
-                        <div class="card-title"><h6 class="title">Bounce Rate</h6></div>
-                        <div class="card-tools"><em class="card-hint icon ni ni-help-fill" data-toggle="tooltip" title="Single-page sessions %"></em></div>
-                    </div>
-                    <div class="align-items-center">
-                        <div class="amount-wrap">
-                            <div class="amount h2 fw-bold @(((double)getProp(summary, "BounceRatePct")) > 50 ? "text-danger" : "text-success") mb-0">@getProp(summary, "BounceRatePct")%</div>
-                            <span class="subtitle text-soft fs-13px">Lower is better</span>
-                        </div>
-                        <div class="analytics-icon"><em class="icon ni ni-activity @(((double)getProp(summary, "BounceRatePct")) > 50 ? "text-danger" : "text-success")"></em></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
         <div class="col-xxl-3 col-md-6 col-lg-4">
             <div class="card card-bordered h-100 analytics-card gradient-card gradient-secondary">
                 <div class="card-inner">
@@ -271,7 +255,10 @@
 .gradient-success { --grad-start:#1ee0ac; --grad-end:#17c995; }
 .gradient-info { --grad-start:#559bfb; --grad-end:#6576ff; }
 .gradient-warning { --grad-start:#ff9f43; --grad-end:#ffc163; }
-.gradient-secondary { --grad-start:#8b8bff; --grad-end:#a6b8ff; }
+    .gradient-secondary {
+        --grad-start: #f4bf17;
+        --grad-end: #ff9933;
+    }
 .gradient-card .card-inner { backdrop-filter: blur(0px); }
 .small-tabs li a { font-size:.65rem; letter-spacing:.5px; }
 .smooth-card { transition: box-shadow .25s, transform .25s; }
