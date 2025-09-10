@@ -16,10 +16,6 @@
         <div class="nk-block">
             <div class="card card-bordered">
                 <div class="card-inner">
-                    @if (TempData["Success"] != null)
-                    {
-                        <div class="alert alert-success">@TempData["Success"]</div>
-                    }
                     @using (Html.BeginForm("Contacts", "QAC", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
                         @Html.AntiForgeryToken()
@@ -76,41 +72,6 @@
             $(document).on('change', '.custom-file-input', function () {
                 var fileName = $(this).val().split('\\').pop();
                 $(this).siblings('.custom-file-label').addClass("selected").html(fileName || 'Choose file');
-            });
-
-            if ($.fn.summernote && !$('.summernote-minimal').hasClass('initialized')) {
-                $('.summernote-minimal').addClass('initialized').summernote({
-                    placeholder: 'Enter details here...',
-                    tabsize: 2,
-                    height: 300,
-                    fontNames: ['Arial', 'Arial Black', 'Calibri', 'Times New Roman', 'Courier New', 'Verdana', 'Montserrat', 'Poppins'],
-                    fontNamesIgnoreCheck: ['Montserrat', 'Poppins'],
-                    fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '24', '36', '48', '64'],
-                    toolbar: [
-                        ['style', ['style']],
-                        ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
-                        ['fontname', ['fontname']],
-                        ['fontsize', ['fontsize']],
-                        ['color', ['color']],
-                        ['para', ['ul', 'ol', 'paragraph']],
-                        ['height', ['height']],
-                        ['table', ['table']],
-                        ['insert', ['link', 'picture', 'video']],
-                        ['view', ['fullscreen', 'codeview', 'help']]
-                    ]
-                });
-            }
-
-            var initial = $('#PageTextHidden').val();
-            if (initial && $.fn.summernote) {
-                $('.summernote-minimal').summernote('code', initial);
-            }
-
-            $('form').on('submit', function () {
-                if ($.fn.summernote) {
-                    var content = $('.summernote-minimal').summernote('code');
-                    $('#PageTextHidden').val(content);
-                }
             });
         });
     </script>

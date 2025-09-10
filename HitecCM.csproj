@@ -449,6 +449,7 @@
     <Content Include="Views\QAC\Policy.cshtml" />
     <Content Include="Views\QAC\About.cshtml" />
     <Content Include="Views\QAC\Statement.cshtml" />
+    <Content Include="Views\QAC\_Placeholder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
