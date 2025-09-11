@@ -36,11 +36,10 @@
                                     </div>
                                 </div>
                             </div>
-                            @* Optionally show validation message here *@
                         </div>
                         <div class="form-group mb-3">
                             @Html.Label("Chairman's Message", htmlAttributes: new { @class = "form-label" })
-                            @Html.TextAreaFor(m => m.chairman_message, new { @class = "form-control w-100 summernote-minimal", placeholder = "Chairman's Message", style = "min-width: 100%;" })
+                            @Html.TextBoxFor(m => m.chairman_message, new { @class = "form-control", placeholder = "Chairman's Message" })
                             @Html.ValidationMessageFor(m => m.chairman_message, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group mb-3">
@@ -55,31 +54,30 @@
                                     </div>
                                 </div>
                             </div>
-                            @* Optionally show validation message here *@
                         </div>
                         <div class="form-group mb-3">
                             @Html.Label("Vice Chancellor's Message", htmlAttributes: new { @class = "form-label" })
-                            @Html.TextAreaFor(m => m.vc_message, new { @class = "form-control w-100 summernote-minimal", placeholder = "VC's Message", style = "min-width: 100%;" })
+                            @Html.TextBoxFor(m => m.vc_message, new { @class = "form-control", placeholder = "VC's Message" })
                             @Html.ValidationMessageFor(m => m.vc_message, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group mb-3">
                             @Html.Label("Motto", htmlAttributes: new { @class = "form-label" })
-                            @Html.TextAreaFor(m => m.motto, new { @class = "form-control w-100 summernote-minimal", placeholder = "Motto", style = "min-width: 100%;" })
+                            @Html.TextBoxFor(m => m.motto, new { @class = "form-control", placeholder = "Motto" })
                             @Html.ValidationMessageFor(m => m.motto, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group mb-3">
                             @Html.Label("Vision", htmlAttributes: new { @class = "form-label" })
-                            @Html.TextAreaFor(m => m.vision, new { @class = "form-control w-100 summernote-minimal", placeholder = "Vision", style = "min-width: 100%;" })
+                            @Html.TextBoxFor(m => m.vision, new { @class = "form-control", placeholder = "Vision" })
                             @Html.ValidationMessageFor(m => m.vision, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group mb-3">
                             @Html.Label("Mission", htmlAttributes: new { @class = "form-label" })
-                            @Html.TextAreaFor(m => m.mission, new { @class = "form-control w-100 summernote-minimal", placeholder = "Mission", style = "min-width: 100%;" })
+                            @Html.TextBoxFor(m => m.mission, new { @class = "form-control", placeholder = "Mission" })
                             @Html.ValidationMessageFor(m => m.mission, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group mb-3">
                             @Html.Label("Emblem Description", htmlAttributes: new { @class = "form-label" })
-                            @Html.TextAreaFor(m => m.emblem, new { @class = "form-control w-100 summernote-minimal", placeholder = "Emblem", style = "min-width: 100%;" })
+                            @Html.TextBoxFor(m => m.emblem, new { @class = "form-control", placeholder = "Emblem" })
                             @Html.ValidationMessageFor(m => m.emblem, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group mt-4 text-left">

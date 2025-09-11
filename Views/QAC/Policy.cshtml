@@ -27,10 +27,7 @@
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(m => m.PageText, new { @class = "form-label" })
-                            <div>
-                                <div class="summernote-minimal"></div>
-                                @Html.HiddenFor(m => m.PageText, new { id = "PageTextHidden" })
-                            </div>
+                            @Html.TextBoxFor(m => m.PageText, new { @class = "form-control", placeholder = "Enter details here..." })
                             @Html.ValidationMessageFor(m => m.PageText)
                         </div>
                         <div class="form-group">
@@ -56,7 +53,6 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script>
         $(function () {
-            // Only keep the file input handler
             $(document).on('change', '.custom-file-input', function () {
                 var fileName = $(this).val().split('\\').pop();
                 $(this).siblings('.custom-file-label').addClass("selected").html(fileName || 'Choose PDF');

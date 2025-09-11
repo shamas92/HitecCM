@@ -11,8 +11,6 @@ namespace HitecCM
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Content/js/bundle.js",
                         "~/Content/js/scripts.js",
-                        "~/Content/js/editors.js",
-                        "~/Content/js/libs/editors/summernote.js",
                         "~/Content/js/charts/gd-analytics.js",
                         "~/Content/js/libs/jqvmap.js",
                         "~/Content/js/crop-functionality.js"
@@ -26,7 +24,6 @@ namespace HitecCM
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/css/dashlite.css",
                       "~/Content/css/theme.css",
-                      "~/Content/css/editors/summernote.css",
                       "~/Content/css/crop-modal.css"));
         }
     }

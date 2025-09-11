@@ -111,10 +111,7 @@
 
                         <div class="form-group">
                             @Html.LabelFor(m => m.Details, "Details", new { @class = "form-label" })
-                            <div>
-                                <div class="summernote-minimal"></div>
-                                @Html.HiddenFor(m => m.Details, new { id = "DetailsHidden" })
-                            </div>
+                            @Html.TextBoxFor(m => m.Details, new { @class = "form-control", placeholder = "Enter event details here..." })
                             @Html.ValidationMessageFor(m => m.Details, "", new { @class = "text-danger" })
                         </div>
 
@@ -149,32 +146,6 @@
                     reader.readAsDataURL(file);
                 } else {
                     $('#imagePreview').hide();
-                }
-            });
-            
-            // Initialize Summernote
-            if ($.fn.summernote) {
-                $('.summernote-minimal').summernote({
-                    placeholder: 'Enter event details...',
-                    tabsize: 2,
-                    height: 300,
-                    toolbar: [
-                        ['style', ['style']],
-                        ['font', ['bold', 'underline', 'italic', 'clear']],
-                        ['color', ['color']],
-                        ['para', ['ul', 'ol', 'paragraph']],
-                        ['table', ['table']],
-                        ['insert', ['link', 'picture']],
-                        ['view', ['fullscreen', 'codeview', 'help']]
-                    ]
-                });
-            }
-
-            // Form submit handler to ensure content is saved
-            $('form').on('submit', function() {
-                if ($.fn.summernote) {
-                    var content = $('.summernote-minimal').summernote('code');
-                    $('#DetailsHidden').val(content);
                 }
             });
         });
