@@ -362,6 +362,7 @@
     <Content Include="Content\js\charts\gd-default.js" />
     <Content Include="Content\js\charts\gd-invest.js" />
     <Content Include="Content\js\crop-functionality.js" />
+    <Content Include="Content\js\editors.js" />
     <Content Include="Content\js\example-chart.js" />
     <Content Include="Content\js\example-listbox.js" />
     <Content Include="Content\js\example-sweetalert.js" />
@@ -370,6 +371,7 @@
     <Content Include="Content\js\libs\dual-listbox.js" />
     <Content Include="Content\js\libs\editors\quill.js" />
     <Content Include="Content\js\libs\editors\skins\content\default\content.css" />
+    <Content Include="Content\js\libs\editors\summernote.js" />
     <Content Include="Content\js\libs\editors\tinymce.js" />
     <Content Include="Content\js\libs\fullcalendar.js" />
     <Content Include="Content\js\libs\jkanban.js" />
@@ -409,6 +411,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Facilities\Create.cshtml" />
     <Content Include="Views\Facilities\Delete.cshtml" />
     <Content Include="Views\Facilities\Edit.cshtml" />
     <Content Include="Views\Facilities\Index.cshtml" />
@@ -447,7 +450,6 @@
     <Content Include="Views\QAC\About.cshtml" />
     <Content Include="Views\QAC\Statement.cshtml" />
     <Content Include="Views\QAC\_Placeholder.cshtml" />
-    <Content Include="Views\Facilities\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

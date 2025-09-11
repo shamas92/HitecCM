@@ -79,7 +79,10 @@
 
                         <div class="form-group">
                             @Html.LabelFor(model => model.Details, "Details", new { @class = "form-label" })
-                            @Html.TextBoxFor(model => model.Details, new { @class = "form-control", placeholder = "Enter facility details here..." })
+                            <div>
+                                <div class="summernote-minimal"></div>
+                                @Html.HiddenFor(model => model.Details, new { id = "DetailsHidden" })
+                            </div>
                             @Html.ValidationMessageFor(model => model.Details, "", new { @class = "text-danger" })
                         </div>
 

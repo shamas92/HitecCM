@@ -31,7 +31,7 @@
                         </div>
                         <div class="form-group mb-3">
                             @Html.Label("Description", htmlAttributes: new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.DescripQon, new { @class = "form-control", placeholder = "Description" })
+                            @Html.TextAreaFor(m => m.DescripQon, new { @class = "form-control w-100 summernote-minimal", placeholder = "Description", style = "min-width: 100%;" })
                             @Html.ValidationMessageFor(m => m.DescripQon, "", new { @class = "text-danger" })
                         </div>
                         <div class="form-group mt-4 text-left">
@@ -45,4 +45,8 @@
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-}
+    @Scripts.Render("~/Content/js/editors.js")
+    <script>
+        NioApp.SummerNote();
+    </script>
+} 

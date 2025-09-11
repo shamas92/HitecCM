@@ -64,7 +64,10 @@
 
                         <div class="form-group">
                             @Html.LabelFor(model => model.Details, "Details", new { @class = "form-label" })
-                            @Html.TextBoxFor(model => model.Details, new { @class = "form-control", placeholder = "Enter facility details here..." })
+                            <div>
+                                <div class="summernote-minimal"></div>
+                            </div>
+                            @Html.HiddenFor(model => model.Details, new { id = "DetailsHidden" })
                             @Html.ValidationMessageFor(model => model.Details, "", new { @class = "text-danger" })
                         </div>
 
@@ -204,6 +207,14 @@
                     $('#cropImageBtn').hide();
                 }
             });
+
+            // Form submit handler to ensure content is saved
+            $('form').on('submit', function() {
+                if (window.jQuery && window.jQuery.fn && window.jQuery.fn.summernote) {
+                    var content = $('.summernote-minimal').summernote('code');
+                    $('#DetailsHidden').val(content);
+                }
+            });
         });
     </script>
-}
+} 

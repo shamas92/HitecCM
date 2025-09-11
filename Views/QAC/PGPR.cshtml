@@ -27,7 +27,10 @@
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(m => m.PageText, new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.PageText, new { @class = "form-control", placeholder = "Enter details here..." })
+                            <div>
+                                <div class="summernote-minimal"></div>
+                                @Html.HiddenFor(m => m.PageText, new { id = "PageTextHidden" })
+                            </div>
                             @Html.ValidationMessageFor(m => m.PageText)
                         </div>
                         <div class="form-group">
