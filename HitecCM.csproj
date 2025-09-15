@@ -450,7 +450,6 @@
     <Content Include="Views\QAC\About.cshtml" />
     <Content Include="Views\QAC\Statement.cshtml" />
     <Content Include="Views\QAC\_Placeholder.cshtml" />
-    <Content Include="SUMMERNOTE_MODAL_VIBRATION_FIX.md" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
