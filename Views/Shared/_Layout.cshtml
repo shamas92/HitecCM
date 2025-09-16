@@ -7,508 +7,179 @@
     @Styles.Render("~/Content/css")
     <link href="~/Content/css/dashboard.css" rel="stylesheet" type="text/css" />
     @Scripts.Render("~/bundles/modernizr")
-
+    <style>
+        /* Layout constants */
+        :root { --header-h:60px; --sidebar-w:240px; }
+        /* Sidebar redesign (minimal custom CSS) */
+        #sidebar { width:var(--sidebar-w); flex:0 0 var(--sidebar-w); background:#fff; border-right:1px solid #e5e9f2; position:fixed; top:var(--header-h); left:0; bottom:0; overflow-y:auto; overflow-x:hidden; }
+        .sidebar-header { padding:12px 18px 4px; font-size:.65rem; letter-spacing:.15em; font-weight:700; color:#364a63; opacity:.75; }
+        .sidebar-nav { list-style:none; margin:0; padding:0; }
+        .sidebar-nav li { position:relative; }
+        .sidebar-nav a { display:flex; align-items:center; font-weight:600; color:#4a5b75; padding:8px 18px; font-size:14px; text-decoration:none; }
+        .sidebar-nav a .icon { font-size:18px; margin-right:10px; line-height:1; }
+        .sidebar-nav a .caret { margin-left:auto; font-size:16px; line-height:1; width:16px; text-align:center; transition:transform .25s ease, color .15s; opacity:.65; }
+        .sidebar-nav a:hover { background:#f5f6fa; color:#4a6ef2; text-decoration:none; }
+        .sidebar-nav a:hover .icon, .sidebar-nav a:hover .caret { color:#4a6ef2; }
+        .sidebar-nav a.active { color:#274bdb; }
+        .sidebar-nav a.active .icon, .sidebar-nav a.active .caret { color:#274bdb; }
+        .sidebar-nav a[aria-expanded="true"] .caret { transform:rotate(90deg); opacity:1; }
+        .sidebar-sub { list-style:none; margin:0 0 4px; padding:0; }
+        .sidebar-sub a { padding:6px 18px 6px 46px; font-weight:500; font-size:13px; color:#4a5b75; }
+        .sidebar-sub a:hover { color:#4a6ef2; background:#f5f6fa; }
+        .sidebar-sub a.active { color:#274bdb; }
+        /* Header spans full width and fixed */
+        .app-header { position:fixed; top:0; left:0; right:0; height:var(--header-h); z-index:1040; display:flex; align-items:center; background:#fff; border-bottom:1px solid #e5e9f2; padding:10px 18px; }
+        .app-brand { display:flex; align-items:center; cursor:pointer; }
+        .app-brand-icon { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#efeaff; color:#816bff; font-size:18px; margin-right:10px; }
+        .app-brand-text small { display:block; font-size:.6rem; letter-spacing:.15em; font-weight:600; color:#8091a7; }
+        .app-brand-text span { font-weight:700; color:#364a63; font-size:.95rem; }
+        .header-actions { margin-left:auto; display:flex; align-items:center; gap:22px; }
+        .header-actions .action-btn { background:none; border:0; position:relative; color:#607089; font-size:18px; padding:4px; }
+        .header-actions .action-btn:focus { outline:none; }
+        .header-actions .action-btn:hover { color:#4a6ef2; }
+        .avatar-circle { width:38px; height:38px; border-radius:50%; background:#6576ff; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:600; }
+        .mobile-toggle { margin-right:12px; }
+        #appLayout { display:flex; width:100%; min-height:100vh; margin-top:var(--header-h); }
+        .content-column { flex:1 1 auto; display:flex; flex-direction:column; min-width:0; margin-left:var(--sidebar-w); }
+        .content-column > main { min-height:calc(100vh - var(--header-h)); }
+        /* Mobile adjustments */
+        @@media (max-width: 991.98px){ 
+            #sidebar{ transform:translateX(-100%); box-shadow:0 0 12px rgba(0,0,0,.08); } 
+            #sidebar.show{ transform:translateX(0);} 
+            body.sidebar-open{ overflow:hidden;} 
+            .content-column { margin-left:0; }
+            .mobile-toggle{ display:inline-block; }
+        }
+        @@media (min-width: 992px){ .mobile-toggle{ display:none; } }
+    </style>
 </head>
 <body>
-
-    <div class="nk-app-root">
-
-        <div class="nk-main ">
-
-            <div class="nk-wrap ">
-
-                <div class="nk-header nk-header-fixed is-light">
-                    <div class="container-fluid">
-                        <div class="nk-header-wrap">
-                            <div class="nk-menu-trigger d-xl-none ml-n1">
-                                <a href="#" class="nk-nav-toggle nk-quick-nav-icon" data-target="sidebarMenu"><em class="icon ni ni-menu"></em></a>
-                            </div>
-                            <div class="nk-header-app-name" onclick="window.location.href='/'" style="cursor: pointer;">
-                                <div class="nk-header-app-logo">
-                                    <em class="icon ni ni-dashlite bg-purple-dim"></em>
-                                </div>
-                                <div class="nk-header-app-info">
-                                    <span class="sub-text">HITEC</span>
-                                    <span class="lead-text">Content Management</span>
-                                </div>
-                            </div>
-                            <div class="nk-header-menu is-light">
-                                <div class="nk-header-menu-inner">
-                                    <!-- Menu -->
-                                    <!-- <ul class="nk-menu nk-menu-main">
-                                    <li class="nk-menu-item">
-                                        <a href="html/index.html" class="nk-menu-link">
-                                            <span class="nk-menu-text">Overview</span>
-                                        </a>
-                                    </li>
-                                    <li class="nk-menu-item">
-                                        <a href="html/components.html" class="nk-menu-link">
-                                            <span class="nk-menu-text">Components</span>
-                                        </a>
-                                    </li>
-                                    <li class="nk-menu-item has-sub">
-                                        <a href="#" class="nk-menu-link nk-menu-toggle">
-                                            <span class="nk-menu-text">Use-Case Panel</span>
-                                        </a>
-                                        <ul class="nk-menu-sub">
-                                            <li class="nk-menu-item">
-                                                <a href="/demo2/ecommerce/index.html" class="nk-menu-link"><span class="nk-menu-text">eCommerce Panel</span></a>
-                                            </li>
-                                            <li class="nk-menu-item">
-                                                <a href="/demo3/apps/file-manager.html" class="nk-menu-link"><span class="nk-menu-text">File Manangement Panel</span></a>
-                                            </li>
-                                            <li class="nk-menu-item">
-                                                <a href="/demo4/subscription/index.html" class="nk-menu-link"><span class="nk-menu-text">Subscription Panel</span></a>
-                                            </li>
-                                            <li class="nk-menu-item">
-                                                <a href="/demo5/crypto/index.html" class="nk-menu-link"><span class="nk-menu-text">Crypto Buy Sell Panel</span></a>
-                                            </li>
-                                            <li class="nk-menu-item">
-                                                <a href="/demo6/invest/index.html" class="nk-menu-link"><span class="nk-menu-text">HYIP Investment Panel</span></a>
-                                            </li>
-                                        </ul><!-- .nk-menu-sub -->
-                                    <!-- </li> <!-- .nk-menu-item -->
-                                    <!--</ul> -->
-                                    <!-- Menu -->
-                                </div>
-                            </div>
-                            <div class="nk-header-tools">
-                                <ul class="nk-quick-nav">
-                                    <li class="dropdown chats-dropdown hide-mb-xs">
-                                        <a href="#" class="dropdown-toggle nk-quick-nav-icon" data-toggle="dropdown">
-                                            <div class="icon-status icon-status-na"><em class="icon ni ni-comments"></em></div>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right">
-                                            <div class="dropdown-head">
-                                                <span class="sub-title nk-dropdown-title">Recent Chats</span>
-                                                <a href="#">Setting</a>
-                                            </div>
-                                            <div class="dropdown-body">
-                                                <ul class="chat-list">
-                                                    <li class="chat-item">
-                                                        <a class="chat-link" href="html/apps/chats.html">
-                                                            <div class="chat-media user-avatar">
-                                                                <span>IH</span>
-                                                                <span class="status dot dot-lg dot-gray"></span>
-                                                            </div>
-                                                            <div class="chat-info">
-                                                                <div class="chat-from">
-                                                                    <div class="name">Iliash Hossain</div>
-                                                                    <span class="time">Now</span>
-                                                                </div>
-                                                                <div class="chat-context">
-                                                                    <div class="text">You: Please confrim if you got my last messages.</div>
-                                                                    <div class="status delivered">
-                                                                        <em class="icon ni ni-check-circle-fill"></em>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    </li><!-- .chat-item -->
-                                                    <li class="chat-item is-unread">
-                                                        <a class="chat-link" href="html/apps/chats.html">
-                                                            <div class="chat-media user-avatar bg-pink">
-                                                                <span>AB</span>
-                                                                <span class="status dot dot-lg dot-success"></span>
-                                                            </div>
-                                                            <div class="chat-info">
-                                                                <div class="chat-from">
-                                                                    <div class="name">Abu Bin Ishtiyak</div>
-                                                                    <span class="time">4:49 AM</span>
-                                                                </div>
-                                                                <div class="chat-context">
-                                                                    <div class="text">Hi, I am Ishtiyak, can you help me with this problem ?</div>
-                                                                    <div class="status unread">
-                                                                        <em class="icon ni ni-bullet-fill"></em>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    </li><!-- .chat-item -->
-                                                    <li class="chat-item">
-                                                        <a class="chat-link" href="html/apps/chats.html">
-                                                            <div class="chat-media user-avatar">
-                                                                <img src="./images/avatar/b-sm.jpg" alt="">
-                                                            </div>
-                                                            <div class="chat-info">
-                                                                <div class="chat-from">
-                                                                    <div class="name">George Philips</div>
-                                                                    <span class="time">6 Apr</span>
-                                                                </div>
-                                                                <div class="chat-context">
-                                                                    <div class="text">Have you seens the claim from Rose?</div>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    </li><!-- .chat-item -->
-                                                    <li class="chat-item">
-                                                        <a class="chat-link" href="html/apps/chats.html">
-                                                            <div class="chat-media user-avatar user-avatar-multiple">
-                                                                <div class="user-avatar">
-                                                                    <img src="./images/avatar/c-sm.jpg" alt="">
-                                                                </div>
-                                                                <div class="user-avatar">
-                                                                    <span>AB</span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="chat-info">
-                                                                <div class="chat-from">
-                                                                    <div class="name">Softnio Group</div>
-                                                                    <span class="time">27 Mar</span>
-                                                                </div>
-                                                                <div class="chat-context">
-                                                                    <div class="text">You: I just bought a new computer but i am having some problem</div>
-                                                                    <div class="status sent">
-                                                                        <em class="icon ni ni-check-circle"></em>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    </li><!-- .chat-item -->
-                                                    <li class="chat-item">
-                                                        <a class="chat-link" href="html/apps/chats.html">
-                                                            <div class="chat-media user-avatar">
-                                                                <img src="./images/avatar/a-sm.jpg" alt="">
-                                                                <span class="status dot dot-lg dot-success"></span>
-                                                            </div>
-                                                            <div class="chat-info">
-                                                                <div class="chat-from">
-                                                                    <div class="name">Larry Hughes</div>
-                                                                    <span class="time">3 Apr</span>
-                                                                </div>
-                                                                <div class="chat-context">
-                                                                    <div class="text">Hi Frank! How is you doing?</div>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    </li><!-- .chat-item -->
-                                                    <li class="chat-item">
-                                                        <a class="chat-link" href="html/apps/chats.html">
-                                                            <div class="chat-media user-avatar bg-purple">
-                                                                <span>TW</span>
-                                                            </div>
-                                                            <div class="chat-info">
-                                                                <div class="chat-from">
-                                                                    <div class="name">Tammy Wilson</div>
-                                                                    <span class="time">27 Mar</span>
-                                                                </div>
-                                                                <div class="chat-context">
-                                                                    <div class="text">You: I just bought a new computer but i am having some problem</div>
-                                                                    <div class="status sent">
-                                                                        <em class="icon ni ni-check-circle"></em>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    </li><!-- .chat-item -->
-                                                </ul><!-- .chat-list -->
-                                            </div><!-- .nk-dropdown-body -->
-                                            <div class="dropdown-foot center">
-                                                <a href="html/chats.html">View All</a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="dropdown notification-dropdown">
-                                        <a href="#" class="dropdown-toggle nk-quick-nav-icon" data-toggle="dropdown">
-                                            <div class="icon-status icon-status-info"><em class="icon ni ni-bell"></em></div>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right">
-                                            <div class="dropdown-head">
-                                                <span class="sub-title nk-dropdown-title">Notifications</span>
-                                                <a href="#">Mark All as Read</a>
-                                            </div>
-                                            <div class="dropdown-body">
-                                                <div class="nk-notification">
-                                                    <div class="nk-notification-item dropdown-inner">
-                                                        <div class="nk-notification-icon">
-                                                            <em class="icon icon-circle bg-primary-dim ni ni-share"></em>
-                                                        </div>
-                                                        <div class="nk-notification-content">
-                                                            <div class="nk-notification-text">Iliash shared <span>Dashlite-v2</span> with you.</div>
-                                                            <div class="nk-notification-time">Just now</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="nk-notification-item dropdown-inner">
-                                                        <div class="nk-notification-icon">
-                                                            <em class="icon icon-circle bg-info-dim ni ni-edit"></em>
-                                                        </div>
-                                                        <div class="nk-notification-content">
-                                                            <div class="nk-notification-text">Iliash <span>invited</span> you to edit <span>DashLite</span> folder</div>
-                                                            <div class="nk-notification-time">2 hrs ago</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="nk-notification-item dropdown-inner">
-                                                        <div class="nk-notification-icon">
-                                                            <em class="icon icon-circle bg-primary-dim ni ni-share"></em>
-                                                        </div>
-                                                        <div class="nk-notification-content">
-                                                            <div class="nk-notification-text">You have shared <span>project v2</span> with Parvez.</div>
-                                                            <div class="nk-notification-time">7 days ago</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="nk-notification-item dropdown-inner">
-                                                        <div class="nk-notification-icon">
-                                                            <em class="icon icon-circle bg-success-dim ni ni-spark"></em>
-                                                        </div>
-                                                        <div class="nk-notification-content">
-                                                            <div class="nk-notification-text">Your <span>Subscription</span> renew successfully.</div>
-                                                            <div class="nk-notification-time">2 month ago</div>
-                                                        </div>
-                                                    </div>
-                                                </div><!-- .nk-notification -->
-                                            </div><!-- .nk-dropdown-body -->
-                                            <div class="dropdown-foot center">
-                                                <a href="#">View All</a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="dropdown list-apps-dropdown d-lg-none">
-                                        <a href="#" class="dropdown-toggle nk-quick-nav-icon" data-toggle="dropdown">
-                                            <div class="icon-status icon-status-na"><em class="icon ni ni-menu-circled"></em></div>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                                            <div class="dropdown-body">
-                                                <ul class="list-apps">
-                                                    <li>
-                                                        <a href="html/index.html">
-                                                            <span class="list-apps-media"><em class="icon ni ni-dashlite bg-primary text-white"></em></span>
-                                                            <span class="list-apps-title">Dashboard</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="html/apps/chats.html">
-                                                            <span class="list-apps-media"><em class="icon ni ni-chat-circle bg-info-dim"></em></span>
-                                                            <span class="list-apps-title">Chats</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="html/apps/mailbox.html">
-                                                            <span class="list-apps-media"><em class="icon ni ni-inbox bg-purple-dim"></em></span>
-                                                            <span class="list-apps-title">Mailbox</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="html/apps/messages.html">
-                                                            <span class="list-apps-media"><em class="icon ni ni-chat bg-success-dim"></em></span>
-                                                            <span class="list-apps-title">Messages</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="html/apps/file-manager.html">
-                                                            <span class="list-apps-media"><em class="icon ni ni-folder bg-purple-dim"></em></span>
-                                                            <span class="list-apps-title">File Manager</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="html/components.html">
-                                                            <span class="list-apps-media"><em class="icon ni ni-layers bg-secondary-dim"></em></span>
-                                                            <span class="list-apps-title">Components</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                                <ul class="list-apps">
-                                                    <li>
-                                                        <a href="/demo2/ecommerce/index.html">
-                                                            <span class="list-apps-media"><em class="icon ni ni-cart bg-danger-dim"></em></span>
-                                                            <span class="list-apps-title">Ecommerce Panel</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="/demo4/subscription/index.html">
-                                                            <span class="list-apps-media"><em class="icon ni ni-calendar-booking bg-primary-dim"></em></span>
-                                                            <span class="list-apps-title">Subscription Panel</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="/demo5/crypto/index.html">
-                                                            <span class="list-apps-media"><em class="icon ni ni-bitcoin-cash bg-warning-dim"></em></span>
-                                                            <span class="list-apps-title">Crypto Wallet Panel</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="/demo6/invest/index.html">
-                                                            <span class="list-apps-media"><em class="icon ni ni-invest bg-blue-dim"></em></span>
-                                                            <span class="list-apps-title">HYIP Invest Panel</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div><!-- .nk-dropdown-body -->
-                                        </div>
-                                    </li>
-                                    <li class="dropdown user-dropdown">
-                                        <a href="#" class="dropdown-toggle mr-n1" data-toggle="dropdown">
-                                            <div class="user-toggle">
-                                                <div class="user-avatar sm">
-                                                    <em class="icon ni ni-user-alt"></em>
-                                                </div>
-                                            </div>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-md dropdown-menu-right">
-                                            <div class="dropdown-inner user-card-wrap bg-lighter d-none d-md-block">
-                                                <div class="user-card">
-                                                    <div class="user-avatar">
-                                                        <span>AB</span>
-                                                    </div>
-                                                    <div class="user-info">
-                                                        <span class="lead-text">Abu Bin Ishtiyak</span>
-                                                        <span class="sub-text">info@softnio.com</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="dropdown-inner">
-                                                <ul class="link-list">
-                                                    <li><a href="html/user-profile-regular.html"><em class="icon ni ni-user-alt"></em><span>View Profile</span></a></li>
-                                                    <li><a href="html/user-profile-setting.html"><em class="icon ni ni-setting-alt"></em><span>Account Setting</span></a></li>
-                                                    <li><a href="html/user-profile-activity.html"><em class="icon ni ni-activity-alt"></em><span>Login Activity</span></a></li>
-                                                    <li><a class="dark-switch" href="#"><em class="icon ni ni-moon"></em><span>Dark Mode</span></a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="dropdown-inner">
-                                                <ul class="link-list">
-                                                    <li><a href="#"><em class="icon ni ni-signout"></em><span>Sign out</span></a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- main header  -->
-                <div class="nk-sidebar" data-content="sidebarMenu">
-                    <div class="nk-sidebar-inner" data-simplebar>
-                        <ul class="nk-menu nk-menu-md">
-                            <li class="nk-menu-item">
-                                <a href="@Url.Action("Index", "Home")" class="nk-menu-link">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-dashboard"></em></span>
-                                    <span class="nk-menu-text">Dashboard</span>
-                                </a>
-                            </li><!-- .nk-menu-item -->
-                            <li class="nk-menu-item">
-                                <a href="@Url.Action("Index", "About")" class="nk-menu-link">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-info"></em></span>
-                                    <span class="nk-menu-text">About</span>
-                                </a>
-                            </li><!-- .nk-menu-item -->
-                            <li class="nk-menu-item has-sub">
-                                <a href="#" class="nk-menu-link nk-menu-toggle">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-building"></em></span>
-                                    <span class="nk-menu-text">Departments</span>
-                                </a>
-                                <ul class="nk-menu-sub">
-                                    <li class="nk-menu-item">
-                                        <a href="@Url.Action("Index", "Departments")" class="nk-menu-link"><span class="nk-menu-text">Manage Departments</span></a>
-                                    </li>
-                                </ul><!-- .nk-menu-sub -->
-                            </li><!-- .nk-menu-item -->
-                            <li class="nk-menu-item has-sub">
-                                <a href="#" class="nk-menu-link nk-menu-toggle">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-building"></em></span>
-                                    <span class="nk-menu-text">Facilities</span>
-                                </a>
-                                <ul class="nk-menu-sub">
-                                    <li class="nk-menu-item">
-                                        <a href="@Url.Action("Index", "Facilities")" class="nk-menu-link"><span class="nk-menu-text">Manage Facilities</span></a>
-                                    </li>
-                                </ul><!-- .nk-menu-sub -->
-                            </li><!-- .nk-menu-item -->
-
-                            <li class="nk-menu-item has-sub">
-                                <a href="#" class="nk-menu-link nk-menu-toggle">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-book"></em></span>
-                                    <span class="nk-menu-text">Admissions</span>
-                                </a>
-                                <ul class="nk-menu-sub">
-                                    <li class="nk-menu-item">
-                                        <a href="@Url.Action("Index", "Advertisement")" class="nk-menu-link"><span class="nk-menu-text">Advertisement</span></a>
-                                    </li>
-                                    <li class="nk-menu-item">
-                                        <a href="@Url.Action("Index", "AcademicCalendar")" class="nk-menu-link"><span class="nk-menu-text">Academic Calendar</span></a>
-                                    </li>
-                                    <li class="nk-menu-item">
-                                        <a href="#" class="nk-menu-link"><span class="nk-menu-text">Admitted Students</span></a>
-                                    </li>
-                                </ul><!-- .nk-menu-sub -->
-                            </li><!-- .nk-menu-item -->
-                            <li class="nk-menu-item has-sub">
-                                <a href="#" class="nk-menu-link nk-menu-toggle">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-tile-thumb"></em></span>
-                                    <span class="nk-menu-text">Faculty</span>
-                                </a>
-                                <ul class="nk-menu-sub">
-                                    <li class="nk-menu-item">
-                                        <a href="@Url.Action("VisionMission", "Faculty")" class="nk-menu-link"><span class="nk-menu-text">Vision & Mission</span></a>
-                                    </li>
-
-                                </ul><!-- .nk-menu-sub -->
-                            </li><!-- .nk-menu-item -->
-
-
-
-                            <li class="nk-menu-item has-sub">
-                                <a href="#" class="nk-menu-link nk-menu-toggle">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-menu"></em></span>
-                                    <span class="nk-menu-text">Menus</span>
-                                </a>
-                                <ul class="nk-menu-sub">
-                                    <li class="nk-menu-item">
-                                        <a href="@Url.Action("Index", "Menus")" class="nk-menu-link"><span class="nk-menu-text">Menu</span></a>
-                                    </li>
-                                    <li class="nk-menu-item">
-                                        <a href="@Url.Action("Index", "MenuType")" class="nk-menu-link"><span class="nk-menu-text">Menu Type</span></a>
-                                    </li>
-                                </ul><!-- .nk-menu-sub -->
-                            </li><!-- .nk-menu-item -->
-
-                            <li class="nk-menu-item has-sub">
-                                <a href="#" class="nk-menu-link nk-menu-toggle">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-calendar"></em></span>
-                                    <span class="nk-menu-text">Events</span>
-                                </a>
-                                <ul class="nk-menu-sub">
-                                    <li class="nk-menu-item">
-                                        <a href="@Url.Action("Index", "Events")" class="nk-menu-link"><span class="nk-menu-text">Manage Events</span></a>
-                                    </li>
-                                </ul><!-- .nk-menu-sub -->
-                            </li><!-- .nk-menu-item -->
-
-                            <!-- QAC Menu -->
-                            <li class="nk-menu-item has-sub">
-                                <a href="#" class="nk-menu-link nk-menu-toggle">
-                                    <span class="nk-menu-icon"><em class="icon ni ni-briefcase"></em></span>
-                                    <span class="nk-menu-text">QA&C</span>
-                                </a>
-                                <ul class="nk-menu-sub">
-                                    <li class="nk-menu-item"><a href="@Url.Action("About", "QAC")" class="nk-menu-link"><span class="nk-menu-text">About QA&C</span></a></li>
-                                    <li class="nk-menu-item"><a href="@Url.Action("Policy", "QAC")" class="nk-menu-link"><span class="nk-menu-text">Quality Assurance Policy</span></a></li>
-                                    <li class="nk-menu-item"><a href="@Url.Action("AnnualActivityCalendar", "QAC")" class="nk-menu-link"><span class="nk-menu-text">Annual Activity Calendar</span></a></li>
-                                    <li class="nk-menu-item"><a href="@Url.Action("Organogram", "QAC")" class="nk-menu-link"><span class="nk-menu-text">Organogram</span></a></li>
-                                    <li class="nk-menu-item"><a href="@Url.Action("IPE", "QAC")" class="nk-menu-link"><span class="nk-menu-text">IPE</span></a></li>
-                                    <li class="nk-menu-item"><a href="@Url.Action("RIPE", "QAC")" class="nk-menu-link"><span class="nk-menu-text">RIPE</span></a></li>
-                                    <li class="nk-menu-item"><a href="@Url.Action("PGPR", "QAC")" class="nk-menu-link"><span class="nk-menu-text">PGPR</span></a></li>
-                                    <li class="nk-menu-item"><a href="@Url.Action("SARs", "QAC")" class="nk-menu-link"><span class="nk-menu-text">SARs</span></a></li>
-                                    <li class="nk-menu-item"><a href="@Url.Action("Surveys", "QAC")" class="nk-menu-link"><span class="nk-menu-text">Surveys</span></a></li>
-                                    <li class="nk-menu-item"><a href="@Url.Action("Accreditation", "QAC")" class="nk-menu-link"><span class="nk-menu-text">Accreditation</span></a></li>
-                                    <li class="nk-menu-item"><a href="@Url.Action("Contacts", "QAC")" class="nk-menu-link"><span class="nk-menu-text">Contacts</span></a></li>
-                                </ul>
-                            </li>
-                            <!-- End QAC Menu -->
-
-                        </ul><!-- .nk-menu -->
-                    </div>
-                </div>
-
-                <div class="nk-content ">
-                    @RenderBody()
-                </div>
-                <!-- content -->
-            </div>
-            <!-- wrap -->
+@{ 
+    var ctrl = (string)ViewContext.RouteData.Values["controller"]; 
+    var action = (string)ViewContext.RouteData.Values["action"]; 
+    var admissionsCtrls = new[]{"Advertisement","AcademicCalendar"};
+    var facultyCtrls = new[]{"Faculty"};
+    var menusCtrls = new[]{"Menus","MenuType"};
+    var eventsCtrls = new[]{"Events"};
+    var qacCtrls = new[]{"QAC"};
+    Func<string,bool> isCtrl = c => string.Equals(ctrl,c,System.StringComparison.OrdinalIgnoreCase);
+    bool admissionsActive = admissionsCtrls.Any(c=>isCtrl(c));
+    bool facultyActive = facultyCtrls.Any(c=>isCtrl(c));
+    bool menusActive = menusCtrls.Any(c=>isCtrl(c));
+    bool eventsActive = eventsCtrls.Any(c=>isCtrl(c));
+    bool qacActive = qacCtrls.Any(c=>isCtrl(c));
+}
+    <!-- Full-width Fixed Header -->
+    <div class="app-header">
+        <button class="btn btn-outline-secondary btn-sm mobile-toggle" id="sidebarToggle" type="button">☰</button>
+        <div class="app-brand" onclick="window.location.href='@Url.Action("Index","Home")'">
+            <div class="app-brand-icon"><em class="icon ni ni-dashlite"></em></div>
+            <div class="app-brand-text"><small>HITEC</small><span>Content Management</span></div>
         </div>
-        <!-- main -->
+        <div class="header-actions">
+            <button class="action-btn" title="Chats" type="button"><em class="icon ni ni-comments"></em></button>
+            <button class="action-btn" title="Notifications" type="button"><em class="icon ni ni-bell"></em></button>
+            <div class="dropdown">
+                <button class="action-btn dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" type="button">
+                    <div class="avatar-circle">A</div>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="#">Profile</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Sign out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Layout with fixed-width, fixed-position sidebar -->
+    <div id="appLayout">
+        <nav id="sidebar">
+            <div class="sidebar-header">MAIN</div>
+            <ul class="sidebar-nav" id="sidebarNav">
+                <li><a class="@(isCtrl("Home")?"active":"")" href="@Url.Action("Index","Home")"><em class="icon ni ni-dashboard"></em><span>Dashboard</span></a></li>
+                <li><a class="@(isCtrl("About")?"active":"")" href="@Url.Action("Index","About")"><em class="icon ni ni-info"></em><span>About</span></a></li>
+                <li><a class="@(isCtrl("Departments")?"active":"")" href="@Url.Action("Index","Departments")"><em class="icon ni ni-building"></em><span>Departments</span></a></li>
+                <li><a class="@(isCtrl("Facilities")?"active":"")" href="@Url.Action("Index","Facilities")"><em class="icon ni ni-building"></em><span>Facilities</span></a></li>
+                <li>
+                    <a class="submenu-toggle @(admissionsActive?"active":"")" data-target="#admissionsMenu" aria-expanded="@(admissionsActive.ToString().ToLower())"><em class="icon ni ni-book"></em><span>Admissions</span><span class="caret">›</span></a>
+                    <div class="collapse @(admissionsActive?"show":"")" id="admissionsMenu">
+                        <ul class="sidebar-sub">
+                            <li><a class="@(isCtrl("Advertisement")?"active":"")" href="@Url.Action("Index","Advertisement")">Advertisement</a></li>
+                            <li><a class="@(isCtrl("AcademicCalendar")?"active":"")" href="@Url.Action("Index","AcademicCalendar")">Academic Calendar</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="submenu-toggle @(facultyActive?"active":"")" data-target="#facultyMenu" aria-expanded="@(facultyActive.ToString().ToLower())"><em class="icon ni ni-tile-thumb"></em><span>Faculty</span><span class="caret">›</span></a>
+                    <div class="collapse @(facultyActive?"show":"")" id="facultyMenu">
+                        <ul class="sidebar-sub">
+                            <li><a class="@( (ctrl=="Faculty")?"active":"")" href="@Url.Action("VisionMission","Faculty")">Vision & Mission</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="submenu-toggle @(menusActive?"active":"")" data-target="#menusMenu" aria-expanded="@(menusActive.ToString().ToLower())"><em class="icon ni ni-menu"></em><span>Menus</span><span class="caret">›</span></a>
+                    <div class="collapse @(menusActive?"show":"")" id="menusMenu">
+                        <ul class="sidebar-sub">
+                            <li><a class="@(isCtrl("Menus")?"active":"")" href="@Url.Action("Index","Menus")">Menu</a></li>
+                            <li><a class="@(isCtrl("MenuType")?"active":"")" href="@Url.Action("Index","MenuType")">Menu Type</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="submenu-toggle @(eventsActive?"active":"")" data-target="#eventsMenu" aria-expanded="@(eventsActive.ToString().ToLower())"><em class="icon ni ni-calendar"></em><span>Events</span><span class="caret">›</span></a>
+                    <div class="collapse @(eventsActive?"show":"")" id="eventsMenu">
+                        <ul class="sidebar-sub">
+                            <li><a class="@(isCtrl("Events")?"active":"")" href="@Url.Action("Index","Events")">Manage Events</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="submenu-toggle @(qacActive?"active":"")" data-target="#qacMenu" aria-expanded="@(qacActive.ToString().ToLower())"><em class="icon ni ni-briefcase"></em><span>QA&C</span><span class="caret">›</span></a>
+                    <div class="collapse @(qacActive?"show":"")" id="qacMenu">
+                        <ul class="sidebar-sub">
+                            <li><a class="@(isCtrl("QAC") && action=="About"?"active":"")" href="@Url.Action("About","QAC")">About QA&C</a></li>
+                            <li><a class="@(isCtrl("QAC") && action=="Policy"?"active":"")" href="@Url.Action("Policy","QAC")">Quality Assurance Policy</a></li>
+                            <li><a class="@(isCtrl("QAC") && action=="AnnualActivityCalendar"?"active":"")" href="@Url.Action("AnnualActivityCalendar","QAC")">Annual Activity Calendar</a></li>
+                            <li><a class="@(isCtrl("QAC") && action=="Organogram"?"active":"")" href="@Url.Action("Organogram","QAC")">Organogram</a></li>
+                            <li><a class="@(isCtrl("QAC") && action=="IPE"?"active":"")" href="@Url.Action("IPE","QAC")">IPE</a></li>
+                            <li><a class="@(isCtrl("QAC") && action=="RIPE"?"active":"")" href="@Url.Action("RIPE","QAC")">RIPE</a></li>
+                            <li><a class="@(isCtrl("QAC") && action=="PGPR"?"active":"")" href="@Url.Action("PGPR","QAC")">PGPR</a></li>
+                            <li><a class="@(isCtrl("QAC") && action=="SARs"?"active":"")" href="@Url.Action("SARs","QAC")">SARs</a></li>
+                            <li><a class="@(isCtrl("QAC") && action=="Surveys"?"active":"")" href="@Url.Action("Surveys","QAC")">Surveys</a></li>
+                            <li><a class="@(isCtrl("QAC") && action=="Accreditation"?"active":"")" href="@Url.Action("Accreditation","QAC")">Accreditation</a></li>
+                            <li><a class="@(isCtrl("QAC") && action=="Contacts"?"active":"")" href="@Url.Action("Contacts","QAC")">Contacts</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <div class="content-column">
+            <main class="flex-grow-1 p-3">
+                @RenderBody()
+            </main>
+        </div>
     </div>
     @Scripts.Render("~/bundles/jquery")
+    <script>
+        (function () {
+            var toggle = document.getElementById('sidebarToggle');
+            if (toggle) {
+                toggle.addEventListener('click', function () {
+                    var sb = document.getElementById('sidebar');
+                    sb.classList.toggle('show');
+                    document.body.classList.toggle('sidebar-open');
+                });
+            }
+            // Reliable submenu toggle
+            $('.submenu-toggle').on('click', function (e) {
+                e.preventDefault();
+                var $a = $(this); var target = $a.data('target'); var $panel = $(target); var expanded = $a.attr('aria-expanded') === 'true';
+                if (expanded) { $panel.stop(true,true).slideUp(160, function(){ $(this).removeClass('show'); }); $a.attr('aria-expanded','false'); }
+                else { $panel.stop(true,true).slideDown(180, function(){ $(this).addClass('show'); }); $a.attr('aria-expanded','true'); }
+            });
+        })();
+    </script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

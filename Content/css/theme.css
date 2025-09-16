@@ -6,3 +6,20 @@
  * Version	 :	1.0.0
  * Updated	 :	07.23.2020
 **/
+
+/* Sidebar related CSS neutralized to prepare for fresh implementation. */
+.nk-sidebar, .nk-sidebar *,
+.nk-nav-toggle,
+.nk-menu, .nk-menu *,
+.nk-menu-item, .nk-menu-item *,
+.nk-menu-link, .nk-menu-link *,
+.nk-menu-toggle,
+.nk-menu-sub, .nk-menu-sub * {
+    all: unset !important; /* Remove all inherited DashLite / Bootstrap styling */
+}
+
+/* Provide minimal structural defaults to avoid layout break where old markup might still linger. */
+.nk-content { width: 100%; padding: 20px; box-sizing: border-box; }
+
+/* Utility: ensure any leftover display none from previous scripts is cleared */
+.nk-menu, .nk-menu-sub { display: block !important; }
