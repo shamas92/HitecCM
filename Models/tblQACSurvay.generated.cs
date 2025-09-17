@@ -1,11 +1,11 @@
 namespace HitecCM.Models
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
+    // Maps to database table [tblQACSurvays]
+    [Table("tblQACSurvays")]
     public partial class tblQACSurvay
     {
         public int Id { get; set; }

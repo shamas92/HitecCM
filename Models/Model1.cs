@@ -147,6 +147,7 @@ namespace HitecCM.Models
         public virtual DbSet<tblProgram> tblPrograms { get; set; }
         public virtual DbSet<tblVisitSession> tblVisitSessions { get; set; }
         public virtual DbSet<tblPageView> tblPageViews { get; set; }
+        public virtual DbSet<tblQACRIPE> tblQACRIPEs { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -970,6 +971,14 @@ namespace HitecCM.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tblQACIPE>()
+                .Property(e => e.PageText)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tblQACRIPE>()
+                .Property(e => e.PageTitle)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tblQACRIPE>()
                 .Property(e => e.PageText)
                 .IsUnicode(false);
 

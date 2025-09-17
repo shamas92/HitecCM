@@ -6,6 +6,7 @@ namespace HitecCM.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    [Table("tblQACContacts")] // fixed: correct table name
     public partial class tblQACContact
     {
         public int Id { get; set; }

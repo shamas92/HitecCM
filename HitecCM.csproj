@@ -258,11 +258,12 @@
     <Compile Include="Models\tblQACAccreditation.cs" />
     <Compile Include="Models\tblQACAnnualActivityCalender.cs" />
     <Compile Include="Models\tblQACContact.cs" />
+    <Compile Include="Models\tblQACRIPE.cs" />
     <Compile Include="Models\tblQACIPE.cs" />
     <Compile Include="Models\tblQACOrganogram.cs" />
     <Compile Include="Models\tblQACPGPR.cs" />
     <Compile Include="Models\tblQACSAR.cs" />
-    <Compile Include="Models\tblQACSurvay.cs" />
+    <Compile Include="Models\tblQACSurvay.generated.cs" />
     <Compile Include="Models\tblQAPolicy.cs" />
     <Compile Include="Models\tblRefundPolicy.cs" />
     <Compile Include="Models\tblSchemeOfStudy.cs" />
@@ -331,6 +332,7 @@
     <Content Include="Content\img\departments\ChairmanHIT.jpg" />
     <Content Include="Content\img\departments\NewsPaperCut1.jpg" />
     <Content Include="Content\img\departments\VC.jpg" />
+    <Content Include="Content\img\events\20250828094732768.jpg" />
     <Content Include="Content\img\facilities\0b3bf106-a2ce-4061-b2ca-2a71777b493a.png" />
     <Content Include="Content\img\facilities\24ad06b9-9cc6-446d-ae9a-65012f0a74d0.png" />
     <Content Include="Content\img\facilities\468f9d90-7b58-43f9-a915-d80ac528f9bd.png" />
@@ -350,6 +352,7 @@
     <Content Include="Content\img\jsTree\40px.png" />
     <Content Include="Content\img\jsTree\throbber-dark.gif" />
     <Content Include="Content\img\jsTree\throbber.gif" />
+    <Content Include="Content\img\qac\Organogram.png" />
     <Content Include="Content\js\apps\calendar.js" />
     <Content Include="Content\js\apps\chats.js" />
     <Content Include="Content\js\apps\file-manager.js" />
@@ -387,6 +390,7 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Content\pdf\qac\NDMA Advisory.pdf" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />

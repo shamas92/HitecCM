@@ -12,9 +12,9 @@ namespace HitecCM.Controllers
     {
         private readonly Model1 db = new Model1();
 
-        // Utility upload paths
-        private const string QacImageDir = "~/Content/uploads/qac/images/";
-        private const string QacPdfDir = "~/Content/uploads/qac/pdfs/";
+        // Storage paths updated: use Content/img/qac for images and Content/pdf/qac for PDFs
+        private const string QacImageDir = "~/Content/img/qac/";
+        private const string QacPdfDir = "~/Content/pdf/qac/";
 
         private string SaveFile(HttpPostedFileBase file, string rootDir)
         {
@@ -255,11 +255,11 @@ namespace HitecCM.Controllers
             return RedirectToAction("IPE");
         }
 
-        // GET/POST: /QAC/RIPE (no dedicated table; reuse tblQACIPE with PageTitle \"RIPE\")
+        // GET/POST: /QAC/RIPE (tblQACRIPE)
         [HttpGet]
         public ActionResult RIPE()
         {
-            var model = db.tblQACIPEs.FirstOrDefault(e => e.PageTitle == "RIPE") ?? new tblQACIPE { PageTitle = "RIPE" };
+            var model = db.tblQACRIPEs.FirstOrDefault() ?? new tblQACRIPE();
             ViewBag.Title = "RIPE";
             return View(model);
         }
@@ -267,17 +267,14 @@ namespace HitecCM.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult RIPE(tblQACIPE input, HttpPostedFileBase imageFile, HttpPostedFileBase pdfFile)
+        public ActionResult RIPE(tblQACRIPE input, HttpPostedFileBase imageFile, HttpPostedFileBase pdfFile)
         {
-            // Ensure title marks this as RIPE content
-            input.PageTitle = string.IsNullOrWhiteSpace(input.PageTitle) ? "RIPE" : input.PageTitle;
-
             string imgPath = SaveFile(imageFile, QacImageDir);
             string pdfPath = SaveFile(pdfFile, QacPdfDir);
 
             if (input.Id > 0)
             {
-                var entity = db.tblQACIPEs.Find(input.Id);
+                var entity = db.tblQACRIPEs.Find(input.Id);
                 if (entity == null) return HttpNotFound();
                 entity.PageTitle = input.PageTitle;
                 entity.PageText = input.PageText;
@@ -292,6 +289,14 @@ namespace HitecCM.Controllers
             }
             else
             {
+                // Assign a new Id manually since the table doesn't auto-generate Id
+                int nextId = 1;
+                if (db.tblQACRIPEs.Any())
+                {
+                    nextId = db.tblQACRIPEs.Max(x => x.Id) + 1;
+                }
+                input.Id = nextId;
+
                 if (imgPath != null) input.PageImage = imgPath;
                 if (pdfPath != null)
                 {
@@ -299,7 +304,7 @@ namespace HitecCM.Controllers
                     input.PdfFilePath = pdfPath;
                 }
                 input.UploadedDate = DateTime.Now;
-                db.tblQACIPEs.Add(input);
+                db.tblQACRIPEs.Add(input);
             }
             db.SaveChanges();
             TempData["Success"] = "Saved successfully.";
