@@ -148,6 +148,7 @@ namespace HitecCM.Models
         public virtual DbSet<tblVisitSession> tblVisitSessions { get; set; }
         public virtual DbSet<tblPageView> tblPageViews { get; set; }
         public virtual DbSet<tblQACRIPE> tblQACRIPEs { get; set; }
+        public virtual DbSet<tblDownloadsNew> tblDownloadsNews { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -1059,6 +1060,14 @@ namespace HitecCM.Models
                 .HasPrecision(10, 2);
 
             // Analytics mapping already handled by DataAnnotations; explicit relation not necessary here to avoid duplicate definitions.
+
+            modelBuilder.Entity<tblDownloadsNew>()
+                .Property(e => e.PageTitle)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tblDownloadsNew>()
+                .Property(e => e.PageData)
+                .IsUnicode(false);
         }
     }
 }

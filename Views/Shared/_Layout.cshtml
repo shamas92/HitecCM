@@ -100,6 +100,7 @@
                 <li><a class="@(isCtrl("About")?"active":"")" href="@Url.Action("Index","About")"><em class="icon ni ni-info"></em><span>About</span></a></li>
                 <li><a class="@(isCtrl("Departments")?"active":"")" href="@Url.Action("Index","Departments")"><em class="icon ni ni-building"></em><span>Departments</span></a></li>
                 <li><a class="@(isCtrl("Facilities")?"active":"")" href="@Url.Action("Index","Facilities")"><em class="icon ni ni-building"></em><span>Facilities</span></a></li>
+                <li><a class="@(isCtrl("Downloads")?"active":"")" href="@Url.Action("Index","Downloads")"><em class="icon ni ni-download"></em><span>Downloads</span></a></li>
                 <li>
                     <a class="submenu-toggle @(admissionsActive?"active":"")" data-target="#admissionsMenu" aria-expanded="@(admissionsActive.ToString().ToLower())"><em class="icon ni ni-book"></em><span>Admissions</span><span class="caret">›</span></a>
                     <div class="collapse @(admissionsActive?"show":"")" id="admissionsMenu">

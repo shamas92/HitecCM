@@ -131,6 +131,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\AdvertisementController.cs" />
+    <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\FacilitiesController.cs" />
     <Compile Include="Controllers\FacultyController.cs" />
@@ -145,6 +146,7 @@
     </Compile>
     <Compile Include="Models\AnalyticsModels.cs" />
     <Compile Include="Models\Model1.Analytics.cs" />
+    <Compile Include="Models\tblDownloadsNew.cs" />
     <Compile Include="Models\tblMenus.cs" />
     <Compile Include="Models\tblMenuType.cs" />
     <Compile Include="Models\AcademicCalendar.cs" />
@@ -453,6 +455,7 @@
     <Content Include="Views\QAC\About.cshtml" />
     <Content Include="Views\QAC\Statement.cshtml" />
     <Content Include="Views\QAC\_Placeholder.cshtml" />
+    <Content Include="Views\Downloads\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
