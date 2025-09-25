@@ -21,7 +21,7 @@
                     {
                         <div class="alert alert-success">@TempData["Success"]</div>
                     }
-                    @using (Html.BeginForm("Index", "AcademicCalendar", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    @using (Html.BeginForm("AcademicCalendar", "Admissions", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                     {
                         @Html.AntiForgeryToken()
                         <div class="form-group mb-3">

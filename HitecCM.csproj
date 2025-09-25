@@ -130,14 +130,13 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AboutController.cs" />
-    <Compile Include="Controllers\AdvertisementController.cs" />
+    <Compile Include="Controllers\AdmissionsController.cs" />
     <Compile Include="Controllers\PolicyController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\FacilitiesController.cs" />
     <Compile Include="Controllers\FacultyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\AcademicCalendarController.cs" />
     <Compile Include="Controllers\MenusController.cs" />
     <Compile Include="Controllers\MenuTypeController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
@@ -311,28 +310,12 @@
     <Content Include="Content\css\libs\themify-icons.css" />
     <Content Include="Content\css\style-email.css" />
     <Content Include="Content\css\theme.css" />
-    <Content Include="Content\images\facilities\0b3bf106-a2ce-4061-b2ca-2a71777b493a.png" />
-    <Content Include="Content\images\facilities\24ad06b9-9cc6-446d-ae9a-65012f0a74d0.png" />
-    <Content Include="Content\images\facilities\468f9d90-7b58-43f9-a915-d80ac528f9bd.png" />
-    <Content Include="Content\images\facilities\56cc4ee3-ee29-4145-aa06-2c118eec8c05.png" />
-    <Content Include="Content\images\facilities\710b2e3d-77e1-459b-ae1a-1e05a56844ed.jpg" />
-    <Content Include="Content\images\facilities\8879b21e-45b6-437c-bc7f-7986b2242ad3.png" />
-    <Content Include="Content\images\facilities\972970e7-e201-4297-b1e2-c0f7e2c38f35.png" />
-    <Content Include="Content\images\facilities\c7897dcb-1e64-40b4-845c-0b5dfc8cf389.png" />
-    <Content Include="Content\images\facilities\c95aa1a5-89ed-4e66-91c4-9d88046308a3.png" />
-    <Content Include="Content\images\facilities\ce1e59ba-7ef9-4155-b424-9fc5a8bb7a94.png" />
-    <Content Include="Content\images\facilities\efc21173-ebcf-4ba1-b011-7da9e250d750.png" />
-    <Content Include="Content\images\jsTree\32px-dark.png" />
-    <Content Include="Content\images\jsTree\32px.png" />
-    <Content Include="Content\images\jsTree\40px-dark.png" />
-    <Content Include="Content\images\jsTree\40px.png" />
-    <Content Include="Content\images\jsTree\throbber-dark.gif" />
-    <Content Include="Content\images\jsTree\throbber.gif" />
     <Content Include="Content\img\about\AdmissionAd.jpg" />
     <Content Include="Content\img\about\ChairmanHIT.jpg" />
     <Content Include="Content\img\about\logoReport.png" />
     <Content Include="Content\img\about\pelican_noao_big.jpg" />
     <Content Include="Content\img\about\VC.jpg" />
+    <Content Include="Content\img\admissions\AdmissionAd.jpg" />
     <Content Include="Content\img\departments\ChairmanHIT.jpg" />
     <Content Include="Content\img\departments\NewsPaperCut1.jpg" />
     <Content Include="Content\img\departments\VC.jpg" />
@@ -423,8 +406,6 @@
     <Content Include="Views\Facilities\Edit.cshtml" />
     <Content Include="Views\Facilities\Index.cshtml" />
     <Content Include="Views\About\Index.cshtml" />
-    <Content Include="Views\Advertisement\Index.cshtml" />
-    <Content Include="Views\AcademicCalendar\Index.cshtml" />
     <Content Include="Views\MenuType\Create.cshtml" />
     <Content Include="Views\MenuType\Delete.cshtml" />
     <Content Include="Views\MenuType\Edit.cshtml" />
@@ -459,10 +440,11 @@
     <Content Include="Views\QAC\_Placeholder.cshtml" />
     <Content Include="Views\Downloads\Index.cshtml" />
     <Content Include="Views\Policy\Index.cshtml" />
+    <Content Include="Views\Admissions\AcademicCalendar.cshtml" />
+    <Content Include="Views\Admissions\Advertisement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\images\about\" />
     <Folder Include="Content\img\menuicon\" />
   </ItemGroup>
   <ItemGroup>

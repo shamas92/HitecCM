@@ -106,9 +106,8 @@
                     <a class="submenu-toggle @(admissionsActive?"active":"")" data-target="#admissionsMenu" aria-expanded="@(admissionsActive.ToString().ToLower())"><em class="icon ni ni-book"></em><span>Admissions</span><span class="caret">›</span></a>
                     <div class="collapse @(admissionsActive?"show":"")" id="admissionsMenu">
                         <ul class="sidebar-sub">
-                            <li><a class="@(isCtrl("Advertisement")?"active":"")" href="@Url.Action("Index","Advertisement")">Advertisement</a></li>
-                            <li><a class="@(isCtrl("AcademicCalendar")?"active":"")" href="@Url.Action("Index","AcademicCalendar")">Academic Calendar</a></li>
-                        </ul>
+                            <li><a class="@(isCtrl("Admissions") && action=="Advertisement"?"active":"")" href="@Url.Action("Advertisement","Admissions")">Advertisement</a></li>
+                            <li><a class="@(isCtrl("Admissions") && action=="AcademicCalendar"?"active":"")" href="@Url.Action("AcademicCalendar","Admissions")">Academic Calendar</a></li>
                     </div>
                 </li>
                 <li>
