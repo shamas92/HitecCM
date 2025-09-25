@@ -149,6 +149,7 @@ namespace HitecCM.Models
         public virtual DbSet<tblPageView> tblPageViews { get; set; }
         public virtual DbSet<tblQACRIPE> tblQACRIPEs { get; set; }
         public virtual DbSet<tblDownloadsNew> tblDownloadsNews { get; set; }
+        public virtual DbSet<tblPolicy> tblPolicys { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -1066,6 +1067,14 @@ namespace HitecCM.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tblDownloadsNew>()
+                .Property(e => e.PageData)
+                .IsUnicode(false);
+            
+            modelBuilder.Entity<tblPolicy>()
+                .Property(e => e.PageTitle)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tblPolicy>()
                 .Property(e => e.PageData)
                 .IsUnicode(false);
         }

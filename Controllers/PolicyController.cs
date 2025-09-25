@@ -1,0 +1,86 @@
+using System;
+using System.Linq;
+using System.Web.Mvc;
+using HitecCM.Models;
+
+namespace HitecCM.Controllers
+{
+    public class PolicyController : Controller
+    {
+        private readonly Model1 db = new Model1();
+
+        [HttpGet]
+        public ActionResult Index()
+        {
+            var model = db.tblPolicys.FirstOrDefault();
+            if (model == null)
+            {
+                // Create the initial row automatically with timestamps
+                var created = new tblPolicy
+                {
+                    Id = GetNextId(),
+                    PageTitle = "Policy",
+                    PageData = string.Empty,
+                    UploadedDate = DateTime.Now,
+                    ModifiedDate = DateTime.Now
+                };
+                db.tblPolicys.Add(created);
+                db.SaveChanges();
+                model = created;
+            }
+            ViewBag.Title = "Policy";
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult Index(tblPolicy input)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = "Policy";
+                return View(input);
+            }
+
+            if (input.Id > 0)
+            {
+                var entity = db.tblPolicys.Find(input.Id);
+                if (entity == null) return HttpNotFound();
+                entity.PageTitle = input.PageTitle;
+                entity.PageData = input.PageData;
+                entity.ModifiedDate = DateTime.Now;
+                db.Entry(entity).State = System.Data.Entity.EntityState.Modified;
+            }
+            else
+            {
+                var newEntity = new tblPolicy
+                {
+                    Id = GetNextId(),
+                    PageTitle = input.PageTitle,
+                    PageData = input.PageData,
+                    UploadedDate = DateTime.Now,
+                    ModifiedDate = DateTime.Now
+                };
+                db.tblPolicys.Add(newEntity);
+            }
+
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        private int GetNextId()
+        {
+            return db.tblPolicys.Any() ? db.tblPolicys.Max(x => x.Id) + 1 : 1;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+    }
+}

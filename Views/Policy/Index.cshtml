@@ -1,0 +1,48 @@
+@model HitecCM.Models.tblPolicy
+@{
+    ViewBag.Title = "Policy";
+}
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Downloads</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Manage the Policies page content. All fields map to `tblPolicy`.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered card-stretch">
+                <div class="card-inner">
+                    @using (Html.BeginForm("Index", "Policy", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.PageTitle, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.PageTitle, new { @class = "form-control", placeholder = "Page title (optional)" })
+                            @Html.ValidationMessageFor(m => m.PageTitle, null, new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.PageData, new { @class = "form-label" })
+                            <div>
+                                <div class="summernote-minimal"></div>
+                                @Html.HiddenFor(m => m.PageData, new { id = "PageTextHidden" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.PageData, null, new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group mt-4 text-left">
+                            <button type="submit" class="btn btn-primary px-5">Save</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
