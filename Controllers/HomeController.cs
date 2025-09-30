@@ -40,16 +40,15 @@ namespace HitecCM.Controllers
                 ViewBag.TotalQACItems = db.tblQACs.Count();
                 ViewBag.TotalAccreditations = db.tblQACAccreditations.Count();
 
-                // Student services metrics
-                ViewBag.HostelFacilities = db.Hostel_Info.Count();
-                ViewBag.TransportRoutes = db.Transport_Info.Count();
-                ViewBag.SportsFacilities = db.Sport_Info.Count();
-                ViewBag.CafeteriaOptions = db.Cafeteria_Info.Count();
+                // Student services metrics (tables removed -> set to 0 safely)
+                ViewBag.HostelFacilities = 0;
+                ViewBag.TransportRoutes = 0;
+                ViewBag.SportsFacilities = 0;
+                ViewBag.CafeteriaOptions = 0;
 
-                // Employee-related metrics
-                ViewBag.TotalEmployees = db.Employee_Appointment_Details.Count();
-                ViewBag.ActiveEmployees = db.Employee_Appointment_Details
-                    .Where(e => e.ConfirmaQon_Status != null && e.ConfirmaQon_Status.ToLower() == "confirmed").Count();
+                // Employee-related metrics (tables removed -> set to 0 safely)
+                ViewBag.TotalEmployees = 0;
+                ViewBag.ActiveEmployees = 0;
 
                 // Recent activities
                 ViewBag.RecentEvents = db.tblEvents
@@ -175,7 +174,7 @@ namespace HitecCM.Controllers
                 ViewBag.QuickStats = new {
                     TotalContent = db.tblNews.Count() + db.tblNoticeBoards.Count() + db.tblDownloads.Count(),
                     TotalQAPolicies = db.tblQACs.Count() + db.tblPolicyItems.Count() + db.tblQACAccreditations.Count(),
-                    TotalStudentServices = db.Hostel_Info.Count() + db.Transport_Info.Count() + db.Sport_Info.Count(),
+                    TotalStudentServices = 0,
                     TotalAcademicPrograms = db.tblDepartmentPrograms.Count()
                 };
 
@@ -198,7 +197,6 @@ namespace HitecCM.Controllers
                     var from30 = utcNow.Date.AddDays(-29); // last 30 days including today
                     var from24h = utcNow.AddHours(-23); // last 24 hours (hour buckets)
 
-                    // Debug: Check if analytics tables exist and have data
                     int sessionCount = 0;
                     int pageViewCount = 0;
                     try
@@ -208,19 +206,17 @@ namespace HitecCM.Controllers
                     }
                     catch (Exception dbEx)
                     {
-                        // Analytics tables might not exist or have different structure
                         ViewBag.ErrorMessage = $"Analytics tables not available: {dbEx.Message}";
                     }
 
                     if (sessionCount == 0 || pageViewCount == 0)
                     {
-                        // Generate sample analytics data for demonstration
                         var sampleData = GenerateSampleAnalyticsData();
                         ViewBag.AnalyticsSummary = sampleData.Summary;
                         ViewBag.TrafficSeries = sampleData.TrafficSeries;
                         ViewBag.TopPages = sampleData.TopPages;
                         ViewBag.HourlyViews = sampleData.HourlyViews;
-                        
+
                         if (sessionCount == 0 && pageViewCount == 0)
                         {
                             ViewBag.ErrorMessage = "No analytics data available. Displaying sample data for demonstration.";
@@ -228,17 +224,14 @@ namespace HitecCM.Controllers
                     }
                     else
                     {
-                        // Get sessions in window
                         var rawSessions = db.tblVisitSessions
                             .Where(s => s.FirstSeenUtc >= from30 && s.FirstSeenUtc <= utcNow)
                             .Select(s => new { s.VisitSessionId, s.FirstSeenUtc, s.LastSeenUtc, s.PageViews, s.IsBot })
                             .ToList();
 
-                        // Filter bots
                         var userSessions = rawSessions.Where(s => !s.IsBot).ToList();
                         var sessionIds = new HashSet<long>(userSessions.Select(s => (long)s.VisitSessionId));
 
-                        // Page views in window (filter by sessions)
                         var rawPageViews = db.tblPageViews
                             .Where(p => p.ViewUtc >= from30 && p.ViewUtc <= utcNow)
                             .Select(p => new { p.ViewUtc, p.Path, p.VisitSessionId, p.StatusCode })
@@ -246,7 +239,6 @@ namespace HitecCM.Controllers
                             .Where(p => sessionIds.Contains(p.VisitSessionId))
                             .ToList();
 
-                        // Aggregate per day
                         var daily = userSessions
                             .GroupBy(s => s.FirstSeenUtc.Date)
                             .Select(g => new { Date = g.Key, Sessions = g.Count(), PageViews = g.Sum(x => x.PageViews) })
@@ -259,7 +251,6 @@ namespace HitecCM.Controllers
                             filledDaily.Add(new { Date = d.ToString("yyyy-MM-dd"), Sessions = existing?.Sessions ?? 0, PageViews = existing?.PageViews ?? 0 });
                         }
 
-                        // Top pages (strip query)
                         var topPages = rawPageViews
                             .GroupBy(p => (p.Path ?? string.Empty).Split('?')[0])
                             .Select(g => new { Path = g.Key, Views = g.Count() })
@@ -267,7 +258,6 @@ namespace HitecCM.Controllers
                             .Take(10)
                             .ToList();
 
-                        // Hourly (last 24h)
                         var last24Views = db.tblPageViews
                             .Where(p => p.ViewUtc >= from24h && p.ViewUtc <= utcNow)
                             .Select(p => p.ViewUtc)
@@ -280,17 +270,11 @@ namespace HitecCM.Controllers
                             hourly.Add(new { HourLabel = hour.ToString("HH:00"), Views = cnt });
                         }
 
-                        // Summary numbers
                         int totalSessions = userSessions.Count;
                         int totalPageViews = rawPageViews.Count;
                         double avgPagesPerSession = totalSessions > 0 ? (double)totalPageViews / totalSessions : 0d;
                         double bounceRate = totalSessions > 0 ? (double)userSessions.Count(s => s.PageViews <= 1) / totalSessions * 100d : 0d;
 
-                        // Improved average session duration logic:
-                        // We trust LastSeenUtc as the last interaction timestamp for the session.
-                        // To avoid inflated durations caused by very long-lived sessions (tabs left open),
-                        // we cap individual session length at 30 minutes of continuous activity (typical analytics standard).
-                        // We also ignore negative or obviously corrupt values.
                         var maxSessionSpan = TimeSpan.FromMinutes(30);
                         var sessionDurations = userSessions.Select(s => {
                             TimeSpan span = TimeSpan.Zero;
@@ -298,7 +282,7 @@ namespace HitecCM.Controllers
                             {
                                 span = s.LastSeenUtc - s.FirstSeenUtc;
                                 if (span < TimeSpan.Zero) span = TimeSpan.Zero;
-                                if (span > maxSessionSpan) span = maxSessionSpan; // cap
+                                if (span > maxSessionSpan) span = maxSessionSpan;
                             }
                             return span.TotalSeconds;
                         }).ToList();
@@ -318,7 +302,6 @@ namespace HitecCM.Controllers
                 }
                 catch (Exception ex)
                 {
-                    // Generate sample data as fallback
                     var sampleData = GenerateSampleAnalyticsData();
                     ViewBag.AnalyticsSummary = sampleData.Summary;
                     ViewBag.TrafficSeries = sampleData.TrafficSeries;
@@ -326,7 +309,6 @@ namespace HitecCM.Controllers
                     ViewBag.HourlyViews = sampleData.HourlyViews;
                     ViewBag.ErrorMessage = $"Analytics data unavailable. Displaying sample data. Error: {ex.Message}";
                 }
-                // =========================================================================================
 
                 return View();
             }

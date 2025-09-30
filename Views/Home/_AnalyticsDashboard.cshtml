@@ -63,20 +63,7 @@
                             </button>
                         </div>
                     }
-                    <ul class="nk-block-tools g-2 flex-wrap mt-2">
-                        <li class="badge badge-dim badge-pill bg-outline-success">
-                            <em class="icon ni ni-clock"></em>
-                            <span>Last updated: @DateTime.Now.ToString("MMM dd, HH:mm")</span>
-                        </li>
-                        <li class="badge badge-dim badge-pill bg-outline-info">
-                            <em class="icon ni ni-growth"></em>
-                            <span>@(ViewBag.ActiveEvents ?? 0) Active Events</span>
-                        </li>
-                        <li class="badge badge-dim badge-pill bg-outline-warning">
-                            <em class="icon ni ni-users"></em>
-                            <span>@(ViewBag.TotalFaculties ?? 0) Faculty Members</span>
-                        </li>
-                    </ul>
+                    
                 </div>
             </div>
             <div class="nk-block-head-content">
@@ -89,7 +76,7 @@
                             <div class="dropdown-menu dropdown-menu-right">
                                 <ul class="link-list-opt no-bdr">
                                     <li><a href="@Url.Action("Create", "Events")"><em class="icon ni ni-calendar"></em><span>Add Event</span></a></li>
-                                    <li><a href="@Url.Action("Create", "Menus")"><em class="icon ni ni-menu"></em><span>Add Menu</span></a></li>
+                                   <li><a href="@Url.Action("Create", "Menus")"><em class="icon ni ni-menu"></em><span>Add Menu</span></a></li>
                                     <li><a href="@Url.Action("Index", "Facilities")"><em class="icon ni ni-building"></em><span>Manage Facilities</span></a></li>
                                 </ul>
                             </div>

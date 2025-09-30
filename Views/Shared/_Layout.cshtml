@@ -57,17 +57,21 @@
 @{ 
     var ctrl = (string)ViewContext.RouteData.Values["controller"]; 
     var action = (string)ViewContext.RouteData.Values["action"]; 
-    var admissionsCtrls = new[]{"Advertisement","AcademicCalendar"};
+    // Mark Admissions active when controller is Admissions
+    var admissionsCtrls = new[]{"Admissions"};
     var facultyCtrls = new[]{"Faculty"};
     var menusCtrls = new[]{"Menus","MenuType"};
     var eventsCtrls = new[]{"Events"};
     var qacCtrls = new[]{"QAC"};
     Func<string,bool> isCtrl = c => string.Equals(ctrl,c,System.StringComparison.OrdinalIgnoreCase);
+    Func<string,bool> isAction = a => string.Equals(action,a,System.StringComparison.OrdinalIgnoreCase);
     bool admissionsActive = admissionsCtrls.Any(c=>isCtrl(c));
     bool facultyActive = facultyCtrls.Any(c=>isCtrl(c));
     bool menusActive = menusCtrls.Any(c=>isCtrl(c));
     bool eventsActive = eventsCtrls.Any(c=>isCtrl(c));
     bool qacActive = qacCtrls.Any(c=>isCtrl(c));
+    var finActs = new[]{"FinancialAssistance","RefundPolicy","LatePayments","Accommodation","Transport","MiscellaneousCharges"};
+    bool financialMattersActive = isCtrl("Admissions") && finActs.Any(a=> string.Equals(action,a,System.StringComparison.OrdinalIgnoreCase));
 }
     <!-- Full-width Fixed Header -->
     <div class="app-header">
@@ -108,6 +112,25 @@
                         <ul class="sidebar-sub">
                             <li><a class="@(isCtrl("Admissions") && action=="Advertisement"?"active":"")" href="@Url.Action("Advertisement","Admissions")">Advertisement</a></li>
                             <li><a class="@(isCtrl("Admissions") && action=="AcademicCalendar"?"active":"")" href="@Url.Action("AcademicCalendar","Admissions")">Academic Calendar</a></li>
+                            <li><a class="@(isCtrl("Admissions") && action=="FeeStructure"?"active":"")" href="@Url.Action("FeeStructure","Admissions")">Fee Structure</a></li>
+                            <li>
+                                <a class="submenu-toggle @(financialMattersActive?"active":"")" data-target="#financialMattersMenu" aria-expanded="@(financialMattersActive.ToString().ToLower())">Financial Matters<span class="caret">›</span></a>
+                                <div class="collapse @(financialMattersActive?"show":"")" id="financialMattersMenu">
+                                    <ul class="sidebar-sub">
+                                        <li><a class="@(isCtrl("Admissions") && isAction("FinancialAssistance")?"active":"")" href="@Url.Action("FinancialAssistance","Admissions")">Financial Assistance</a></li>
+                                        <li><a class="@(isCtrl("Admissions") && isAction("RefundPolicy")?"active":"")" href="@Url.Action("RefundPolicy","Admissions")">Refund Policy</a></li>
+                                        <li><a class="@(isCtrl("Admissions") && isAction("LatePayments")?"active":"")" href="@Url.Action("LatePayments","Admissions")">Fine/Penalties On Late Payments</a></li>
+                                        <li><a class="@(isCtrl("Admissions") && isAction("Accommodation")?"active":"")" href="@Url.Action("Accommodation","Admissions")">Accommodation</a></li>
+                                        <li><a class="@(isCtrl("Admissions") && isAction("Transport")?"active":"")" href="@Url.Action("Transport","Admissions")">Transport</a></li>
+                                        <li><a class="@(isCtrl("Admissions") && isAction("MiscellaneousCharges")?"active":"")" href="@Url.Action("MiscellaneousCharges","Admissions")">Miscellaneous Charges</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li><a class="@(isCtrl("Admissions") && action=="AcademicRegulations"?"active":"")" href="@Url.Action("AcademicRegulations","Admissions")">Academic Regulations</a></li>
+                            <li><a class="@(isCtrl("Admissions") && action=="AcademicDeficiencies"?"active":"")" href="@Url.Action("AcademicDeficiencies","Admissions")">Academic Deficiencies</a></li>
+                            <li><a class="@(isCtrl("Admissions") && action=="RulesRegulationsMS"?"active":"")" href="@Url.Action("RulesRegulationsMS","Admissions")">Rules & Regulations (MS)</a></li>
+                            <li><a class="@(isCtrl("Admissions") && action=="RulesRegulationsPhD"?"active":"")" href="@Url.Action("RulesRegulationsPhD","Admissions")">Rules & Regulations (PhD)</a></li>
+                        </ul>
                     </div>
                 </li>
                 <li>

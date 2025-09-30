@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using HitecCM.Models;
 using System.IO;
 using System.Web;
+using System.Data.Entity;
 
 namespace HitecCM.Controllers
 {
@@ -148,6 +149,299 @@ namespace HitecCM.Controllers
                 var calendar = db.AcademicCalendars.FirstOrDefault() ?? new AcademicCalendar();
                 return View(calendar);
             }
+        }
+
+        // ====== Admissions: Fee Structure ======
+        [HttpGet]
+        public ActionResult FeeStructure()
+        {
+            using (var db = new Model1())
+            {
+                var model = db.tblFeeStructures.FirstOrDefault() ?? new tblFeeStructure
+                {
+                    Title = "Fee Structure",
+                    CreatedAt = DateTime.Now
+                };
+                ViewBag.Title = "Fee Structure";
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult FeeStructure(tblFeeStructure input)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = "Fee Structure";
+                return View(input);
+            }
+            using (var db = new Model1())
+            {
+                if (input.ID > 0)
+                {
+                    var entity = db.tblFeeStructures.Find(input.ID);
+                    if (entity == null) return HttpNotFound();
+                    entity.Title = input.Title;
+                    entity.PageData = input.PageData;
+                    entity.UpdatedAt = DateTime.Now;
+                    db.Entry(entity).State = EntityState.Modified;
+                }
+                else
+                {
+                    input.CreatedAt = DateTime.Now;
+                    input.UpdatedAt = DateTime.Now;
+                    db.tblFeeStructures.Add(input);
+                }
+                db.SaveChanges();
+            }
+            TempData["Success"] = "Fee Structure saved successfully.";
+            return RedirectToAction("FeeStructure");
+        }
+
+        // ====== Admissions: Academic Regulations (single page content) ======
+        [HttpGet]
+        public ActionResult AcademicRegulations()
+        {
+            using (var db = new Model1())
+            {
+                var model = db.tblAcademicRegulations.FirstOrDefault() ?? new tblAcademicRegulation
+                {
+                    Title = "Academic Regulations",
+                    CreatedAt = DateTime.Now
+                };
+                ViewBag.Title = "Academic Regulations";
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult AcademicRegulations(tblAcademicRegulation input)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = "Academic Regulations";
+                return View(input);
+            }
+
+            using (var db = new Model1())
+            {
+                if (input.ID > 0)
+                {
+                    var entity = db.tblAcademicRegulations.Find(input.ID);
+                    if (entity == null) return HttpNotFound();
+                    entity.Title = input.Title;
+                    entity.PageData = input.PageData;
+                    entity.UpdatedAt = DateTime.Now;
+                    db.Entry(entity).State = EntityState.Modified;
+                }
+                else
+                {
+                    input.ID = db.tblAcademicRegulations.Any() ? db.tblAcademicRegulations.Max(x => x.ID) + 1 : 1;
+                    input.CreatedAt = DateTime.Now;
+                    input.UpdatedAt = DateTime.Now;
+                    db.tblAcademicRegulations.Add(input);
+                }
+                db.SaveChanges();
+            }
+            TempData["Success"] = "Academic Regulations saved successfully.";
+            return RedirectToAction("AcademicRegulations");
+        }
+
+        // ====== Admissions: Academic Deficiencies (single page content) ======
+        [HttpGet]
+        public ActionResult AcademicDeficiencies()
+        {
+            using (var db = new Model1())
+            {
+                var model = db.tblAcademicDeficiencies.FirstOrDefault() ?? new tblAcademicDeficiency
+                {
+                    Title = "Academic Deficiencies",
+                    CreatedAt = DateTime.Now
+                };
+                ViewBag.Title = "Academic Deficiencies";
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult AcademicDeficiencies(tblAcademicDeficiency input)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = "Academic Deficiencies";
+                return View(input);
+            }
+            using (var db = new Model1())
+            {
+                if (input.ID > 0)
+                {
+                    var entity = db.tblAcademicDeficiencies.Find(input.ID);
+                    if (entity == null) return HttpNotFound();
+                    entity.Title = input.Title;
+                    entity.PageData = input.PageData;
+                    entity.UpdatedAt = DateTime.Now;
+                    db.Entry(entity).State = EntityState.Modified;
+                }
+                else
+                {
+                    input.ID = db.tblAcademicDeficiencies.Any() ? db.tblAcademicDeficiencies.Max(x => x.ID) + 1 : 1;
+                    input.CreatedAt = DateTime.Now;
+                    input.UpdatedAt = DateTime.Now;
+                    db.tblAcademicDeficiencies.Add(input);
+                }
+                db.SaveChanges();
+            }
+            TempData["Success"] = "Academic Deficiencies saved successfully.";
+            return RedirectToAction("AcademicDeficiencies");
+        }
+
+        // ====== Rules & Regulations (MS) ======
+        [HttpGet]
+        public ActionResult RulesRegulationsMS()
+        {
+            using (var db = new Model1())
+            {
+                var model = db.tblRulesRegulationsMS.FirstOrDefault() ?? new tblRulesRegulationsMS
+                {
+                    Title = "Rules & Regulations (MS)",
+                    CreatedAt = DateTime.Now
+                };
+                ViewBag.Title = "Rules & Regulations (MS)";
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult RulesRegulationsMS(tblRulesRegulationsMS input)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = "Rules & Regulations (MS)";
+                return View(input);
+            }
+            using (var db = new Model1())
+            {
+                if (input.ID > 0)
+                {
+                    var entity = db.tblRulesRegulationsMS.Find(input.ID);
+                    if (entity == null) return HttpNotFound();
+                    entity.Title = input.Title;
+                    entity.PageData = input.PageData;
+                    entity.UpdatedAt = DateTime.Now;
+                    db.Entry(entity).State = EntityState.Modified;
+                }
+                else
+                {
+                    input.ID = db.tblRulesRegulationsMS.Any() ? db.tblRulesRegulationsMS.Max(x => x.ID) + 1 : 1;
+                    input.CreatedAt = DateTime.Now;
+                    input.UpdatedAt = DateTime.Now;
+                    db.tblRulesRegulationsMS.Add(input);
+                }
+                db.SaveChanges();
+            }
+            TempData["Success"] = "Rules & Regulations (MS) saved successfully.";
+            return RedirectToAction("RulesRegulationsMS");
+        }
+
+        // ====== Rules & Regulations (PhD) ======
+        [HttpGet]
+        public ActionResult RulesRegulationsPhD()
+        {
+            using (var db = new Model1())
+            {
+                var model = db.tblRulesRegulationsPhds.FirstOrDefault() ?? new tblRulesRegulationsPhd
+                {
+                    Title = "Rules & Regulations (PhD)",
+                    CreatedAt = DateTime.Now
+                };
+                ViewBag.Title = "Rules & Regulations (PhD)";
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult RulesRegulationsPhD(tblRulesRegulationsPhd input)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = "Rules & Regulations (PhD)";
+                return View(input);
+            }
+            using (var db = new Model1())
+            {
+                if (input.ID > 0)
+                {
+                    var entity = db.tblRulesRegulationsPhds.Find(input.ID);
+                    if (entity == null) return HttpNotFound();
+                    entity.Title = input.Title;
+                    entity.PageData = input.PageData;
+                    entity.UpdatedAt = DateTime.Now;
+                    db.Entry(entity).State = EntityState.Modified;
+                }
+                else
+                {
+                    input.ID = db.tblRulesRegulationsPhds.Any() ? db.tblRulesRegulationsPhds.Max(x => x.ID) + 1 : 1;
+                    input.CreatedAt = DateTime.Now;
+                    input.UpdatedAt = DateTime.Now;
+                    db.tblRulesRegulationsPhds.Add(input);
+                }
+                db.SaveChanges();
+            }
+            TempData["Success"] = "Rules & Regulations (PhD) saved successfully.";
+            return RedirectToAction("RulesRegulationsPhD");
+        }
+
+        // ====== Other submenu stubs ======
+        [HttpGet]
+        public ActionResult FinancialAssistance()
+        {
+            ViewBag.Title = "Financial Assistance";
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult RefundPolicy()
+        {
+            ViewBag.Title = "Refund Policy";
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult LatePayments()
+        {
+            ViewBag.Title = "Fine/Penalties On Late Payments";
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Accommodation()
+        {
+            ViewBag.Title = "Accommodation";
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Transport()
+        {
+            ViewBag.Title = "Transport";
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult MiscellaneousCharges()
+        {
+            ViewBag.Title = "Miscellaneous Charges";
+            return View();
         }
     }
 }
