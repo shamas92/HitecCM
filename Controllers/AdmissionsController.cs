@@ -405,43 +405,302 @@ namespace HitecCM.Controllers
         [HttpGet]
         public ActionResult FinancialAssistance()
         {
-            ViewBag.Title = "Financial Assistance";
-            return View();
+            using (var db = new Model1())
+            {
+                var model = db.tblFinancialAssistances.FirstOrDefault() ?? new tblFinancialAssistance
+                {
+                    Title = "Financial Assistance",
+                    CreatedAt = DateTime.Now
+                };
+                ViewBag.Title = "Financial Assistance";
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult FinancialAssistance(tblFinancialAssistance input)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = "Financial Assistance";
+                return View(input);
+            }
+            using (var db = new Model1())
+            {
+                if (input.ID > 0)
+                {
+                    var entity = db.tblFinancialAssistances.Find(input.ID);
+                    if (entity == null) return HttpNotFound();
+                    entity.Title = input.Title;
+                    entity.PageData = input.PageData;
+                    entity.UpdatedAt = DateTime.Now;
+                    db.Entry(entity).State = EntityState.Modified;
+                }
+                else
+                {
+                    input.ID = db.tblFinancialAssistances.Any() ? db.tblFinancialAssistances.Max(x => x.ID) + 1 : 1;
+                    input.CreatedAt = DateTime.Now;
+                    input.UpdatedAt = DateTime.Now;
+                    db.tblFinancialAssistances.Add(input);
+                }
+                db.SaveChanges();
+            }
+            TempData["Success"] = "Financial Assistance saved successfully.";
+            return RedirectToAction("FinancialAssistance");
         }
 
         [HttpGet]
         public ActionResult RefundPolicy()
         {
-            ViewBag.Title = "Refund Policy";
-            return View();
+            using (var db = new Model1())
+            {
+                var model = db.tblRefundPolicies.FirstOrDefault() ?? new tblRefundPolicy
+                {
+                    Title = "Refund Policy",
+                    CreatedAt = DateTime.Now
+                };
+                ViewBag.Title = "Refund Policy";
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult RefundPolicy(tblRefundPolicy input)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = "Refund Policy";
+                return View(input);
+            }
+            using (var db = new Model1())
+            {
+                if (input.ID > 0)
+                {
+                    var entity = db.tblRefundPolicies.Find(input.ID);
+                    if (entity == null) return HttpNotFound();
+                    entity.Title = input.Title;
+                    entity.PageData = input.PageData;
+                    entity.UpdatedAt = DateTime.Now;
+                    db.Entry(entity).State = EntityState.Modified;
+                }
+                else
+                {
+                    input.ID = db.tblRefundPolicies.Any() ? db.tblRefundPolicies.Max(x => x.ID) + 1 : 1;
+                    input.CreatedAt = DateTime.Now;
+                    input.UpdatedAt = DateTime.Now;
+                    db.tblRefundPolicies.Add(input);
+                }
+                db.SaveChanges();
+            }
+            TempData["Success"] = "Refund Policy saved successfully.";
+            return RedirectToAction("RefundPolicy");
         }
 
         [HttpGet]
         public ActionResult LatePayments()
         {
-            ViewBag.Title = "Fine/Penalties On Late Payments";
-            return View();
+            using (var db = new Model1())
+            {
+                var model = db.tblLatePaymentPenalties.FirstOrDefault() ?? new tblLatePaymentPenalty();
+                ViewBag.Title = "Fine/Penalties On Late Payments";
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult LatePayments(tblLatePaymentPenalty input)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = "Fine/Penalties On Late Payments";
+                return View(input);
+            }
+
+            using (var db = new Model1())
+            {
+                if (input.PenaltyID > 0)
+                {
+                    var entity = db.tblLatePaymentPenalties.Find(input.PenaltyID);
+                    if (entity == null) return HttpNotFound();
+                    entity.PenaltyDetail = input.PenaltyDetail;
+                    entity.ModifiedDate = DateTime.Now;
+                    db.Entry(entity).State = EntityState.Modified;
+                }
+                else
+                {
+                    input.CreatedDate = DateTime.Now;
+                    input.ModifiedDate = DateTime.Now;
+                    db.tblLatePaymentPenalties.Add(input);
+                }
+                db.SaveChanges();
+            }
+            TempData["Success"] = "Fine/Penalties On Late Payments saved successfully.";
+            return RedirectToAction("LatePayments");
         }
 
         [HttpGet]
         public ActionResult Accommodation()
         {
-            ViewBag.Title = "Accommodation";
-            return View();
+            using (var db = new Model1())
+            {
+                var model = db.tblAccomodations.FirstOrDefault() ?? new tblAccomodation
+                {
+                    Title = "Accommodation",
+                    CreatedAt = DateTime.Now
+                };
+                ViewBag.Title = "Accommodation";
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult Accommodation(tblAccomodation input)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = "Accommodation";
+                return View(input);
+            }
+            using (var db = new Model1())
+            {
+                if (input.ID > 0)
+                {
+                    var entity = db.tblAccomodations.Find(input.ID);
+                    if (entity == null) return HttpNotFound();
+                    entity.Title = input.Title;
+                    entity.PageData = input.PageData;
+                    entity.UpdatedAt = DateTime.Now;
+                    db.Entry(entity).State = EntityState.Modified;
+                }
+                else
+                {
+                    input.ID = db.tblAccomodations.Any() ? db.tblAccomodations.Max(x => x.ID) + 1 : 1;
+                    input.CreatedAt = DateTime.Now;
+                    input.UpdatedAt = DateTime.Now;
+                    db.tblAccomodations.Add(input);
+                }
+                db.SaveChanges();
+            }
+            TempData["Success"] = "Accommodation page saved successfully.";
+            return RedirectToAction("Accommodation");
         }
 
         [HttpGet]
         public ActionResult Transport()
         {
-            ViewBag.Title = "Transport";
-            return View();
+            using (var db = new Model1())
+            {
+                var model = db.tblAdmTransports.FirstOrDefault() ?? new tblAdmTransport
+                {
+                    Title = "Transport",
+                    CreatedAt = DateTime.Now
+                };
+                ViewBag.Title = "Transport";
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult Transport(tblAdmTransport input)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = "Transport";
+                return View(input);
+            }
+            using (var db = new Model1())
+            {
+                if (input.ID > 0)
+                {
+                    var entity = db.tblAdmTransports.Find(input.ID);
+                    if (entity == null) return HttpNotFound();
+                    entity.Title = input.Title;
+                    entity.PageData = input.PageData;
+                    entity.UpdatedAt = DateTime.Now;
+                    db.Entry(entity).State = EntityState.Modified;
+                }
+                else
+                {
+                    input.ID = db.tblAdmTransports.Any() ? db.tblAdmTransports.Max(x => x.ID) + 1 : 1;
+                    input.CreatedAt = DateTime.Now;
+                    input.UpdatedAt = DateTime.Now;
+                    db.tblAdmTransports.Add(input);
+                }
+                db.SaveChanges();
+            }
+            TempData["Success"] = "Transport page saved successfully.";
+            return RedirectToAction("Transport");
         }
 
         [HttpGet]
         public ActionResult MiscellaneousCharges()
         {
-            ViewBag.Title = "Miscellaneous Charges";
-            return View();
+            using (var db = new Model1())
+            {
+                var model = db.tblMiscellaneousCharges.FirstOrDefault() ?? new tblMiscellaneousCharge();
+                ViewBag.Title = "Miscellaneous Charges";
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult MiscellaneousCharges(tblMiscellaneousCharge input)
+        {
+            // Remove AmountRates from validation as page does not include it
+            ModelState.Remove("AmountRates");
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = "Miscellaneous Charges";
+                return View(input);
+            }
+
+            using (var db = new Model1())
+            {
+                if (input.ChargeID > 0)
+                {
+                    var entity = db.tblMiscellaneousCharges.Find(input.ChargeID);
+                    if (entity == null) return HttpNotFound();
+                    entity.Description = input.Description;
+                    entity.ModifiedDate = DateTime.Now;
+                    db.Entry(entity).State = EntityState.Modified;
+                }
+                else
+                {
+                    input.CreatedDate = DateTime.Now;
+                    input.ModifiedDate = DateTime.Now;
+                    db.tblMiscellaneousCharges.Add(input);
+                }
+                db.SaveChanges();
+            }
+            TempData["Success"] = "Miscellaneous Charges saved successfully.";
+            return RedirectToAction("MiscellaneousCharges");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteMiscellaneousCharge(int id)
+        {
+            using (var db = new Model1())
+            {
+                var entity = db.tblMiscellaneousCharges.Find(id);
+                if (entity == null) return HttpNotFound();
+                db.tblMiscellaneousCharges.Remove(entity);
+                db.SaveChanges();
+            }
+            TempData["Success"] = "Miscellaneous charge deleted.";
+            return RedirectToAction("MiscellaneousCharges");
         }
     }
 }

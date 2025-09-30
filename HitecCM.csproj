@@ -149,7 +149,10 @@
     <Compile Include="Models\Model1.Analytics.cs" />
     <Compile Include="Models\tblAcademicDeficiency.cs" />
     <Compile Include="Models\tblAcademicRegulation.cs" />
+    <Compile Include="Models\tblAccomodation.cs" />
+    <Compile Include="Models\tblAdmTransport.cs" />
     <Compile Include="Models\tblFeeStructure.cs" />
+    <Compile Include="Models\tblFinancialAssistance.cs" />
     <Compile Include="Models\tblPolicy.cs" />
     <Compile Include="Models\tblDownloadsNew.cs" />
     <Compile Include="Models\tblMenus.cs" />
@@ -158,9 +161,6 @@
     <Compile Include="Models\AdverQsement.cs" />
     <Compile Include="Models\Model1.cs" />
     <Compile Include="Models\tblAbout.cs" />
-    <Compile Include="Models\tblAccommodation.cs" />
-    <Compile Include="Models\tblAccommodationNote.cs" />
-    <Compile Include="Models\tblAccommodationRefundPolicy.cs" />
     <Compile Include="Models\tblBMEOBECurriculum.cs" />
     <Compile Include="Models\tblCsOBECurriculum.cs" />
     <Compile Include="Models\tblDepartment.cs" />
@@ -187,11 +187,8 @@
     <Compile Include="Models\tblFacultiesET.cs" />
     <Compile Include="Models\tblFaculty.cs" />
     <Compile Include="Models\tblFAQ.cs" />
-    <Compile Include="Models\tblFeeRefundPolicy.cs" />
-    <Compile Include="Models\tblFinancialAssistance.cs" />
     <Compile Include="Models\tblLatePaymentPenalty.cs" />
     <Compile Include="Models\tblMiscellaneousCharge.cs" />
-    <Compile Include="Models\tblMiscellaneousNote.cs" />
     <Compile Include="Models\tblNew.cs" />
     <Compile Include="Models\tblNewsHead.cs" />
     <Compile Include="Models\tblNewsPhoto.cs" />

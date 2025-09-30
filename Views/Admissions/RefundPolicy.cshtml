@@ -1,0 +1,53 @@
+@model HitecCM.Models.tblRefundPolicy
+@{
+    ViewBag.Title = "Refund Policy";
+}
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">@ViewBag.Title</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Update the Refund Policy details. This saves into `tblRefundPolicy`.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered card-stretch">
+                <div class="card-inner">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["Success"]</div>
+                    }
+                    @using (Html.BeginForm("RefundPolicy", "Admissions", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.ID)
+                        @Html.HiddenFor(m => m.CreatedAt)
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Title, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Title, new { @class = "form-control", placeholder = "Enter title" })
+                            @Html.ValidationMessageFor(m => m.Title, null, new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Page Content", new { @class = "form-label" })
+                            @Html.TextAreaFor(m => m.PageData, new { @class = "form-control summernote-minimal", rows = 12 })
+                        </div>
+                        <div class="form-group mt-3">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Content/js/editors.js")
+    <script>
+        if (window.NioApp && NioApp.SummerNote) { NioApp.SummerNote(); }
+    </script>
+}

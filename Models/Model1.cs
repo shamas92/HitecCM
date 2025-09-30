@@ -17,12 +17,11 @@ namespace HitecCM.Models
         public virtual DbSet<AdverQsement> AdverQsements { get; set; }
         public virtual DbSet<tblDownloadsNew> tblDownloadsNews { get; set; }
         public virtual DbSet<tblFeeStructure> tblFeeStructures { get; set; }
+        public virtual DbSet<tblAccomodation> tblAccomodations { get; set; }
+        public virtual DbSet<tblAdmTransport> tblAdmTransports { get; set; }
 
         // Site structure/content entities (tbl*)
         public virtual DbSet<tblAbout> tblAbouts { get; set; }
-        public virtual DbSet<tblAccommodation> tblAccommodations { get; set; }
-        public virtual DbSet<tblAccommodationNote> tblAccommodationNotes { get; set; }
-        public virtual DbSet<tblAccommodationRefundPolicy> tblAccommodationRefundPolicies { get; set; }
         public virtual DbSet<tblBMEOBECurriculum> tblBMEOBECurriculums { get; set; }
         public virtual DbSet<tblCsOBECurriculum> tblCsOBECurriculums { get; set; }
         public virtual DbSet<tblDepartment> tblDepartments { get; set; }
@@ -49,13 +48,11 @@ namespace HitecCM.Models
         public virtual DbSet<tblFacultiesET> tblFacultiesETs { get; set; }
         public virtual DbSet<tblFaculty> tblFaculties { get; set; }
         public virtual DbSet<tblFAQ> tblFAQs { get; set; }
-        public virtual DbSet<tblFeeRefundPolicy> tblFeeRefundPolicies { get; set; }
         public virtual DbSet<tblFinancialAssistance> tblFinancialAssistances { get; set; }
         public virtual DbSet<tblLatePaymentPenalty> tblLatePaymentPenalties { get; set; }
         public virtual DbSet<tblMenus> tblMenus { get; set; }
         public virtual DbSet<tblMenuType> tblMenuTypes { get; set; }
         public virtual DbSet<tblMiscellaneousCharge> tblMiscellaneousCharges { get; set; }
-        public virtual DbSet<tblMiscellaneousNote> tblMiscellaneousNotes { get; set; }
         public virtual DbSet<tblNew> tblNews { get; set; }
         public virtual DbSet<tblNewsHead> tblNewsHeads { get; set; }
         public virtual DbSet<tblNewsPhoto> tblNewsPhotos { get; set; }
@@ -89,6 +86,7 @@ namespace HitecCM.Models
         public virtual DbSet<tblAcademicRegulation> tblAcademicRegulations { get; set; }
         public virtual DbSet<tblRulesRegulationsMS> tblRulesRegulationsMS { get; set; }
         public virtual DbSet<tblRulesRegulationsPhd> tblRulesRegulationsPhds { get; set; }
+        public virtual DbSet<tblRefundPolicy> tblRefundPolicies { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -167,7 +165,7 @@ namespace HitecCM.Models
             modelBuilder.Entity<tblPolicy>().Property(e => e.PageTitle).IsUnicode(false);
             modelBuilder.Entity<tblPolicy>().Property(e => e.PageData).IsUnicode(false);
 
-            // New academic pages & fee structure text mapping
+            // Admissions text pages
             modelBuilder.Entity<tblAcademicDeficiency>().Property(e => e.Title).IsUnicode(false);
             modelBuilder.Entity<tblAcademicDeficiency>().Property(e => e.PageData).IsUnicode(false);
             modelBuilder.Entity<tblAcademicRegulation>().Property(e => e.Title).IsUnicode(false);
@@ -178,6 +176,12 @@ namespace HitecCM.Models
             modelBuilder.Entity<tblRulesRegulationsPhd>().Property(e => e.PageData).IsUnicode(false);
             modelBuilder.Entity<tblFeeStructure>().Property(e => e.Title).IsUnicode(false);
             modelBuilder.Entity<tblFeeStructure>().Property(e => e.PageData).IsUnicode(false);
+            modelBuilder.Entity<tblAccomodation>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<tblAccomodation>().Property(e => e.PageData).IsUnicode(false);
+            modelBuilder.Entity<tblAdmTransport>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<tblAdmTransport>().Property(e => e.PageData).IsUnicode(false);
+            modelBuilder.Entity<tblRefundPolicy>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<tblRefundPolicy>().Property(e => e.PageData).IsUnicode(false);
         }
     }
 }
