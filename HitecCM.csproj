@@ -131,10 +131,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\AdmissionsController.cs" />
+    <Compile Include="Controllers\DepartmentFacilitiesController.cs" />
     <Compile Include="Controllers\PolicyController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
-    <Compile Include="Controllers\FacilitiesController.cs" />
     <Compile Include="Controllers\FacultyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MenusController.cs" />
@@ -144,15 +144,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AcademicDeficiency.cs" />
     <Compile Include="Models\AnalyticsModels.cs" />
     <Compile Include="Models\Model1.Analytics.cs" />
     <Compile Include="Models\tblAcademicDeficiency.cs" />
     <Compile Include="Models\tblAcademicRegulation.cs" />
     <Compile Include="Models\tblAccomodation.cs" />
     <Compile Include="Models\tblAdmTransport.cs" />
+    <Compile Include="Models\tblCafeteria.cs" />
     <Compile Include="Models\tblFeeStructure.cs" />
     <Compile Include="Models\tblFinancialAssistance.cs" />
+    <Compile Include="Models\tblHostel.cs" />
     <Compile Include="Models\tblPolicy.cs" />
     <Compile Include="Models\tblDownloadsNew.cs" />
     <Compile Include="Models\tblMenus.cs" />
@@ -212,10 +213,12 @@
     <Compile Include="Models\tblRulesRegulationsPhd.cs" />
     <Compile Include="Models\tblSchemeOfStudy.cs" />
     <Compile Include="Models\tblSeOBECurriculum.cs" />
+    <Compile Include="Models\tblSports.cs" />
     <Compile Include="Models\tblSuccessStory.cs" />
     <Compile Include="Models\tblTransport.cs" />
     <Compile Include="Models\tblTransportNote.cs" />
     <Compile Include="Models\tblTransportRefundPolicy.cs" />
+    <Compile Include="Models\tblUniversityFacilities.cs" />
     <Compile Include="Models\tblUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -338,10 +341,10 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Facilities\Create.cshtml" />
-    <Content Include="Views\Facilities\Delete.cshtml" />
-    <Content Include="Views\Facilities\Edit.cshtml" />
-    <Content Include="Views\Facilities\Index.cshtml" />
+    <Content Include="Views\DepartmentFacilities\Create.cshtml" />
+    <Content Include="Views\DepartmentFacilities\Delete.cshtml" />
+    <Content Include="Views\DepartmentFacilities\Edit.cshtml" />
+    <Content Include="Views\DepartmentFacilities\Index.cshtml" />
     <Content Include="Views\About\Index.cshtml" />
     <Content Include="Views\MenuType\Create.cshtml" />
     <Content Include="Views\MenuType\Delete.cshtml" />

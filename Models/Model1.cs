@@ -88,6 +88,12 @@ namespace HitecCM.Models
         public virtual DbSet<tblRulesRegulationsPhd> tblRulesRegulationsPhds { get; set; }
         public virtual DbSet<tblRefundPolicy> tblRefundPolicies { get; set; }
 
+        // New facility and service pages
+        public virtual DbSet<tblUniversityFacilities> tblUniversityFacilities { get; set; }
+        public virtual DbSet<tblSports> tblSports { get; set; }
+        public virtual DbSet<tblHostel> tblHostels { get; set; }
+        public virtual DbSet<tblCafeteria> tblCafeterias { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // Relationships
@@ -182,6 +188,16 @@ namespace HitecCM.Models
             modelBuilder.Entity<tblAdmTransport>().Property(e => e.PageData).IsUnicode(false);
             modelBuilder.Entity<tblRefundPolicy>().Property(e => e.Title).IsUnicode(false);
             modelBuilder.Entity<tblRefundPolicy>().Property(e => e.PageData).IsUnicode(false);
+
+            // New facility and service pages mapping
+            modelBuilder.Entity<tblUniversityFacilities>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<tblUniversityFacilities>().Property(e => e.PageData).IsUnicode(false);
+            modelBuilder.Entity<tblSports>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<tblSports>().Property(e => e.PageData).IsUnicode(false);
+            modelBuilder.Entity<tblHostel>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<tblHostel>().Property(e => e.PageData).IsUnicode(false);
+            modelBuilder.Entity<tblCafeteria>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<tblCafeteria>().Property(e => e.PageData).IsUnicode(false);
         }
     }
 }
