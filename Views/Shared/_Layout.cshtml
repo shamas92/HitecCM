@@ -57,13 +57,14 @@
 @{ 
     var ctrl = (string)ViewContext.RouteData.Values["controller"]; 
     var action = (string)ViewContext.RouteData.Values["action"]; 
-    // Mark Admissions active when controller is Admissions
+    // Mark active controllers
     var admissionsCtrls = new[]{"Admissions"};
     var facultyCtrls = new[]{"Faculty"};
     var menusCtrls = new[]{"Menus","MenuType"};
     var eventsCtrls = new[]{"Events"};
     var qacCtrls = new[]{"QAC"};
     var facilitiesCtrls = new[]{"Facilities"};
+    var hrCtrls = new[]{"HR"};
     Func<string,bool> isCtrl = c => string.Equals(ctrl,c,System.StringComparison.OrdinalIgnoreCase);
     Func<string,bool> isAction = a => string.Equals(action,a,System.StringComparison.OrdinalIgnoreCase);
     bool admissionsActive = admissionsCtrls.Any(c=>isCtrl(c));
@@ -72,6 +73,7 @@
     bool eventsActive = eventsCtrls.Any(c=>isCtrl(c));
     bool qacActive = qacCtrls.Any(c=>isCtrl(c));
     bool facilitiesActive = facilitiesCtrls.Any(c=>isCtrl(c));
+    bool hrActive = hrCtrls.Any(c=>isCtrl(c));
     var finActs = new[]{"FinancialAssistance","RefundPolicy","LatePayments","Accommodation","Transport","MiscellaneousCharges"};
     bool financialMattersActive = isCtrl("Admissions") && finActs.Any(a=> string.Equals(action,a,System.StringComparison.OrdinalIgnoreCase));
 }
@@ -116,6 +118,19 @@
                             <li><a class="@(isCtrl("Facilities") && action=="Sports"?"active":"")" href="@Url.Action("Sports","Facilities")">Sports</a></li>
                             <li><a class="@(isCtrl("Facilities") && action=="Hostel"?"active":"")" href="@Url.Action("Hostel","Facilities")">Hostel</a></li>
                             <li><a class="@(isCtrl("Facilities") && action=="Cafeteria"?"active":"")" href="@Url.Action("Cafeteria","Facilities")">Cafeteria</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="submenu-toggle @(hrActive?"active":"")" data-target="#hrMenu" aria-expanded="@(hrActive.ToString().ToLower())"><em class="icon ni ni-users"></em><span>Human Resources</span><span class="caret">›</span></a>
+                    <div class="collapse @(hrActive?"show":"")" id="hrMenu">
+                        <ul class="sidebar-sub">
+                            <li><a class="@(isCtrl("HR") && action=="ClassificationServices"?"active":"")" href="@Url.Action("ClassificationServices","HR")">Classification Services</a></li>
+                            <li><a class="@(isCtrl("HR") && action=="ESTR"?"active":"")" href="@Url.Action("ESTR","HR")">ESTR</a></li>
+                            <li><a class="@(isCtrl("HR") && action=="Perks"?"active":"")" href="@Url.Action("Perks","HR")">Perks</a></li>
+                            <li><a class="@(isCtrl("HR") && action=="Leaves"?"active":"")" href="@Url.Action("Leaves","HR")">Leaves</a></li>
+                            <li><a class="@(isCtrl("HR") && action=="ContributoryFund"?"active":"")" href="@Url.Action("ContributoryFund","HR")">Contributory Fund</a></li>
+                            <li><a class="@(isCtrl("HR") && action=="Discipline"?"active":"")" href="@Url.Action("Discipline","HR")">Discipline</a></li>
                         </ul>
                     </div>
                 </li>

@@ -133,6 +133,7 @@
     <Compile Include="Controllers\AdmissionsController.cs" />
     <Compile Include="Controllers\DepartmentFacilitiesController.cs" />
     <Compile Include="Controllers\FacilitiesController.cs" />
+    <Compile Include="Controllers\HRController.cs" />
     <Compile Include="Controllers\PolicyController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
@@ -155,6 +156,12 @@
     <Compile Include="Models\tblFeeStructure.cs" />
     <Compile Include="Models\tblFinancialAssistance.cs" />
     <Compile Include="Models\tblHostel.cs" />
+    <Compile Include="Models\tblHrClassificationServices.cs" />
+    <Compile Include="Models\tblHrContributoryFund.cs" />
+    <Compile Include="Models\tblHrDiscipline.cs" />
+    <Compile Include="Models\tblHrESTR.cs" />
+    <Compile Include="Models\tblHrLeaves.cs" />
+    <Compile Include="Models\tblHrPerks.cs" />
     <Compile Include="Models\tblPolicy.cs" />
     <Compile Include="Models\tblDownloadsNew.cs" />
     <Compile Include="Models\tblMenus.cs" />
@@ -397,6 +404,12 @@
     <Content Include="Views\Facilities\Sports.cshtml" />
     <Content Include="Views\Facilities\Hostel.cshtml" />
     <Content Include="Views\Facilities\Cafeteria.cshtml" />
+    <Content Include="Views\HR\ClassificationServices.cshtml" />
+    <Content Include="Views\HR\ESTR.cshtml" />
+    <Content Include="Views\HR\Perks.cshtml" />
+    <Content Include="Views\HR\Leaves.cshtml" />
+    <Content Include="Views\HR\ContributoryFund.cshtml" />
+    <Content Include="Views\HR\Discipline.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -92,6 +92,14 @@ namespace HitecCM.Models
         public virtual DbSet<tblHostel> tblHostels { get; set; }
         public virtual DbSet<tblCafeteria> tblCafeterias { get; set; }
 
+        // New HR management pages
+        public virtual DbSet<tblHrClassificationServices> tblHrClassificationServices { get; set; }
+        public virtual DbSet<tblHrESTR> tblHrESTRs { get; set; }
+        public virtual DbSet<tblHrPerks> tblHrPerks { get; set; }
+        public virtual DbSet<tblHrLeaves> tblHrLeaves { get; set; }
+        public virtual DbSet<tblHrContributoryFund> tblHrContributoryFunds { get; set; }
+        public virtual DbSet<tblHrDiscipline> tblHrDisciplines { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // Relationships
@@ -199,6 +207,20 @@ namespace HitecCM.Models
             // New tblTransport mapping (Facilities section)
             modelBuilder.Entity<tblTransport>().Property(e => e.Title).IsUnicode(false);
             modelBuilder.Entity<tblTransport>().Property(e => e.PageData).IsUnicode(false);
+
+            // New HR pages mapping
+            modelBuilder.Entity<tblHrClassificationServices>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<tblHrClassificationServices>().Property(e => e.PageData).IsUnicode(false);
+            modelBuilder.Entity<tblHrESTR>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<tblHrESTR>().Property(e => e.PageData).IsUnicode(false);
+            modelBuilder.Entity<tblHrPerks>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<tblHrPerks>().Property(e => e.PageData).IsUnicode(false);
+            modelBuilder.Entity<tblHrLeaves>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<tblHrLeaves>().Property(e => e.PageData).IsUnicode(false);
+            modelBuilder.Entity<tblHrContributoryFund>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<tblHrContributoryFund>().Property(e => e.PageData).IsUnicode(false);
+            modelBuilder.Entity<tblHrDiscipline>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<tblHrDiscipline>().Property(e => e.PageData).IsUnicode(false);
         }
     }
 }

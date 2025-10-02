@@ -1,0 +1,86 @@
+@model HitecCM.Models.tblHrClassificationServices
+@{
+    ViewBag.Title = "Classification Services";
+}
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Classification Services</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Manage Classification Services content. All fields map to `tblHrClassificationServices`.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered card-stretch">
+                <div class="card-inner">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["Success"]</div>
+                    }
+                    @using (Html.BeginForm("ClassificationServices", "HR", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.ID)
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.Title, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Title, new { @class = "form-control", placeholder = "Page title" })
+                            @Html.ValidationMessageFor(m => m.Title, null, new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.PageData, new { @class = "form-label" })
+                            <div>
+                                <div class="summernote-minimal"></div>
+                                @Html.HiddenFor(m => m.PageData, new { id = "PageDataHidden" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.PageData, null, new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group mt-4 text-left">
+                            <button type="submit" class="btn btn-primary px-5">Save</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            // Initialize Summernote if available
+            if (typeof $('.summernote-minimal').summernote === 'function') {
+                $('.summernote-minimal').summernote({
+                    height: 300,
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['fontname', ['fontname']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['height', ['height']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'hr']],
+                        ['view', ['fullscreen', 'codeview']],
+                        ['help', ['help']]
+                    ]
+                });
+                
+                // Set initial content
+                var initialContent = '@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.PageData ?? ""))';
+                $('.summernote-minimal').summernote('code', initialContent);
+            }
+            
+            // Before form submission, get content from Summernote
+            $('form').on('submit', function() {
+                if (typeof $('.summernote-minimal').summernote === 'function') {
+                    var content = $('.summernote-minimal').summernote('code');
+                    $('#PageDataHidden').val(content);
+                }
+            });
+        });
+    </script>
+}
