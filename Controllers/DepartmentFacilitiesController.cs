@@ -9,11 +9,11 @@ using System.IO;
 
 namespace HitecCM.Controllers
 {
-    public class FacilitiesController : Controller
+    public class DepartmentFacilitiesController : Controller
     {
         private Model1 db = new Model1();
 
-        // GET: Facilities
+        // GET: DepartmentFacilities
         public ActionResult Index()
         {
             var facilities = db.tblFacilites
@@ -24,7 +24,7 @@ namespace HitecCM.Controllers
             return View(facilities);
         }
 
-        // GET: Facilities/Details/5
+        // GET: DepartmentFacilities/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -43,14 +43,14 @@ namespace HitecCM.Controllers
             return View(facility);
         }
 
-        // GET: Facilities/Create
+        // GET: DepartmentFacilities/Create
         public ActionResult Create()
         {
             ViewBag.DepartmentID = new SelectList(db.tblDepartments, "DepartmentID", "Title");
             return View(new tblFacilite());
         }
 
-        // POST: Facilities/Create
+        // POST: DepartmentFacilities/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
@@ -101,7 +101,7 @@ namespace HitecCM.Controllers
             return View(facility);
         }
 
-        // GET: Facilities/Edit/5
+        // GET: DepartmentFacilities/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -118,8 +118,8 @@ namespace HitecCM.Controllers
             return View(facility);
         }
 
-        // POST: Facilities/Edit/5
-                [HttpPost]
+        // POST: DepartmentFacilities/Edit/5
+        [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
         public ActionResult Edit([Bind(Include = "FacilityID,DepartmentID,Title,Details,Active,C_Order")] tblFacilite facility, HttpPostedFileBase bannerFile, string croppedImageData)
@@ -205,7 +205,7 @@ namespace HitecCM.Controllers
             return View(facility);
         }
 
-        // GET: Facilities/Delete/5
+        // GET: DepartmentFacilities/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -223,7 +223,7 @@ namespace HitecCM.Controllers
             return View(facility);
         }
 
-        // POST: Facilities/Delete/5
+        // POST: DepartmentFacilities/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

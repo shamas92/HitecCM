@@ -132,7 +132,7 @@
                 var facilityId = $('#deleteFacilityId').val();
                 if (!facilityId) return;
                 $.ajax({
-                    url: '/Facilities/Delete/' + facilityId,
+                    url: '/DepartmentFacilities/Delete/' + facilityId,
                     type: 'POST',
                     data: {
                         __RequestVerificationToken: $('input[name=__RequestVerificationToken]').val(),
@@ -185,4 +185,4 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
