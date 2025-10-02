@@ -10,6 +10,7 @@ namespace HitecCM.Models
     public partial class tblUniversityFacilities
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ID { get; set; }
 
         [Required]

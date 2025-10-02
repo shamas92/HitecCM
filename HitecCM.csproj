@@ -132,6 +132,7 @@
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\AdmissionsController.cs" />
     <Compile Include="Controllers\DepartmentFacilitiesController.cs" />
+    <Compile Include="Controllers\FacilitiesController.cs" />
     <Compile Include="Controllers\PolicyController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
@@ -216,8 +217,6 @@
     <Compile Include="Models\tblSports.cs" />
     <Compile Include="Models\tblSuccessStory.cs" />
     <Compile Include="Models\tblTransport.cs" />
-    <Compile Include="Models\tblTransportNote.cs" />
-    <Compile Include="Models\tblTransportRefundPolicy.cs" />
     <Compile Include="Models\tblUniversityFacilities.cs" />
     <Compile Include="Models\tblUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -394,6 +393,10 @@
     <Content Include="Views\Admissions\FeeStructure.cshtml" />
     <Content Include="Views\Admissions\RulesRegulationsMS.cshtml" />
     <Content Include="Views\Admissions\RulesRegulationsPhD.cshtml" />
+    <Content Include="Views\Facilities\Transport.cshtml" />
+    <Content Include="Views\Facilities\Sports.cshtml" />
+    <Content Include="Views\Facilities\Hostel.cshtml" />
+    <Content Include="Views\Facilities\Cafeteria.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

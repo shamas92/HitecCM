@@ -63,6 +63,7 @@
     var menusCtrls = new[]{"Menus","MenuType"};
     var eventsCtrls = new[]{"Events"};
     var qacCtrls = new[]{"QAC"};
+    var facilitiesCtrls = new[]{"Facilities"};
     Func<string,bool> isCtrl = c => string.Equals(ctrl,c,System.StringComparison.OrdinalIgnoreCase);
     Func<string,bool> isAction = a => string.Equals(action,a,System.StringComparison.OrdinalIgnoreCase);
     bool admissionsActive = admissionsCtrls.Any(c=>isCtrl(c));
@@ -70,6 +71,7 @@
     bool menusActive = menusCtrls.Any(c=>isCtrl(c));
     bool eventsActive = eventsCtrls.Any(c=>isCtrl(c));
     bool qacActive = qacCtrls.Any(c=>isCtrl(c));
+    bool facilitiesActive = facilitiesCtrls.Any(c=>isCtrl(c));
     var finActs = new[]{"FinancialAssistance","RefundPolicy","LatePayments","Accommodation","Transport","MiscellaneousCharges"};
     bool financialMattersActive = isCtrl("Admissions") && finActs.Any(a=> string.Equals(action,a,System.StringComparison.OrdinalIgnoreCase));
 }
@@ -106,6 +108,17 @@
                 <li><a class="@(isCtrl("DepartmentFacilities")?"active":"")" href="@Url.Action("Index","DepartmentFacilities")"><em class="icon ni ni-building"></em><span>Department Facilities</span></a></li>
                 <li><a class="@(isCtrl("Downloads")?"active":"")" href="@Url.Action("Index","Downloads")"><em class="icon ni ni-download"></em><span>Downloads</span></a></li>
                 <li><a class="@(isCtrl("Policy")?"active":"")" href="@Url.Action("Index","Policy")"><em class="icon ni ni-policy"></em><span>Policies</span></a></li>
+                <li>
+                    <a class="submenu-toggle @(facilitiesActive?"active":"")" data-target="#facilitiesMenu" aria-expanded="@(facilitiesActive.ToString().ToLower())"><em class="icon ni ni-home"></em><span>Facilities</span><span class="caret">›</span></a>
+                    <div class="collapse @(facilitiesActive?"show":"")" id="facilitiesMenu">
+                        <ul class="sidebar-sub">
+                            <li><a class="@(isCtrl("Facilities") && action=="Transport"?"active":"")" href="@Url.Action("Transport","Facilities")">Transport</a></li>
+                            <li><a class="@(isCtrl("Facilities") && action=="Sports"?"active":"")" href="@Url.Action("Sports","Facilities")">Sports</a></li>
+                            <li><a class="@(isCtrl("Facilities") && action=="Hostel"?"active":"")" href="@Url.Action("Hostel","Facilities")">Hostel</a></li>
+                            <li><a class="@(isCtrl("Facilities") && action=="Cafeteria"?"active":"")" href="@Url.Action("Cafeteria","Facilities")">Cafeteria</a></li>
+                        </ul>
+                    </div>
+                </li>
                 <li>
                     <a class="submenu-toggle @(admissionsActive?"active":"")" data-target="#admissionsMenu" aria-expanded="@(admissionsActive.ToString().ToLower())"><em class="icon ni ni-book"></em><span>Admissions</span><span class="caret">›</span></a>
                     <div class="collapse @(admissionsActive?"show":"")" id="admissionsMenu">

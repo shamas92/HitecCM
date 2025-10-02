@@ -75,8 +75,6 @@ namespace HitecCM.Models
         public virtual DbSet<tblSeOBECurriculum> tblSeOBECurriculums { get; set; }
         public virtual DbSet<tblSuccessStory> tblSuccessStories { get; set; }
         public virtual DbSet<tblTransport> tblTransports { get; set; }
-        public virtual DbSet<tblTransportNote> tblTransportNotes { get; set; }
-        public virtual DbSet<tblTransportRefundPolicy> tblTransportRefundPolicies { get; set; }
         public virtual DbSet<tblUser> tblUsers { get; set; }
         public virtual DbSet<tblVisitSession> tblVisitSessions { get; set; }
         public virtual DbSet<tblPageView> tblPageViews { get; set; }
@@ -163,7 +161,6 @@ namespace HitecCM.Models
             modelBuilder.Entity<tblQACSurvay>().Property(e => e.PageTitle).IsUnicode(false);
             modelBuilder.Entity<tblQACSurvay>().Property(e => e.PageText).IsUnicode(false);
             modelBuilder.Entity<tblSeOBECurriculum>().Property(e => e.CurriculumTitle).IsUnicode(false);
-            modelBuilder.Entity<tblTransport>().Property(e => e.TransportChargesPerSemester).HasPrecision(10, 2);
 
             // Downloads/Policy simple mapping
             modelBuilder.Entity<tblDownloadsNew>().Property(e => e.PageTitle).IsUnicode(false);
@@ -198,6 +195,10 @@ namespace HitecCM.Models
             modelBuilder.Entity<tblHostel>().Property(e => e.PageData).IsUnicode(false);
             modelBuilder.Entity<tblCafeteria>().Property(e => e.Title).IsUnicode(false);
             modelBuilder.Entity<tblCafeteria>().Property(e => e.PageData).IsUnicode(false);
+            
+            // New tblTransport mapping (Facilities section)
+            modelBuilder.Entity<tblTransport>().Property(e => e.Title).IsUnicode(false);
+            modelBuilder.Entity<tblTransport>().Property(e => e.PageData).IsUnicode(false);
         }
     }
 }
