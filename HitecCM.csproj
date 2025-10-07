@@ -147,6 +147,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AnalyticsModels.cs" />
+    <Compile Include="Models\FeeStructureWithHostel.cs" />
     <Compile Include="Models\Model1.Analytics.cs" />
     <Compile Include="Models\tblAcademicDeficiency.cs" />
     <Compile Include="Models\tblAcademicRegulation.cs" />
