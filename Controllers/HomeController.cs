@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using HitecCM.Models;
+using System.Data.Entity; // for DbFunctions
 
 namespace HitecCM.Controllers
 {
@@ -194,8 +195,6 @@ namespace HitecCM.Controllers
                 try
                 {
                     var utcNow = DateTime.UtcNow;
-                    var from30 = utcNow.Date.AddDays(-29); // last 30 days including today
-                    var from24h = utcNow.AddHours(-23); // last 24 hours (hour buckets)
 
                     int sessionCount = 0;
                     int pageViewCount = 0;
@@ -209,74 +208,85 @@ namespace HitecCM.Controllers
                         ViewBag.ErrorMessage = $"Analytics tables not available: {dbEx.Message}";
                     }
 
-                    if (sessionCount == 0 || pageViewCount == 0)
+                    // Only fall back to sample data when BOTH tables have no rows
+                    if (sessionCount == 0 && pageViewCount == 0)
                     {
                         var sampleData = GenerateSampleAnalyticsData();
                         ViewBag.AnalyticsSummary = sampleData.Summary;
                         ViewBag.TrafficSeries = sampleData.TrafficSeries;
                         ViewBag.TopPages = sampleData.TopPages;
                         ViewBag.HourlyViews = sampleData.HourlyViews;
-
-                        if (sessionCount == 0 && pageViewCount == 0)
-                        {
-                            ViewBag.ErrorMessage = "No analytics data available. Displaying sample data for demonstration.";
-                        }
+                        ViewBag.ErrorMessage = "No analytics data available. Displaying sample data for demonstration.";
                     }
                     else
                     {
-                        var rawSessions = db.tblVisitSessions
-                            .Where(s => s.FirstSeenUtc >= from30 && s.FirstSeenUtc <= utcNow)
-                            .Select(s => new { s.VisitSessionId, s.FirstSeenUtc, s.LastSeenUtc, s.PageViews, s.IsBot })
+                        // Build base queries excluding bots
+                        var nonBotSessions = db.tblVisitSessions.Where(s => !s.IsBot);
+                        var nonBotPageViews = from p in db.tblPageViews
+                                              join s in db.tblVisitSessions on p.VisitSessionId equals s.VisitSessionId
+                                              where !s.IsBot
+                                              select new { p.ViewUtc, p.Path, p.StatusCode };
+
+                        // Last 30 days filter using DbFunctions to avoid timezone/sql translation issues
+                        var sessions30Query = nonBotSessions
+                            .Where(s => DbFunctions.DiffDays(s.FirstSeenUtc, utcNow) <= 29 && DbFunctions.DiffDays(s.FirstSeenUtc, utcNow) >= 0);
+
+                        var pageViews30Query = nonBotPageViews
+                            .Where(p => DbFunctions.DiffDays(p.ViewUtc, utcNow) <= 29 && DbFunctions.DiffDays(p.ViewUtc, utcNow) >= 0);
+
+                        var sessions30 = sessions30Query
+                            .Select(s => new { s.VisitSessionId, s.FirstSeenUtc, s.LastSeenUtc, s.PageViews })
                             .ToList();
 
-                        var userSessions = rawSessions.Where(s => !s.IsBot).ToList();
-                        var sessionIds = new HashSet<long>(userSessions.Select(s => (long)s.VisitSessionId));
-
-                        var rawPageViews = db.tblPageViews
-                            .Where(p => p.ViewUtc >= from30 && p.ViewUtc <= utcNow)
-                            .Select(p => new { p.ViewUtc, p.Path, p.VisitSessionId, p.StatusCode })
-                            .ToList()
-                            .Where(p => sessionIds.Contains(p.VisitSessionId))
+                        var pageViews30 = pageViews30Query
+                            .Select(p => new { p.ViewUtc, p.Path, p.StatusCode })
                             .ToList();
 
-                        var daily = userSessions
+                        // Daily series (sessions started on day)
+                        var dailyRaw = sessions30
                             .GroupBy(s => s.FirstSeenUtc.Date)
                             .Select(g => new { Date = g.Key, Sessions = g.Count(), PageViews = g.Sum(x => x.PageViews) })
                             .ToList();
 
                         var filledDaily = new List<object>();
-                        for (var d = from30.Date; d <= utcNow.Date; d = d.AddDays(1))
+                        for (var i = 29; i >= 0; i--)
                         {
-                            var existing = daily.FirstOrDefault(x => x.Date == d);
+                            var d = utcNow.Date.AddDays(-i);
+                            var existing = dailyRaw.FirstOrDefault(x => x.Date == d);
                             filledDaily.Add(new { Date = d.ToString("yyyy-MM-dd"), Sessions = existing?.Sessions ?? 0, PageViews = existing?.PageViews ?? 0 });
                         }
 
-                        var topPages = rawPageViews
+                        // Top pages (normalize path without query string)
+                        var topPages = pageViews30
                             .GroupBy(p => (p.Path ?? string.Empty).Split('?')[0])
                             .Select(g => new { Path = g.Key, Views = g.Count() })
                             .OrderByDescending(g => g.Views)
                             .Take(10)
                             .ToList();
 
-                        var last24Views = db.tblPageViews
-                            .Where(p => p.ViewUtc >= from24h && p.ViewUtc <= utcNow)
+                        // Hourly views last 24h
+                        var pageViews24 = nonBotPageViews
+                            .Where(p => DbFunctions.DiffHours(p.ViewUtc, utcNow) <= 23 && DbFunctions.DiffHours(p.ViewUtc, utcNow) >= 0)
                             .Select(p => p.ViewUtc)
                             .ToList();
+
                         var hourly = new List<object>();
-                        for (int i = 0; i < 24; i++)
+                        for (int i = 23; i >= 0; i--)
                         {
-                            var hour = from24h.AddHours(i);
-                            var cnt = last24Views.Count(v => v.Year == hour.Year && v.Month == hour.Month && v.Day == hour.Day && v.Hour == hour.Hour);
+                            var hour = utcNow.AddHours(-i);
+                            var cnt = pageViews24.Count(v => v.Year == hour.Year && v.Month == hour.Month && v.Day == hour.Day && v.Hour == hour.Hour);
                             hourly.Add(new { HourLabel = hour.ToString("HH:00"), Views = cnt });
                         }
 
-                        int totalSessions = userSessions.Count;
-                        int totalPageViews = rawPageViews.Count;
+                        // Summary metrics
+                        int totalSessions = sessions30.Count;
+                        int totalPageViews = pageViews30.Count;
                         double avgPagesPerSession = totalSessions > 0 ? (double)totalPageViews / totalSessions : 0d;
-                        double bounceRate = totalSessions > 0 ? (double)userSessions.Count(s => s.PageViews <= 1) / totalSessions * 100d : 0d;
+                        double bounceRate = totalSessions > 0 ? (double)sessions30.Count(s => s.PageViews <= 1) / totalSessions * 100d : 0d;
 
                         var maxSessionSpan = TimeSpan.FromMinutes(30);
-                        var sessionDurations = userSessions.Select(s => {
+                        var sessionDurations = sessions30.Select(s =>
+                        {
                             TimeSpan span = TimeSpan.Zero;
                             if (s.LastSeenUtc > s.FirstSeenUtc)
                             {
@@ -288,7 +298,8 @@ namespace HitecCM.Controllers
                         }).ToList();
                         double avgSessionDuration = sessionDurations.Count > 0 ? sessionDurations.Average() : 0d;
 
-                        ViewBag.AnalyticsSummary = new {
+                        ViewBag.AnalyticsSummary = new
+                        {
                             TotalSessions = totalSessions,
                             TotalPageViews = totalPageViews,
                             AvgPagesPerSession = Math.Round(avgPagesPerSession, 2),

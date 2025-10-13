@@ -150,7 +150,15 @@
                             <div class="amount h2 fw-bold text-warning mb-0" title="Raw: @(getProp(summary, "AvgSessionDurationSec"))s">
                                 @{ 
                                     var sessionSecondsVal = 0d; 
-                                    try { sessionSecondsVal = (double)getProp(summary, "AvgSessionDurationSec"); } catch { }
+                                    try
+                                    {
+                                        var raw = getProp(summary, "AvgSessionDurationSec");
+                                        if (raw != null)
+                                        {
+                                            sessionSecondsVal = Convert.ToDouble(raw);
+                                        }
+                                    }
+                                    catch { }
                                     var totalSeconds = (int)Math.Round(sessionSecondsVal);
                                     int hrs = totalSeconds / 3600;
                                     int mins = (totalSeconds % 3600) / 60;
