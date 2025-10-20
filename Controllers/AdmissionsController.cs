@@ -179,20 +179,27 @@ namespace HitecCM.Controllers
             }
             using (var db = new Model1())
             {
-                if (input.ID > 0)
+                var entity = db.tblFeeStructures.FirstOrDefault();
+                if (entity == null)
                 {
-                    var entity = db.tblFeeStructures.Find(input.ID);
-                    if (entity == null) return HttpNotFound();
+                    // Create new record only if none exists
+                    entity = new tblFeeStructure
+                    {
+                        ID = 1,
+                        CreatedAt = DateTime.Now
+                    };
+                    entity.Title = input.Title;
+                    entity.PageData = input.PageData;
+                    entity.UpdatedAt = DateTime.Now;
+                    db.tblFeeStructures.Add(entity);
+                }
+                else
+                {
+                    // Update existing record
                     entity.Title = input.Title;
                     entity.PageData = input.PageData;
                     entity.UpdatedAt = DateTime.Now;
                     db.Entry(entity).State = EntityState.Modified;
-                }
-                else
-                {
-                    input.CreatedAt = DateTime.Now;
-                    input.UpdatedAt = DateTime.Now;
-                    db.tblFeeStructures.Add(input);
                 }
                 db.SaveChanges();
             }
