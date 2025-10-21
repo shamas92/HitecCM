@@ -654,7 +654,11 @@ namespace HitecCM.Controllers
         {
             using (var db = new Model1())
             {
-                var model = db.tblMiscellaneousCharges.FirstOrDefault() ?? new tblMiscellaneousCharge();
+                var model = db.tblMiscellaneousCharges.FirstOrDefault() ?? new tblMiscellaneousCharge
+                {
+                    Title = "Miscellaneous Charges",
+                    CreatedAt = DateTime.Now
+                };
                 ViewBag.Title = "Miscellaneous Charges";
                 return View(model);
             }
@@ -665,8 +669,6 @@ namespace HitecCM.Controllers
         [ValidateInput(false)]
         public ActionResult MiscellaneousCharges(tblMiscellaneousCharge input)
         {
-            // Remove AmountRates from validation as page does not include it
-            ModelState.Remove("AmountRates");
             if (!ModelState.IsValid)
             {
                 ViewBag.Title = "Miscellaneous Charges";
@@ -675,19 +677,27 @@ namespace HitecCM.Controllers
 
             using (var db = new Model1())
             {
-                if (input.ChargeID > 0)
+                var entity = db.tblMiscellaneousCharges.FirstOrDefault();
+                if (entity == null)
                 {
-                    var entity = db.tblMiscellaneousCharges.Find(input.ChargeID);
-                    if (entity == null) return HttpNotFound();
-                    entity.Description = input.Description;
-                    entity.ModifiedDate = DateTime.Now;
-                    db.Entry(entity).State = EntityState.Modified;
+                    // Create new record only if none exists
+                    entity = new tblMiscellaneousCharge
+                    {
+                        ID = 1,
+                        CreatedAt = DateTime.Now
+                    };
+                    entity.Title = input.Title;
+                    entity.PageData = input.PageData;
+                    entity.UpdatedAt = DateTime.Now;
+                    db.tblMiscellaneousCharges.Add(entity);
                 }
                 else
                 {
-                    input.CreatedDate = DateTime.Now;
-                    input.ModifiedDate = DateTime.Now;
-                    db.tblMiscellaneousCharges.Add(input);
+                    // Update existing record
+                    entity.Title = input.Title;
+                    entity.PageData = input.PageData;
+                    entity.UpdatedAt = DateTime.Now;
+                    db.Entry(entity).State = EntityState.Modified;
                 }
                 db.SaveChanges();
             }
