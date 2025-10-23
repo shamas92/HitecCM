@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using HitecCM.Filters;
 
 namespace HitecCM
 {
@@ -8,6 +9,7 @@ namespace HitecCM
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new AnalyticsTrackingAttribute());
         }
     }
 }

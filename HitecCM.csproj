@@ -143,6 +143,7 @@
     <Compile Include="Controllers\MenuTypeController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
     <Compile Include="Controllers\QACController.cs" />
+    <Compile Include="Filters\AnalyticsTrackingAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
