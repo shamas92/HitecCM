@@ -14,10 +14,17 @@ namespace HitecCM.Filters
     public class AnalyticsTrackingAttribute : ActionFilterAttribute
     {
         private const int SESSION_TIMEOUT_MINUTES = 30;
+        private const string EXCLUDED_PROJECT_NAME = "HitecCM";
 
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             base.OnActionExecuted(filterContext);
+
+            // Check if this is from the excluded project
+            if (IsExcludedProject())
+            {
+                return;
+            }
 
             // Only track successful GET requests
             if (filterContext.HttpContext.Request.HttpMethod != "GET" ||
@@ -35,6 +42,13 @@ namespace HitecCM.Filters
             {
                 // Silently fail - don't break the page if tracking fails
             }
+        }
+
+        private bool IsExcludedProject()
+        {
+            // Get the current executing assembly name
+            var assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+            return assemblyName.Equals(EXCLUDED_PROJECT_NAME, StringComparison.OrdinalIgnoreCase);
         }
 
         private void TrackPageView(HttpContextBase context)
