@@ -605,7 +605,7 @@
         var admissionsCtrls = new[] { "Admissions" };
         var facultyCtrls = new[] { "Faculty" };
         var menusCtrls = new[] { "Menus", "MenuType" };
-        var eventsCtrls = new[] { "Events" };
+        var eventsCtrls = new[] { "Events", "EventPhotos" };
         var qacCtrls = new[] { "QAC" };
         var facilitiesCtrls = new[] { "Facilities" };
         var hrCtrls = new[] { "HR" };
@@ -669,6 +669,7 @@
                         <div class="collapse @(eventsActive?"show":"")" id="eventsMenu">
                             <ul class="sidebar-sub">
                                 <li><a class="@(isCtrl("Events")?"active":"")" href="@Url.Action("Index","Events")">Manage Events</a></li>
+                                <li><a class="@(isCtrl("EventPhotos")?"active":"")" href="@Url.Action("Index","EventPhotos")">Event Photos</a></li>
                             </ul>
                         </div>
                     </li>
@@ -755,6 +756,7 @@
                         <div class="collapse @(eventsActive?"show":"")" id="eventsMenu">
                             <ul class="sidebar-sub">
                                 <li><a class="@(isCtrl("Events")?"active":"")" href="@Url.Action("Index","Events")">Manage Events</a></li>
+                                <li><a class="@(isCtrl("EventPhotos")?"active":"")" href="@Url.Action("Index","EventPhotos")">Event Photos</a></li>
                             </ul>
                         </div>
                     </li>

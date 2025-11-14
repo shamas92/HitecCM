@@ -30,8 +30,9 @@ namespace HitecCM.Controllers
             // DSA role restrictions
             if (string.Equals(role, "DSA", StringComparison.OrdinalIgnoreCase))
             {
-                // Allow access only to Events controller and Home dashboard
+                // Allow access to Events, EventPhotos controllers and Home dashboard
                 bool isAllowedController = string.Equals(controller, "Events", StringComparison.OrdinalIgnoreCase) ||
+                                          string.Equals(controller, "EventPhotos", StringComparison.OrdinalIgnoreCase) ||
                                           string.Equals(controller, "Home", StringComparison.OrdinalIgnoreCase);
 
                 // For Home controller, only allow Index action (dashboard)

@@ -1,0 +1,116 @@
+@model HitecCM.Models.tblEventPhoto
+@{
+    ViewBag.Title = "Add Event Photo";
+    var events = ViewBag.Events as SelectList;
+}
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Add New Event Photo</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Upload a new photo for an event.</p>
+                    </div>
+                </div>
+                <div class="nk-block-head-content">
+                    <div class="toggle-wrap nk-block-tools-toggle">
+                        <a href="@Url.Action("Index")" class="btn btn-primary">
+                            <em class="icon ni ni-arrow-left"></em>
+                            <span>Back to List</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered">
+                <div class="card-inner">
+                    @using (Html.BeginForm("Create", "EventPhotos", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.EventID, "Event *", new { @class = "form-label" })
+                            @if (events != null)
+                            {
+                                @Html.DropDownListFor(m => m.EventID, events, "-- Select Event --", new { @class = "form-control form-select", required = "required" })
+                            }
+                            else
+                            {
+                                <select class="form-control form-select" name="EventID" required>
+                                    <option value="">-- No Events Available --</option>
+                                </select>
+                            }
+                            @Html.ValidationMessageFor(m => m.EventID, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Title, "Photo Title", new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Title, new { @class = "form-control", placeholder = "Enter photo title" })
+                            @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+                        </div>
+                        
+                        <div class="form-group">
+                            @Html.Label("Date", new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Date, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                            @Html.ValidationMessageFor(m => m.Date, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Photo *</label>
+                            <div class="form-control-wrap">
+                                <div class="mb-2">
+                                    <img id="imagePreview" src="#" style="max-width: 100%; max-height: 300px; border: 2px dashed #ccc; display: none;" />
+                                </div>
+                                <div class="custom-file">
+                                    <input type="file" name="photoFile" class="custom-file-input" id="photoFile" required>
+                                    <label class="custom-file-label" for="photoFile">Choose file</label>
+                                </div>
+                                <small class="form-text text-muted">Allowed formats: JPG, JPEG, PNG, GIF, WEBP</small>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Photo, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Status, new { @class = "form-label" })
+                            @Html.DropDownListFor(m => m.Status, new SelectList(new[] { "Active", "Inactive" }), new { @class = "form-control form-select" })
+                            @Html.ValidationMessageFor(m => m.Status, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <button type="submit" class="btn btn-primary">
+                                <em class="icon ni ni-save"></em>
+                                <span>Add Photo</span>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            // Update custom file input label with filename when selected
+            $('.custom-file-input').on('change', function() {
+                var fileName = $(this).val().split('\\').pop();
+                $(this).next('.custom-file-label').html(fileName || "Choose file");
+                
+                var file = this.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#imagePreview').attr('src', e.target.result).show();
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    $('#imagePreview').hide();
+                }
+            });
+        });
+    </script>
+}

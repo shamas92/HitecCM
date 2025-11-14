@@ -45,7 +45,13 @@ namespace HitecCM.Controllers
         public ActionResult Create()
         {
             PopulateDropdowns();
-            return View(new tblEvent { EventDate = DateTime.Now, Date = DateTime.Now, Active = true });
+            var model = new tblEvent 
+            { 
+                EventDate = DateTime.Now, 
+                Date = DateTime.Now, 
+                Active = true 
+            };
+            return View(model);
         }
 
         // POST: Events/Create
@@ -70,7 +76,10 @@ namespace HitecCM.Controllers
         public ActionResult Edit(int? id)
         {
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var ev = db.tblEvents.Find(id);
+            var ev = db.tblEvents
+                .Include(e => e.tblEventHead)
+                .Include(e => e.tblDepartment)
+                .FirstOrDefault(e => e.EventID == id);
             if (ev == null) return HttpNotFound();
             PopulateDropdowns(ev);
             return View(ev);
@@ -190,16 +199,30 @@ namespace HitecCM.Controllers
         {
             try
             {
-                var heads = db.tblEventHeads.OrderBy(h => h.C_Order).ThenBy(h => h.Title).ToList();
+                var heads = db.tblEventHeads
+                    .Where(h => h.Active == true || h.Active == null)
+                    .OrderBy(h => h.C_Order)
+                    .ThenBy(h => h.Title)
+                    .ToList();
+                
                 ViewBag.EventHeads = new SelectList(heads, "EventHeadID", "Title", ev?.EventHeadID);
+                ViewBag.EventHeadsCount = heads.Count;
 
-                var departments = db.tblDepartments.OrderBy(d => d.C_Order).ThenBy(d => d.Title).ToList();
+                var departments = db.tblDepartments
+                    .OrderBy(d => d.C_Order)
+                    .ThenBy(d => d.Title)
+                    .ToList();
+                
                 ViewBag.Departments = new SelectList(departments, "DepartmentID", "Title", ev?.DepartmentID);
+                ViewBag.DepartmentsCount = departments.Count;
             }
-            catch
+            catch (Exception ex)
             {
                 ViewBag.EventHeads = new SelectList(new List<SelectListItem>(), "Value", "Text");
                 ViewBag.Departments = new SelectList(new List<SelectListItem>(), "Value", "Text");
+                ViewBag.EventHeadsCount = 0;
+                ViewBag.DepartmentsCount = 0;
+                ViewBag.DropdownError = ex.Message;
             }
         }
 

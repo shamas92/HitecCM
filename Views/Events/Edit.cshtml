@@ -1,6 +1,8 @@
 @model HitecCM.Models.tblEvent
 @{
     ViewBag.Title = "Edit Event";
+    var eventHeads = ViewBag.EventHeads as SelectList;
+    var departments = ViewBag.Departments as SelectList;
 }
 <div class="nk-content-inner">
     <div class="nk-content-body">
@@ -22,6 +24,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="nk-block">
             <div class="card card-bordered">
                 <div class="card-inner">
@@ -59,14 +62,32 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     @Html.LabelFor(m => m.EventHeadID, "Event Head", new { @class = "form-label" })
-                                    @Html.DropDownList("EventHeadID", (SelectList)ViewBag.EventHeads, "-- Select --", new { @class = "form-select" })
+                                    @if (eventHeads != null)
+                                    {
+                                        @Html.DropDownListFor(m => m.EventHeadID, eventHeads, "-- Select Event Head --", new { @class = "form-control form-select" })
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control form-select" name="EventHeadID">
+                                            <option value="">-- No Event Heads Available --</option>
+                                        </select>
+                                    }
                                     @Html.ValidationMessageFor(m => m.EventHeadID, "", new { @class = "text-danger" })
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     @Html.LabelFor(m => m.DepartmentID, "Department", new { @class = "form-label" })
-                                    @Html.DropDownList("DepartmentID", (SelectList)ViewBag.Departments, "-- Select --", new { @class = "form-select" })
+                                    @if (departments != null)
+                                    {
+                                        @Html.DropDownListFor(m => m.DepartmentID, departments, "-- Select Department --", new { @class = "form-control form-select" })
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control form-select" name="DepartmentID">
+                                            <option value="">-- No Departments Available --</option>
+                                        </select>
+                                    }
                                     @Html.ValidationMessageFor(m => m.DepartmentID, "", new { @class = "text-danger" })
                                 </div>
                             </div>

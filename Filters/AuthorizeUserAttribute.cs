@@ -32,13 +32,8 @@ namespace HitecCM.Filters
             {
                 // Allow access only to Events controller and Home dashboard
                 bool isAllowedController = string.Equals(controller, "Events", StringComparison.OrdinalIgnoreCase) ||
-                                          string.Equals(controller, "Home", StringComparison.OrdinalIgnoreCase);
+                                          string.Equals(controller, "EventPhotos", StringComparison.OrdinalIgnoreCase);
 
-                // For Home controller, only allow Index action (dashboard)
-                if (string.Equals(controller, "Home", StringComparison.OrdinalIgnoreCase))
-                {
-                    isAllowedController = string.Equals(action, "Index", StringComparison.OrdinalIgnoreCase);
-                }
 
                 if (!isAllowedController)
                 {
