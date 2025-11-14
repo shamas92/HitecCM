@@ -8,7 +8,7 @@ using System.Data.Entity; // for DbFunctions
 
 namespace HitecCM.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private Model1 db = new Model1();
 

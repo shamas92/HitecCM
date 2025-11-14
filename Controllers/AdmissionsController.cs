@@ -8,7 +8,7 @@ using System.Data.Entity;
 
 namespace HitecCM.Controllers
 {
-    public class AdmissionsController : Controller
+    public class AdmissionsController : BaseController
     {
         // Advertisement action (corresponds to the Advertisement view)
         public ActionResult Advertisement()

@@ -7,7 +7,7 @@ using System.Web;
 
 namespace HitecCM.Controllers
 {
-    public class AboutController : Controller
+    public class AboutController : BaseController
     {
         public ActionResult Index()
         {
@@ -77,4 +77,4 @@ namespace HitecCM.Controllers
             }
         }
     }
-} 
+}

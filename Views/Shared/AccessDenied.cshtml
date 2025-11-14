@@ -1,0 +1,345 @@
+@{
+    ViewBag.Title = "Access Denied";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - HITEC CM</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:500,700,900" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            background-color: #36383f;
+            font-size: 16px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body {
+            width: 100%;
+            padding: 20px;
+        }
+
+        :root {
+            --hole-distance: 20px;
+        }
+
+        #hole1 {
+            top: var(--hole-distance);
+            left: var(--hole-distance);
+        }
+
+        #hole2 {
+            top: var(--hole-distance);
+            right: var(--hole-distance);
+        }
+
+        #hole3 {
+            bottom: var(--hole-distance);
+            left: var(--hole-distance);
+        }
+
+        #hole4 {
+            bottom: var(--hole-distance);
+            right: var(--hole-distance);
+        }
+
+        .hole {
+            width: 15px;
+            height: 15px;
+            position: absolute;
+            border-radius: 50%;
+            background-image: radial-gradient(circle at 99%, #f4f4f4 10%, grey 70%);
+            transform: rotate(45deg);
+        }
+
+        #sign-wrapper {
+            background-color: #f4f4f4;
+            position: relative;
+            width: 70%;
+            min-width: 300px;
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 35px;
+            border: 1px solid #e9ecf0;
+            border-radius: 35px;
+            box-shadow: 5px 5px 10px #000;
+            font-family: "Montserrat", sans-serif;
+            font-size: 0.9rem;
+        }
+
+        #header {
+            background-color: #ef5350;
+            padding: 15px;
+            border-radius: 25px 25px 0 0;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            color: #f4f4f4;
+            font-size: 3.5em;
+            line-height: .9em;
+            letter-spacing: 2px;
+            margin: 0;
+            font-weight: 900;
+        }
+
+        #sign-body {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        #copy-container {
+            flex-basis: 60%;
+            padding-right: 20px;
+        }
+
+        #circle-container {
+            flex-basis: 40%;
+        }
+
+        h2,
+        p {
+            text-align: center;
+            color: #1d1e22;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            text-transform: uppercase;
+            margin: 25px 0 15px 0;
+            line-height: 1em;
+        }
+
+        p {
+            font-size: 14px;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .user-info {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 20px 0;
+            font-size: 13px;
+            color: #856404;
+        }
+
+        .user-info strong {
+            color: #1d1e22;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-family: "Montserrat", sans-serif;
+        }
+
+        .btn-primary {
+            background: #ef5350;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #e53935;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 83, 80, 0.4);
+        }
+
+        .btn-secondary {
+            background: #36383f;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #2a2c32;
+            transform: translateY(-2px);
+        }
+
+        @@media screen and (max-width: 930px) {
+            #sign-wrapper {
+                font-size: .8rem;
+                padding: 30px;
+            }
+            
+            h1 {
+                font-size: 3em;
+            }
+        }
+
+        @@media screen and (max-width: 750px) {
+            #sign-wrapper {
+                font-size: .7rem;
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            h2 {
+                margin: 20px 0 10px 0;
+                font-size: 1.5em;
+            }
+
+
+
+            #sign-body {
+                flex-direction: column;
+            }
+
+            #copy-container {
+                flex-basis: 100%;
+                padding-right: 0;
+            }
+
+            #circle-container {
+                flex-basis: 100%;
+                max-width: 200px;
+                margin-top: 15px;
+            }
+        }
+
+        @@media screen and (max-width: 600px) {
+            #sign-wrapper {
+                font-size: .6rem;
+                padding: 20px;
+                border-radius: 20px;
+            }
+
+            #header {
+                border-radius: 15px 15px 0 0;
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            #circle-container {
+                max-width: 150px;
+            }
+
+            .hole {
+                width: 10px;
+                height: 10px;
+            }
+
+            :root {
+                --hole-distance: 12px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @@media screen and (max-width: 450px) {
+            #sign-wrapper {
+                font-size: .5rem;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                margin: 10px 0;
+                font-size: 1.3em;
+            }
+
+            p {
+                font-size: 12px;
+            }
+
+            .user-info {
+                font-size: 11px;
+                padding: 8px;
+            }
+
+            .btn {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="sign-wrapper">
+        <div id="hole1" class="hole"></div>
+        <div id="hole2" class="hole"></div>
+        <div id="hole3" class="hole"></div>
+        <div id="hole4" class="hole"></div>
+        <header id="header">
+            <h1>403 forbidden</h1>
+        </header>
+        <section id="sign-body">
+            <div id="copy-container">
+                <h2>Authorized Personnel Only</h2>
+                <p><strong>Error 403: Forbidden</strong>. You do not have permission to view this page.</p>
+
+                @if (Session["Username"] != null)
+                {
+                    <div class="user-info">
+                        <strong>Logged in as:</strong> @Session["Username"]<br />
+                        <strong>Role:</strong> @(Session["Role"] ?? "User")
+                    </div>
+                }
+
+                <div class="button-group">
+                    <a href="@Url.Action("Index", "Events")" class="btn btn-primary">Go to Events</a>
+                    <a href="@Url.Action("Logout", "Account")" class="btn btn-secondary">Logout</a>
+                </div>
+            </div>
+            <div id="circle-container">
+                <svg version="1.1" viewBox="0 0 500 500" preserveAspectRatio="xMinYMin meet">
+                    <defs>
+                        <pattern id="image" patternUnits="userSpaceOnUse" height="450" width="450">
+                            <image x="25" y="25" height="450" width="450" xlink:href="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"></image>
+                        </pattern>
+                    </defs>
+                    <circle cx="250" cy="250" r="200" stroke-width="40px" stroke="#ef5350" fill="url(#image)" />
+                    <line x1="100" y1="100" x2="400" y2="400" stroke-width="40px" stroke="#ef5350" />
+                </svg>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

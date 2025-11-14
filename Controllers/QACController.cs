@@ -8,7 +8,7 @@ using HitecCM.Models;
 
 namespace HitecCM.Controllers
 {
-    public class QACController : Controller
+    public class QACController : BaseController
     {
         private readonly Model1 db = new Model1();
 

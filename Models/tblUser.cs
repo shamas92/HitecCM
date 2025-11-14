@@ -6,6 +6,7 @@ namespace HitecCM.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
+    [Table("tblUsers")]
     public partial class tblUser
     {
         [Key]

@@ -6,7 +6,7 @@ using System.Data.Entity;
 
 namespace HitecCM.Controllers
 {
-    public class HRController : Controller
+    public class HRController : BaseController
     {
         private readonly Model1 db = new Model1();
 

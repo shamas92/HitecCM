@@ -9,7 +9,7 @@ using System.IO;
 
 namespace HitecCM.Controllers
 {
-    public class DepartmentFacilitiesController : Controller
+    public class DepartmentFacilitiesController : BaseController
     {
         private Model1 db = new Model1();
 

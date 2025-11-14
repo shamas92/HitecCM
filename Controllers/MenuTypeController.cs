@@ -7,7 +7,7 @@ using HitecCM.Models;
 
 namespace HitecCM.Controllers
 {
-    public class MenuTypeController : Controller
+    public class MenuTypeController : BaseController
     {
         private Model1 db = new Model1();
 
@@ -123,4 +123,4 @@ namespace HitecCM.Controllers
             base.Dispose(disposing);
         }
     }
-} 
+}

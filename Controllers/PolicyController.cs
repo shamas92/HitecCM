@@ -5,7 +5,7 @@ using HitecCM.Models;
 
 namespace HitecCM.Controllers
 {
-    public class PolicyController : Controller
+    public class PolicyController : BaseController
     {
         private readonly Model1 db = new Model1();
 

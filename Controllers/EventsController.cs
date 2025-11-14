@@ -10,7 +10,7 @@ using HitecCM.Models;
 
 namespace HitecCM.Controllers
 {
-    public class EventsController : Controller
+    public class EventsController : BaseController
     {
         private readonly Model1 db = new Model1();
         private const string BannerDirectory = "~/Content/img/events/";

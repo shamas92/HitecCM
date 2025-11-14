@@ -9,7 +9,7 @@ using System.Web;
 
 namespace HitecCM.Controllers
 {
-    public class DepartmentsController : Controller
+    public class DepartmentsController : BaseController
     {
         private Model1 db = new Model1();
 
@@ -172,4 +172,4 @@ namespace HitecCM.Controllers
             base.Dispose(disposing);
         }
     }
-} 
+}

@@ -10,7 +10,7 @@ using System.Web;
 
 namespace HitecCM.Controllers
 {
-    public class MenusController : Controller
+    public class MenusController : BaseController
     {
         private Model1 db = new Model1();
         private const string IconDirectory = "~/Content/img/menuicon/";

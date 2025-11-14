@@ -102,6 +102,9 @@ namespace HitecCM.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            // Explicitly map tblUser to tblUsers table
+            modelBuilder.Entity<tblUser>().ToTable("tblUsers");
+
             // Relationships
             modelBuilder.Entity<tblDepartment>()
                 .HasMany(e => e.tblFaculties)

@@ -5,7 +5,7 @@ using HitecCM.Models;
 
 namespace HitecCM.Controllers
 {
-    public class FacultyController : Controller
+    public class FacultyController : BaseController
     {
         public ActionResult VisionMission()
         {
@@ -56,4 +56,4 @@ namespace HitecCM.Controllers
             }
         }
     }
-} 
+}

@@ -5,7 +5,7 @@ using HitecCM.Models;
 
 namespace HitecCM.Controllers
 {
-    public class FacilitiesController : Controller
+    public class FacilitiesController : BaseController
     {
         private readonly Model1 db = new Model1();
 

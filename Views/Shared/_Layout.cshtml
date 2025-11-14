@@ -8,202 +8,775 @@
     <link href="~/Content/css/dashboard.css" rel="stylesheet" type="text/css" />
     @Scripts.Render("~/bundles/modernizr")
     <style>
-        /* Layout constants */
-        :root { --header-h:60px; --sidebar-w:240px; }
-        /* Sidebar redesign (minimal custom CSS) */
-        #sidebar { width:var(--sidebar-w); flex:0 0 var(--sidebar-w); background:#fff; border-right:1px solid #e5e9f2; position:fixed; top:var(--header-h); left:0; bottom:0; overflow-y:auto; overflow-x:hidden; }
-        .sidebar-header { padding:12px 18px 4px; font-size:.65rem; letter-spacing:.15em; font-weight:700; color:#364a63; opacity:.75; }
-        .sidebar-nav { list-style:none; margin:0; padding:0; }
-        .sidebar-nav li { position:relative; }
-        .sidebar-nav a { display:flex; align-items:center; font-weight:600; color:#4a5b75; padding:8px 18px; font-size:14px; text-decoration:none; }
-        .sidebar-nav a .icon { font-size:18px; margin-right:10px; line-height:1; }
-        .sidebar-nav a .caret { margin-left:auto; font-size:16px; line-height:1; width:16px; text-align:center; transition:transform .25s ease, color .15s; opacity:.65; }
-        .sidebar-nav a:hover { background:#f5f6fa; color:#4a6ef2; text-decoration:none; }
-        .sidebar-nav a:hover .icon, .sidebar-nav a:hover .caret { color:#4a6ef2; }
-        .sidebar-nav a.active { color:#274bdb; }
-        .sidebar-nav a.active .icon, .sidebar-nav a.active .caret { color:#274bdb; }
-        .sidebar-nav a[aria-expanded="true"] .caret { transform:rotate(90deg); opacity:1; }
-        .sidebar-sub { list-style:none; margin:0 0 4px; padding:0; }
-        .sidebar-sub a { padding:6px 18px 6px 46px; font-weight:500; font-size:13px; color:#4a5b75; }
-        .sidebar-sub a:hover { color:#4a6ef2; background:#f5f6fa; }
-        .sidebar-sub a.active { color:#274bdb; }
-        /* Header spans full width and fixed */
-        .app-header { position:fixed; top:0; left:0; right:0; height:var(--header-h); z-index:1040; display:flex; align-items:center; background:#fff; border-bottom:1px solid #e5e9f2; padding:10px 18px; }
-        .app-brand { display:flex; align-items:center; cursor:pointer; }
-        .app-brand-icon { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#efeaff; color:#816bff; font-size:18px; margin-right:10px; }
-        .app-brand-text small { display:block; font-size:.6rem; letter-spacing:.15em; font-weight:600; color:#8091a7; }
-        .app-brand-text span { font-weight:700; color:#364a63; font-size:.95rem; }
-        .header-actions { margin-left:auto; display:flex; align-items:center; gap:22px; }
-        .header-actions .action-btn { background:none; border:0; position:relative; color:#607089; font-size:18px; padding:4px; }
-        .header-actions .action-btn:focus { outline:none; }
-        .header-actions .action-btn:hover { color:#4a6ef2; }
-        .avatar-circle { width:38px; height:38px; border-radius:50%; background:#6576ff; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:600; }
-        .mobile-toggle { margin-right:12px; }
-        #appLayout { display:flex; width:100%; min-height:100vh; margin-top:var(--header-h); }
-        .content-column { flex:1 1 auto; display:flex; flex-direction:column; min-width:0; margin-left:var(--sidebar-w); }
-        .content-column > main { min-height:calc(100vh - var(--header-h)); }
-        /* Mobile adjustments */
-        @@media (max-width: 991.98px){ 
-            #sidebar{ transform:translateX(-100%); box-shadow:0 0 12px rgba(0,0,0,.08); } 
-            #sidebar.show{ transform:translateX(0);} 
-            body.sidebar-open{ overflow:hidden;} 
-            .content-column { margin-left:0; }
-            .mobile-toggle{ display:inline-block; }
-        }
-        @@media (min-width: 992px){ .mobile-toggle{ display:none; } }
+                /* Layout constants */
+                :root {
+                    --header-h: 60px;
+                    --sidebar-w: 240px;
+                    --sidebar-w-collapsed: 60px;
+                    --transition-speed: 0.3s;
+                }
+
+                /* Base body styles */
+                body {
+                    margin: 0;
+                    padding: 0;
+                    overflow-x: hidden;
+                }
+
+                /* Sidebar overlay for mobile */
+                .sidebar-overlay {
+                    display: none;
+                    position: fixed;
+                    top: var(--header-h);
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 1039;
+                    opacity: 0;
+                    transition: opacity var(--transition-speed) ease;
+                }
+
+                    .sidebar-overlay.show {
+                        display: block;
+                        opacity: 1;
+                    }
+
+                /* Sidebar redesign with responsive behavior */
+                #sidebar {
+                    width: var(--sidebar-w);
+                    flex: 0 0 var(--sidebar-w);
+                    background: #fff;
+                    border-right: 1px solid #e5e9f2;
+                    position: fixed;
+                    top: var(--header-h);
+                    left: 0;
+                    bottom: 0;
+                    overflow-y: auto;
+                    overflow-x: hidden;
+                    z-index: 1040;
+                    transition: transform var(--transition-speed) ease, width var(--transition-speed) ease;
+                    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+                }
+
+                    /* Scrollbar styling for better aesthetics */
+                    #sidebar::-webkit-scrollbar {
+                        width: 6px;
+                    }
+
+                    #sidebar::-webkit-scrollbar-track {
+                        background: #f5f6fa;
+                    }
+
+                    #sidebar::-webkit-scrollbar-thumb {
+                        background: #c4cdd5;
+                        border-radius: 3px;
+                    }
+
+                        #sidebar::-webkit-scrollbar-thumb:hover {
+                            background: #a0aab5;
+                        }
+
+                .sidebar-header {
+                    padding: 12px 18px 4px;
+                    font-size: .65rem;
+                    letter-spacing: .15em;
+                    font-weight: 700;
+                    color: #364a63;
+                    opacity: .75;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .sidebar-nav {
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                    .sidebar-nav li {
+                        position: relative;
+                    }
+
+                    .sidebar-nav a {
+                        display: flex;
+                        align-items: center;
+                        font-weight: 600;
+                        color: #4a5b75;
+                        padding: 10px 18px;
+                        font-size: 14px;
+                        text-decoration: none;
+                        transition: all 0.2s ease;
+                        position: relative;
+                        white-space: nowrap;
+                    }
+
+                        .sidebar-nav a .icon {
+                            font-size: 18px;
+                            margin-right: 10px;
+                            line-height: 1;
+                            flex-shrink: 0;
+                        }
+
+                        .sidebar-nav a span:not(.caret) {
+                            flex: 1;
+                            min-width: 0;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+
+                        .sidebar-nav a .caret {
+                            margin-left: auto;
+                            font-size: 16px;
+                            line-height: 1;
+                            width: 16px;
+                            text-align: center;
+                            transition: transform .25s ease, color .15s;
+                            opacity: .65;
+                            flex-shrink: 0;
+                        }
+
+                        .sidebar-nav a:hover {
+                            background: #f5f6fa;
+                            color: #4a6ef2;
+                            text-decoration: none;
+                            cursor: pointer;
+                        }
+
+                            .sidebar-nav a:hover .icon,
+                            .sidebar-nav a:hover .caret {
+                                color: #4a6ef2;
+                            }
+
+                        .sidebar-nav a.active {
+                            color: #274bdb;
+                            background: #f0f4ff;
+                        }
+
+                            .sidebar-nav a.active .icon,
+                            .sidebar-nav a.active .caret {
+                                color: #274bdb;
+                            }
+
+                        .sidebar-nav a[aria-expanded="true"] .caret {
+                            transform: rotate(90deg);
+                            opacity: 1;
+                        }
+
+                /* Submenu styles */
+                .sidebar-sub {
+                    list-style: none;
+                    margin: 0 0 4px;
+                    padding: 0;
+                    background: #f9fafb;
+                }
+
+                    .sidebar-sub a {
+                        padding: 8px 18px 8px 46px;
+                        font-weight: 500;
+                        font-size: 13px;
+                        color: #4a5b75;
+                    }
+
+                        .sidebar-sub a:hover {
+                            color: #4a6ef2;
+                            background: #f0f4ff;
+                        }
+
+                        .sidebar-sub a.active {
+                            color: #274bdb;
+                            background: #e6edff;
+                        }
+
+                    /* Nested submenu (3rd level) */
+                    .sidebar-sub .sidebar-sub a {
+                        padding-left: 62px;
+                        font-size: 12px;
+                    }
+
+                /* Header spans full width and fixed */
+                .app-header {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: var(--header-h);
+                    z-index: 1041;
+                    display: flex;
+                    align-items: center;
+                    background: #fff;
+                    border-bottom: 1px solid #e5e9f2;
+                    padding: 10px 18px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                }
+
+                .app-brand {
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+                    transition: opacity 0.2s ease;
+                }
+
+                    .app-brand:hover {
+                        opacity: 0.8;
+                    }
+
+                .app-brand-icon {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: #efeaff;
+                    color: #816bff;
+                    font-size: 18px;
+                    margin-right: 10px;
+                    flex-shrink: 0;
+                }
+
+                .app-brand-text small {
+                    display: block;
+                    font-size: .6rem;
+                    letter-spacing: .15em;
+                    font-weight: 600;
+                    color: #8091a7;
+                }
+
+                .app-brand-text span {
+                    font-weight: 700;
+                    color: #364a63;
+                    font-size: .95rem;
+                    white-space: nowrap;
+                }
+
+                .header-actions {
+                    margin-left: auto;
+                    display: flex;
+                    align-items: center;
+                    gap: 22px;
+                }
+
+                    .header-actions .action-btn {
+                        background: none;
+                        border: 0;
+                        position: relative;
+                        color: #607089;
+                        font-size: 18px;
+                        padding: 4px;
+                        cursor: pointer;
+                        transition: color 0.2s ease;
+                    }
+
+                        .header-actions .action-btn:focus {
+                            outline: none;
+                        }
+
+                        .header-actions .action-btn:hover {
+                            color: #4a6ef2;
+                        }
+
+                .avatar-circle {
+                    width: 38px;
+                    height: 38px;
+                    border-radius: 50%;
+                    background: #6576ff;
+                    color: #fff;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 600;
+                }
+
+                .mobile-toggle {
+                    margin-right: 12px;
+                    font-size: 20px;
+                    padding: 8px 12px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    transition: background 0.2s ease;
+                }
+
+                    .mobile-toggle:hover {
+                        background: #f5f6fa;
+                    }
+
+                #appLayout {
+                    display: flex;
+                    width: 100%;
+                    min-height: 100vh;
+                    margin-top: var(--header-h);
+                }
+
+                .content-column {
+                    flex: 1 1 auto;
+                    display: flex;
+                    flex-direction: column;
+                    min-width: 0;
+                    margin-left: var(--sidebar-w);
+                    transition: margin-left var(--transition-speed) ease;
+                }
+
+                    .content-column > main {
+                        min-height: calc(100vh - var(--header-h));
+                    }
+
+                /* ========================================
+        RESPONSIVE BREAKPOINTS
+                   ======================================== */
+
+                /* Large Desktop: 1200px and up */
+                @@media (min-width: 1200px) {
+                    :root {
+                        --sidebar-w: 260px;
+                    }
+
+                    .sidebar-nav a {
+                        padding: 11px 20px;
+                        font-size: 14.5px;
+                    }
+
+                    .sidebar-sub a {
+                        padding: 9px 20px 9px 50px;
+                    }
+                }
+
+                /* Desktop and Tablets: 992px and up */
+                @@media (min-width: 992px) {
+                    .mobile-toggle {
+                        display: none;
+                    }
+
+                    .sidebar-overlay {
+                        display: none !important;
+                    }
+
+                    #sidebar {
+                        transform: translateX(0);
+                    }
+                }
+
+                /* Tablets and smaller: Below 992px */
+                @@media (max-width: 991.98px) {
+                    #sidebar {
+                        transform: translateX(-100%);
+                        box-shadow: 2px 0 12px rgba(0,0,0,.15);
+                        z-index: 1042;
+                    }
+
+                        #sidebar.show {
+                            transform: translateX(0);
+                        }
+
+                    body.sidebar-open {
+                        overflow: hidden;
+                        position: fixed;
+                        width: 100%;
+                    }
+
+                    .content-column {
+                        margin-left: 0;
+                    }
+
+                    .mobile-toggle {
+                        display: inline-block;
+                    }
+
+                    .app-brand-text {
+                        display: none;
+                    }
+                }
+
+                /* Small Tablets: 768px to 991px */
+                @@media (min-width: 768px) and (max-width: 991.98px) {
+                    :root {
+                        --sidebar-w: 280px;
+                    }
+
+                    .sidebar-nav a {
+                        padding: 11px 20px;
+                    }
+
+                    .header-actions {
+                        gap: 18px;
+                    }
+                }
+
+                /* Mobile Landscape and Portrait: Below 768px */
+                @@media (max-width: 767.98px) {
+                    :root {
+                        --header-h: 56px;
+                        --sidebar-w: 280px;
+                    }
+
+                    .app-header {
+                        padding: 8px 12px;
+                    }
+
+                    .mobile-toggle {
+                        margin-right: 8px;
+                        padding: 6px 10px;
+                    }
+
+                    .app-brand-icon {
+                        width: 36px;
+                        height: 36px;
+                        font-size: 16px;
+                        margin-right: 8px;
+                    }
+
+                    .header-actions {
+                        gap: 12px;
+                    }
+
+                        .header-actions .action-btn {
+                            font-size: 16px;
+                            padding: 6px;
+                        }
+
+                    .avatar-circle {
+                        width: 34px;
+                        height: 34px;
+                        font-size: 14px;
+                    }
+
+                    .sidebar-nav a {
+                        padding: 10px 16px;
+                        font-size: 14px;
+                    }
+
+                    .sidebar-sub a {
+                        padding: 8px 16px 8px 44px;
+                        font-size: 13px;
+                    }
+
+                    .sidebar-sub .sidebar-sub a {
+                        padding-left: 60px;
+                    }
+
+                    .content-column > main {
+                        padding: 12px !important;
+                    }
+                }
+
+                /* Small Mobile: Below 576px */
+                @@media (max-width: 575.98px) {
+                    :root {
+                        --sidebar-w: 85vw;
+                        --header-h: 54px;
+                    }
+
+                    .app-header {
+                        padding: 8px 10px;
+                    }
+
+                    .mobile-toggle {
+                        padding: 5px 8px;
+                        margin-right: 6px;
+                        font-size: 18px;
+                    }
+
+                    .app-brand-icon {
+                        width: 32px;
+                        height: 32px;
+                        font-size: 14px;
+                        margin-right: 6px;
+                    }
+
+                    .header-actions {
+                        gap: 8px;
+                    }
+
+                        .header-actions .action-btn {
+                            font-size: 15px;
+                            padding: 4px;
+                        }
+
+                    .avatar-circle {
+                        width: 30px;
+                        height: 30px;
+                        font-size: 13px;
+                    }
+                    /* Hide some header actions on very small screens */
+                    .header-actions .action-btn:first-child {
+                        display: none;
+                    }
+
+                    .sidebar-header {
+                        padding: 10px 14px 4px;
+                        font-size: .6rem;
+                    }
+
+                    .sidebar-nav a {
+                        padding: 9px 14px;
+                        font-size: 13.5px;
+                    }
+
+                        .sidebar-nav a .icon {
+                            font-size: 17px;
+                            margin-right: 8px;
+                        }
+
+                    .sidebar-sub a {
+                        padding: 7px 14px 7px 42px;
+                        font-size: 12.5px;
+                    }
+
+                    .sidebar-sub .sidebar-sub a {
+                        padding-left: 56px;
+                        font-size: 12px;
+                    }
+
+                    .content-column > main {
+                        padding: 10px !important;
+                    }
+                }
+
+                /* Extra Small Mobile: Below 400px */
+                @@media (max-width: 399.98px) {
+                    :root {
+                        --sidebar-w: 90vw;
+                    }
+
+                    .header-actions .action-btn:nth-child(2) {
+                        display: none;
+                    }
+                }
+
+                /* Touch device optimizations */
+                @@media (hover: none) and (pointer: coarse) {
+                    .sidebar-nav a,
+                    .sidebar-sub a {
+                        padding-top: 11px;
+                        padding-bottom: 11px;
+                    }
+
+                    .mobile-toggle {
+                        padding: 8px 12px;
+                    }
+
+                    .header-actions .action-btn {
+                        padding: 8px;
+                    }
+                }
+
+                /* Print styles */
+                @@media print {
+                    #sidebar,
+                    .app-header,
+                    .sidebar-overlay {
+                        display: none !important;
+                    }
+
+                    .content-column {
+                        margin-left: 0 !important;
+                    }
+
+                    #appLayout {
+                        margin-top: 0 !important;
+                    }
+                }
+
+                /* High contrast mode support */
+                @@media (prefers-contrast: high) {
+                    #sidebar {
+                        border-right: 2px solid #000;
+                    }
+
+                    .sidebar-nav a {
+                        border-bottom: 1px solid #ddd;
+                    }
+                }
+
+                /* Reduced motion support */
+                @@media (prefers-reduced-motion: reduce) {
+                    * {
+                        transition: none !important;
+                        animation: none !important;
+                    }
+                }
     </style>
 </head>
 <body>
-@{ 
-    var ctrl = (string)ViewContext.RouteData.Values["controller"]; 
-    var action = (string)ViewContext.RouteData.Values["action"]; 
-    // Mark active controllers
-    var admissionsCtrls = new[]{"Admissions"};
-    var facultyCtrls = new[]{"Faculty"};
-    var menusCtrls = new[]{"Menus","MenuType"};
-    var eventsCtrls = new[]{"Events"};
-    var qacCtrls = new[]{"QAC"};
-    var facilitiesCtrls = new[]{"Facilities"};
-    var hrCtrls = new[]{"HR"};
-    Func<string,bool> isCtrl = c => string.Equals(ctrl,c,System.StringComparison.OrdinalIgnoreCase);
-    Func<string,bool> isAction = a => string.Equals(action,a,System.StringComparison.OrdinalIgnoreCase);
-    bool admissionsActive = admissionsCtrls.Any(c=>isCtrl(c));
-    bool facultyActive = facultyCtrls.Any(c=>isCtrl(c));
-    bool menusActive = menusCtrls.Any(c=>isCtrl(c));
-    bool eventsActive = eventsCtrls.Any(c=>isCtrl(c));
-    bool qacActive = qacCtrls.Any(c=>isCtrl(c));
-    bool facilitiesActive = facilitiesCtrls.Any(c=>isCtrl(c));
-    bool hrActive = hrCtrls.Any(c=>isCtrl(c));
-    var finActs = new[]{"FinancialAssistance","RefundPolicy","LatePayments","Accommodation","Transport","MiscellaneousCharges"};
-    bool financialMattersActive = isCtrl("Admissions") && finActs.Any(a=> string.Equals(action,a,System.StringComparison.OrdinalIgnoreCase));
-}
+    @{
+        var ctrl = (string)ViewContext.RouteData.Values["controller"];
+        var action = (string)ViewContext.RouteData.Values["action"];
+        var admissionsCtrls = new[] { "Admissions" };
+        var facultyCtrls = new[] { "Faculty" };
+        var menusCtrls = new[] { "Menus", "MenuType" };
+        var eventsCtrls = new[] { "Events" };
+        var qacCtrls = new[] { "QAC" };
+        var facilitiesCtrls = new[] { "Facilities" };
+        var hrCtrls = new[] { "HR" };
+        Func<string, bool> isCtrl = c => string.Equals(ctrl, c, System.StringComparison.OrdinalIgnoreCase);
+        Func<string, bool> isAction = a => string.Equals(action, a, System.StringComparison.OrdinalIgnoreCase);
+        bool admissionsActive = admissionsCtrls.Any(c => isCtrl(c));
+        bool facultyActive = facultyCtrls.Any(c => isCtrl(c));
+        bool menusActive = menusCtrls.Any(c => isCtrl(c));
+        bool eventsActive = eventsCtrls.Any(c => isCtrl(c));
+        bool qacActive = qacCtrls.Any(c => isCtrl(c));
+        bool facilitiesActive = facilitiesCtrls.Any(c => isCtrl(c));
+        bool hrActive = hrCtrls.Any(c => isCtrl(c));
+        var finActs = new[] { "FinancialAssistance", "RefundPolicy", "LatePayments", "Accommodation", "Transport", "MiscellaneousCharges" };
+        bool financialMattersActive = isCtrl("Admissions") && finActs.Any(a => string.Equals(action, a, System.StringComparison.OrdinalIgnoreCase));
+        var role = (string)Session["Role"] ?? "User";
+        bool isDSA = string.Equals(role, "DSA", System.StringComparison.OrdinalIgnoreCase);
+    }
     <!-- Full-width Fixed Header -->
     <div class="app-header">
-        <button class="btn btn-outline-secondary btn-sm mobile-toggle" id="sidebarToggle" type="button">☰</button>
+        <button class="btn btn-outline-secondary btn-sm mobile-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar navigation">☰</button>
         <div class="app-brand" onclick="window.location.href='@Url.Action("Index","Home")'">
             <div class="app-brand-icon"><em class="icon ni ni-dashlite"></em></div>
             <div class="app-brand-text"><small>HITEC</small><span>Content Management</span></div>
         </div>
         <div class="header-actions">
-            <button class="action-btn" title="Chats" type="button"><em class="icon ni ni-comments"></em></button>
-            <button class="action-btn" title="Notifications" type="button"><em class="icon ni ni-bell"></em></button>
+            <button class="action-btn" title="Chats" type="button" aria-label="Chats"><em class="icon ni ni-comments"></em></button>
+            <button class="action-btn" title="Notifications" type="button" aria-label="Notifications"><em class="icon ni ni-bell"></em></button>
             <div class="dropdown">
-                <button class="action-btn dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" type="button">
-                    <div class="avatar-circle">A</div>
+                <button class="action-btn dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" type="button" aria-label="User menu">
+                    <div class="avatar-circle">
+                        @{
+                            var username = Session["Username"] as string ?? "A";
+                            // Get first letter of username or first name
+                            var firstLetter = username.Length > 0 ? username.Substring(0, 1).ToUpper() : "A";
+                        }
+                        @firstLetter
+                    </div>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#">Profile</a>
+                    <a class="dropdown-item" href="#"><strong>@username</strong></a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Sign out</a>
+                    <a class="dropdown-item" href="@Url.Action("Logout", "Account")">Sign out</a>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Sidebar overlay for mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- Layout with fixed-width, fixed-position sidebar -->
     <div id="appLayout">
-        <nav id="sidebar">
+        <nav id="sidebar" aria-label="Main navigation">
             <div class="sidebar-header">MAIN</div>
             <ul class="sidebar-nav" id="sidebarNav">
-                <li><a class="@(isCtrl("Home")?"active":"")" href="@Url.Action("Index","Home")"><em class="icon ni ni-dashboard"></em><span>Dashboard</span></a></li>
-                <li><a class="@(isCtrl("About")?"active":"")" href="@Url.Action("Index","About")"><em class="icon ni ni-info"></em><span>About</span></a></li>
-                <li><a class="@(isCtrl("Departments")?"active":"")" href="@Url.Action("Index","Departments")"><em class="icon ni ni-building"></em><span>Departments</span></a></li>
-                <li><a class="@(isCtrl("DepartmentFacilities")?"active":"")" href="@Url.Action("Index","DepartmentFacilities")"><em class="icon ni ni-building"></em><span>Department Facilities</span></a></li>
-                <li><a class="@(isCtrl("Downloads")?"active":"")" href="@Url.Action("Index","Downloads")"><em class="icon ni ni-download"></em><span>Downloads</span></a></li>
-                <li><a class="@(isCtrl("Policy")?"active":"")" href="@Url.Action("Index","Policy")"><em class="icon ni ni-policy"></em><span>Policies</span></a></li>
-                <li>
-                    <a class="submenu-toggle @(facilitiesActive?"active":"")" data-target="#facilitiesMenu" aria-expanded="@(facilitiesActive.ToString().ToLower())"><em class="icon ni ni-home"></em><span>Facilities</span><span class="caret">›</span></a>
-                    <div class="collapse @(facilitiesActive?"show":"")" id="facilitiesMenu">
-                        <ul class="sidebar-sub">
-                            <li><a class="@(isCtrl("Facilities") && action=="Transport"?"active":"")" href="@Url.Action("Transport","Facilities")">Transport</a></li>
-                            <li><a class="@(isCtrl("Facilities") && action=="Sports"?"active":"")" href="@Url.Action("Sports","Facilities")">Sports</a></li>
-                            <li><a class="@(isCtrl("Facilities") && action=="Hostel"?"active":"")" href="@Url.Action("Hostel","Facilities")">Hostel</a></li>
-                            <li><a class="@(isCtrl("Facilities") && action=="Cafeteria"?"active":"")" href="@Url.Action("Cafeteria","Facilities")">Cafeteria</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a class="submenu-toggle @(hrActive?"active":"")" data-target="#hrMenu" aria-expanded="@(hrActive.ToString().ToLower())"><em class="icon ni ni-users"></em><span>Human Resources</span><span class="caret">›</span></a>
-                    <div class="collapse @(hrActive?"show":"")" id="hrMenu">
-                        <ul class="sidebar-sub">
-                            <li><a class="@(isCtrl("HR") && action=="ClassificationServices"?"active":"")" href="@Url.Action("ClassificationServices","HR")">Classification Services</a></li>
-                            <li><a class="@(isCtrl("HR") && action=="ESTR"?"active":"")" href="@Url.Action("ESTR","HR")">ESTR</a></li>
-                            <li><a class="@(isCtrl("HR") && action=="Perks"?"active":"")" href="@Url.Action("Perks","HR")">Perks</a></li>
-                            <li><a class="@(isCtrl("HR") && action=="Leaves"?"active":"")" href="@Url.Action("Leaves","HR")">Leaves</a></li>
-                            <li><a class="@(isCtrl("HR") && action=="ContributoryFund"?"active":"")" href="@Url.Action("ContributoryFund","HR")">Contributory Fund</a></li>
-                            <li><a class="@(isCtrl("HR") && action=="Discipline"?"active":"")" href="@Url.Action("Discipline","HR")">Discipline</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a class="submenu-toggle @(admissionsActive?"active":"")" data-target="#admissionsMenu" aria-expanded="@(admissionsActive.ToString().ToLower())"><em class="icon ni ni-book"></em><span>Admissions</span><span class="caret">›</span></a>
-                    <div class="collapse @(admissionsActive?"show":"")" id="admissionsMenu">
-                        <ul class="sidebar-sub">
-                            <li><a class="@(isCtrl("Admissions") && action=="Advertisement"?"active":"")" href="@Url.Action("Advertisement","Admissions")">Advertisement</a></li>
-                            <li><a class="@(isCtrl("Admissions") && action=="AcademicCalendar"?"active":"")" href="@Url.Action("AcademicCalendar","Admissions")">Academic Calendar</a></li>
-                            <li><a class="@(isCtrl("Admissions") && action=="FeeStructure"?"active":"")" href="@Url.Action("FeeStructure","Admissions")">Fee Structure</a></li>
-                            <li>
-                                <a class="submenu-toggle @(financialMattersActive?"active":"")" data-target="#financialMattersMenu" aria-expanded="@(financialMattersActive.ToString().ToLower())">Financial Matters<span class="caret">›</span></a>
-                                <div class="collapse @(financialMattersActive?"show":"")" id="financialMattersMenu">
-                                    <ul class="sidebar-sub">
-                                        <li><a class="@(isCtrl("Admissions") && isAction("FinancialAssistance")?"active":"")" href="@Url.Action("FinancialAssistance","Admissions")">Financial Assistance</a></li>
-                                        <li><a class="@(isCtrl("Admissions") && isAction("RefundPolicy")?"active":"")" href="@Url.Action("RefundPolicy","Admissions")">Refund Policy</a></li>
-                                        <li><a class="@(isCtrl("Admissions") && isAction("LatePayments")?"active":"")" href="@Url.Action("LatePayments","Admissions")">Fine/Penalties On Late Payments</a></li>
-                                        <li><a class="@(isCtrl("Admissions") && isAction("Accommodation")?"active":"")" href="@Url.Action("Accommodation","Admissions")">Accommodation</a></li>
-                                        <li><a class="@(isCtrl("Admissions") && isAction("Transport")?"active":"")" href="@Url.Action("Transport","Admissions")">Transport</a></li>
-                                        <li><a class="@(isCtrl("Admissions") && isAction("MiscellaneousCharges")?"active":"")" href="@Url.Action("MiscellaneousCharges","Admissions")">Miscellaneous Charges</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li><a class="@(isCtrl("Admissions") && action=="AcademicRegulations"?"active":"")" href="@Url.Action("AcademicRegulations","Admissions")">Academic Regulations</a></li>
-                            <li><a class="@(isCtrl("Admissions") && action=="AcademicDeficiencies"?"active":"")" href="@Url.Action("AcademicDeficiencies","Admissions")">Academic Deficiencies</a></li>
-                            <li><a class="@(isCtrl("Admissions") && action=="RulesRegulationsMS"?"active":"")" href="@Url.Action("RulesRegulationsMS","Admissions")">Rules & Regulations (MS)</a></li>
-                            <li><a class="@(isCtrl("Admissions") && action=="RulesRegulationsPhD"?"active":"")" href="@Url.Action("RulesRegulationsPhD","Admissions")">Rules & Regulations (PhD)</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a class="submenu-toggle @(facultyActive?"active":"")" data-target="#facultyMenu" aria-expanded="@(facultyActive.ToString().ToLower())"><em class="icon ni ni-tile-thumb"></em><span>Faculty</span><span class="caret">›</span></a>
-                    <div class="collapse @(facultyActive?"show":"")" id="facultyMenu">
-                        <ul class="sidebar-sub">
-                            <li><a class="@( (ctrl=="Faculty")?"active":"")" href="@Url.Action("VisionMission","Faculty")">Vision & Mission</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a class="submenu-toggle @(menusActive?"active":"")" data-target="#menusMenu" aria-expanded="@(menusActive.ToString().ToLower())"><em class="icon ni ni-menu"></em><span>Menus</span><span class="caret">›</span></a>
-                    <div class="collapse @(menusActive?"show":"")" id="menusMenu">
-                        <ul class="sidebar-sub">
-                            <li><a class="@(isCtrl("Menus")?"active":"")" href="@Url.Action("Index","Menus")">Menu</a></li>
-                            <li><a class="@(isCtrl("MenuType")?"active":"")" href="@Url.Action("Index","MenuType")">Menu Type</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a class="submenu-toggle @(eventsActive?"active":"")" data-target="#eventsMenu" aria-expanded="@(eventsActive.ToString().ToLower())"><em class="icon ni ni-calendar"></em><span>Events</span><span class="caret">›</span></a>
-                    <div class="collapse @(eventsActive?"show":"")" id="eventsMenu">
-                        <ul class="sidebar-sub">
-                            <li><a class="@(isCtrl("Events")?"active":"")" href="@Url.Action("Index","Events")">Manage Events</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a class="submenu-toggle @(qacActive?"active":"")" data-target="#qacMenu" aria-expanded="@(qacActive.ToString().ToLower())"><em class="icon ni ni-briefcase"></em><span>QA&C</span><span class="caret">›</span></a>
-                    <div class="collapse @(qacActive?"show":"")" id="qacMenu">
-                        <ul class="sidebar-sub">
-                            <li><a class="@(isCtrl("QAC") && action=="About"?"active":"")" href="@Url.Action("About","QAC")">About QA&C</a></li>
-                            <li><a class="@(isCtrl("QAC") && action=="Policy"?"active":"")" href="@Url.Action("Policy","QAC")">Quality Assurance Policy</a></li>
-                            <li><a class="@(isCtrl("QAC") && action=="AnnualActivityCalendar"?"active":"")" href="@Url.Action("AnnualActivityCalendar","QAC")">Annual Activity Calendar</a></li>
-                            <li><a class="@(isCtrl("QAC") && action=="Organogram"?"active":"")" href="@Url.Action("Organogram","QAC")">Organogram</a></li>
-                            <li><a class="@(isCtrl("QAC") && action=="IPE"?"active":"")" href="@Url.Action("IPE","QAC")">IPE</a></li>
-                            <li><a class="@(isCtrl("QAC") && action=="RIPE"?"active":"")" href="@Url.Action("RIPE","QAC")">RIPE</a></li>
-                            <li><a class="@(isCtrl("QAC") && action=="PGPR"?"active":"")" href="@Url.Action("PGPR","QAC")">PGPR</a></li>
-                            <li><a class="@(isCtrl("QAC") && action=="SARs"?"active":"")" href="@Url.Action("SARs","QAC")">SARs</a></li>
-                            <li><a class="@(isCtrl("QAC") && action=="Surveys"?"active":"")" href="@Url.Action("Surveys","QAC")">Surveys</a></li>
-                            <li><a class="@(isCtrl("QAC") && action=="Accreditation"?"active":"")" href="@Url.Action("Accreditation","QAC")">Accreditation</a></li>
-                            <li><a class="@(isCtrl("QAC") && action=="Contacts"?"active":"")" href="@Url.Action("Contacts","QAC")">Contacts</a></li>
-                        </ul>
-                    </div>
-                </li>
+                @if (isDSA)
+                {
+                    // DSA restricted: only Events
+                    <li>
+                        <a class="submenu-toggle @(eventsActive?"active":"")" data-target="#eventsMenu" aria-expanded="@(eventsActive.ToString().ToLower())"><em class="icon ni ni-calendar"></em><span>Events</span><span class="caret">›</span></a>
+                        <div class="collapse @(eventsActive?"show":"")" id="eventsMenu">
+                            <ul class="sidebar-sub">
+                                <li><a class="@(isCtrl("Events")?"active":"")" href="@Url.Action("Index","Events")">Manage Events</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                }
+                else
+                {
+                    // Full menu for Admin/Other users
+                    <li><a class="@(isCtrl("Home")?"active":"")" href="@Url.Action("Index","Home")"><em class="icon ni ni-dashboard"></em><span>Dashboard</span></a></li>
+                    <li><a class="@(isCtrl("About")?"active":"")" href="@Url.Action("Index","About")"><em class="icon ni ni-info"></em><span>About</span></a></li>
+                    <li><a class="@(isCtrl("Departments")?"active":"")" href="@Url.Action("Index","Departments")"><em class="icon ni ni-building"></em><span>Departments</span></a></li>
+                    <li><a class="@(isCtrl("DepartmentFacilities")?"active":"")" href="@Url.Action("Index","DepartmentFacilities")"><em class="icon ni ni-building"></em><span>Department Facilities</span></a></li>
+                    <li><a class="@(isCtrl("Downloads")?"active":"")" href="@Url.Action("Index","Downloads")"><em class="icon ni ni-download"></em><span>Downloads</span></a></li>
+                    <li><a class="@(isCtrl("Policy")?"active":"")" href="@Url.Action("Index","Policy")"><em class="icon ni ni-policy"></em><span>Policies</span></a></li>
+                    <li>
+                        <a class="submenu-toggle @(facilitiesActive?"active":"")" data-target="#facilitiesMenu" aria-expanded="@(facilitiesActive.ToString().ToLower())"><em class="icon ni ni-home"></em><span>Facilities</span><span class="caret">›</span></a>
+                        <div class="collapse @(facilitiesActive?"show":"")" id="facilitiesMenu">
+                            <ul class="sidebar-sub">
+                                <li><a class="@(isCtrl("Facilities") && action=="Transport"?"active":"")" href="@Url.Action("Transport","Facilities")">Transport</a></li>
+                                <li><a class="@(isCtrl("Facilities") && action=="Sports"?"active":"")" href="@Url.Action("Sports","Facilities")">Sports</a></li>
+                                <li><a class="@(isCtrl("Facilities") && action=="Hostel"?"active":"")" href="@Url.Action("Hostel","Facilities")">Hostel</a></li>
+                                <li><a class="@(isCtrl("Facilities") && action=="Cafeteria"?"active":"")" href="@Url.Action("Cafeteria","Facilities")">Cafeteria</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="submenu-toggle @(hrActive?"active":"")" data-target="#hrMenu" aria-expanded="@(hrActive.ToString().ToLower())"><em class="icon ni ni-users"></em><span>Human Resources</span><span class="caret">›</span></a>
+                        <div class="collapse @(hrActive?"show":"")" id="hrMenu">
+                            <ul class="sidebar-sub">
+                                <li><a class="@(isCtrl("HR") && action=="ClassificationServices"?"active":"")" href="@Url.Action("ClassificationServices","HR")">Classification Services</a></li>
+                                <li><a class="@(isCtrl("HR") && action=="ESTR"?"active":"")" href="@Url.Action("ESTR","HR")">ESTR</a></li>
+                                <li><a class="@(isCtrl("HR") && action=="Perks"?"active":"")" href="@Url.Action("Perks","HR")">Perks</a></li>
+                                <li><a class="@(isCtrl("HR") && action=="Leaves"?"active":"")" href="@Url.Action("Leaves","HR")">Leaves</a></li>
+                                <li><a class="@(isCtrl("HR") && action=="ContributoryFund"?"active":"")" href="@Url.Action("ContributoryFund","HR")">Contributory Fund</a></li>
+                                <li><a class="@(isCtrl("HR") && action=="Discipline"?"active":"")" href="@Url.Action("Discipline","HR")">Discipline</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="submenu-toggle @(admissionsActive?"active":"")" data-target="#admissionsMenu" aria-expanded="@(admissionsActive.ToString().ToLower())"><em class="icon ni ni-book"></em><span>Admissions</span><span class="caret">›</span></a>
+                        <div class="collapse @(admissionsActive?"show":"")" id="admissionsMenu">
+                            <ul class="sidebar-sub">
+                                <li><a class="@(isCtrl("Admissions") && action=="Advertisement"?"active":"")" href="@Url.Action("Advertisement","Admissions")">Advertisement</a></li>
+                                <li><a class="@(isCtrl("Admissions") && action=="AcademicCalendar"?"active":"")" href="@Url.Action("AcademicCalendar","Admissions")">Academic Calendar</a></li>
+                                <li><a class="@(isCtrl("Admissions") && action=="FeeStructure"?"active":"")" href="@Url.Action("FeeStructure","Admissions")">Fee Structure</a></li>
+                                <li>
+                                    <a class="submenu-toggle @(financialMattersActive?"active":"")" data-target="#financialMattersMenu" aria-expanded="@(financialMattersActive.ToString().ToLower())">Financial Matters<span class="caret">›</span></a>
+                                    <div class="collapse @(financialMattersActive?"show":"")" id="financialMattersMenu">
+                                        <ul class="sidebar-sub">
+                                            <li><a class="@(isCtrl("Admissions") && isAction("FinancialAssistance")?"active":"")" href="@Url.Action("FinancialAssistance","Admissions")">Financial Assistance</a></li>
+                                            <li><a class="@(isCtrl("Admissions") && isAction("RefundPolicy")?"active":"")" href="@Url.Action("RefundPolicy","Admissions")">Refund Policy</a></li>
+                                            <li><a class="@(isCtrl("Admissions") && isAction("LatePayments")?"active":"")" href="@Url.Action("LatePayments","Admissions")">Fine/Penalties On Late Payments</a></li>
+                                            <li><a class="@(isCtrl("Admissions") && isAction("Accommodation")?"active":"")" href="@Url.Action("Accommodation","Admissions")">Accommodation</a></li>
+                                            <li><a class="@(isCtrl("Admissions") && isAction("Transport")?"active":"")" href="@Url.Action("Transport","Admissions")">Transport</a></li>
+                                            <li><a class="@(isCtrl("Admissions") && isAction("MiscellaneousCharges")?"active":"")" href="@Url.Action("MiscellaneousCharges","Admissions")">Miscellaneous Charges</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><a class="@(isCtrl("Admissions") && action=="AcademicRegulations"?"active":"")" href="@Url.Action("AcademicRegulations","Admissions")">Academic Regulations</a></li>
+                                <li><a class="@(isCtrl("Admissions") && action=="AcademicDeficiencies"?"active":"")" href="@Url.Action("AcademicDeficiencies","Admissions")">Academic Deficiencies</a></li>
+                                <li><a class="@(isCtrl("Admissions") && action=="RulesRegulationsMS"?"active":"")" href="@Url.Action("RulesRegulationsMS","Admissions")">Rules & Regulations (MS)</a></li>
+                                <li><a class="@(isCtrl("Admissions") && action=="RulesRegulationsPhD"?"active":"")" href="@Url.Action("RulesRegulationsPhD","Admissions")">Rules & Regulations (PhD)</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="submenu-toggle @(facultyActive?"active":"")" data-target="#facultyMenu" aria-expanded="@(facultyActive.ToString().ToLower())"><em class="icon ni ni-tile-thumb"></em><span>Faculty</span><span class="caret">›</span></a>
+                        <div class="collapse @(facultyActive?"show":"")" id="facultyMenu">
+                            <ul class="sidebar-sub">
+                                <li><a class="@( (ctrl=="Faculty")?"active":"")" href="@Url.Action("VisionMission","Faculty")">Vision & Mission</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="submenu-toggle @(menusActive?"active":"")" data-target="#menusMenu" aria-expanded="@(menusActive.ToString().ToLower())"><em class="icon ni ni-menu"></em><span>Menus</span><span class="caret">›</span></a>
+                        <div class="collapse @(menusActive?"show":"")" id="menusMenu">
+                            <ul class="sidebar-sub">
+                                <li><a class="@(isCtrl("Menus")?"active":"")" href="@Url.Action("Index","Menus")">Menu</a></li>
+                                <li><a class="@(isCtrl("MenuType")?"active":"")" href="@Url.Action("Index","MenuType")">Menu Type</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="submenu-toggle @(eventsActive?"active":"")" data-target="#eventsMenu" aria-expanded="@(eventsActive.ToString().ToLower())"><em class="icon ni ni-calendar"></em><span>Events</span><span class="caret">›</span></a>
+                        <div class="collapse @(eventsActive?"show":"")" id="eventsMenu">
+                            <ul class="sidebar-sub">
+                                <li><a class="@(isCtrl("Events")?"active":"")" href="@Url.Action("Index","Events")">Manage Events</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="submenu-toggle @(qacActive?"active":"")" data-target="#qacMenu" aria-expanded="@(qacActive.ToString().ToLower())"><em class="icon ni ni-briefcase"></em><span>QA&C</span><span class="caret">›</span></a>
+                        <div class="collapse @(qacActive?"show":"")" id="qacMenu">
+                            <ul class="sidebar-sub">
+                                <li><a class="@(isCtrl("QAC") && action=="About"?"active":"")" href="@Url.Action("About","QAC")">About QA&C</a></li>
+                                <li><a class="@(isCtrl("QAC") && action=="Policy"?"active":"")" href="@Url.Action("Policy","QAC")">Quality Assurance Policy</a></li>
+                                <li><a class="@(isCtrl("QAC") && action=="AnnualActivityCalendar"?"active":"")" href="@Url.Action("AnnualActivityCalendar","QAC")">Annual Activity Calendar</a></li>
+                                <li><a class="@(isCtrl("QAC") && action=="Organogram"?"active":"")" href="@Url.Action("Organogram","QAC")">Organogram</a></li>
+                                <li><a class="@(isCtrl("QAC") && action=="IPE"?"active":"")" href="@Url.Action("IPE","QAC")">IPE</a></li>
+                                <li><a class="@(isCtrl("QAC") && action=="RIPE"?"active":"")" href="@Url.Action("RIPE","QAC")">RIPE</a></li>
+                                <li><a class="@(isCtrl("QAC") && action=="PGPR"?"active":"")" href="@Url.Action("PGPR","QAC")">PGPR</a></li>
+                                <li><a class="@(isCtrl("QAC") && action=="SARs"?"active":"")" href="@Url.Action("SARs","QAC")">SARs</a></li>
+                                <li><a class="@(isCtrl("QAC") && action=="Surveys"?"active":"")" href="@Url.Action("Surveys","QAC")">Surveys</a></li>
+                                <li><a class="@(isCtrl("QAC") && action=="Accreditation"?"active":"")" href="@Url.Action("Accreditation","QAC")">Accreditation</a></li>
+                                <li><a class="@(isCtrl("QAC") && action=="Contacts"?"active":"")" href="@Url.Action("Contacts","QAC")">Contacts</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                }
             </ul>
         </nav>
         <div class="content-column">
@@ -216,20 +789,148 @@
     <script>
         (function () {
             var toggle = document.getElementById('sidebarToggle');
+            var sidebar = document.getElementById('sidebar');
+            var overlay = document.getElementById('sidebarOverlay');
+
+            // Function to open sidebar
+            function openSidebar() {
+                if (sidebar) sidebar.classList.add('show');
+                if (overlay) overlay.classList.add('show');
+                document.body.classList.add('sidebar-open');
+            }
+
+            // Function to close sidebar
+            function closeSidebar() {
+                if (sidebar) sidebar.classList.remove('show');
+                if (overlay) overlay.classList.remove('show');
+                document.body.classList.remove('sidebar-open');
+            }
+
+            // Toggle button click handler
             if (toggle) {
-                toggle.addEventListener('click', function () {
-                    var sb = document.getElementById('sidebar');
-                    sb.classList.toggle('show');
-                    document.body.classList.toggle('sidebar-open');
+                toggle.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    var isOpen = sidebar && sidebar.classList.contains('show');
+                    if (isOpen) {
+                        closeSidebar();
+                    } else {
+                        openSidebar();
+                    }
                 });
             }
-            // Reliable submenu toggle
+
+            // Overlay click handler
+            if (overlay) {
+                overlay.addEventListener('click', function () {
+                    closeSidebar();
+                });
+            }
+
+            // Close sidebar when clicking a link on mobile
+            if (sidebar) {
+                var sidebarLinks = sidebar.querySelectorAll('a:not(.submenu-toggle)');
+                sidebarLinks.forEach(function (link) {
+                    link.addEventListener('click', function () {
+                        // Only close on mobile (when overlay is visible)
+                        if (window.innerWidth < 992) {
+                            setTimeout(closeSidebar, 150); // Small delay for better UX
+                        }
+                    });
+                });
+            }
+
+            // Handle window resize
+            var resizeTimer;
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function () {
+                    // Close sidebar on desktop
+                    if (window.innerWidth >= 992) {
+                        closeSidebar();
+                    }
+                }, 250);
+            });
+
+            // Prevent body scroll when sidebar is open on mobile
+            if (sidebar) {
+                sidebar.addEventListener('touchmove', function (e) {
+                    if (document.body.classList.contains('sidebar-open')) {
+                        e.stopPropagation();
+                    }
+                }, { passive: true });
+            }
+
+            // Reliable submenu toggle with jQuery
             $('.submenu-toggle').on('click', function (e) {
                 e.preventDefault();
-                var $a = $(this); var target = $a.data('target'); var $panel = $(target); var expanded = $a.attr('aria-expanded') === 'true';
-                if (expanded) { $panel.stop(true,true).slideUp(160, function(){ $(this).removeClass('show'); }); $a.attr('aria-expanded','false'); }
-                else { $panel.stop(true,true).slideDown(180, function(){ $(this).addClass('show'); }); $a.attr('aria-expanded','true'); }
+                e.stopPropagation();
+
+                var $a = $(this);
+                var target = $a.data('target');
+                var $panel = $(target);
+                var expanded = $a.attr('aria-expanded') === 'true';
+
+                if (expanded) {
+                    $panel.stop(true, true).slideUp(180, function () {
+                        $(this).removeClass('show');
+                    });
+                    $a.attr('aria-expanded', 'false');
+                } else {
+                    // Close other submenus at the same level (optional)
+                    // $a.closest('ul').find('.submenu-toggle[aria-expanded="true"]').not($a).trigger('click');
+
+                    $panel.stop(true, true).slideDown(200, function () {
+                        $(this).addClass('show');
+                    });
+                    $a.attr('aria-expanded', 'true');
+                }
             });
+
+            // Keyboard accessibility - ESC to close sidebar
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' || e.keyCode === 27) {
+                    if (sidebar && sidebar.classList.contains('show')) {
+                        closeSidebar();
+                    }
+                }
+            });
+
+            // Swipe gesture support for mobile
+            var touchStartX = 0;
+            var touchEndX = 0;
+            var touchStartY = 0;
+            var touchEndY = 0;
+
+            document.addEventListener('touchstart', function (e) {
+                touchStartX = e.changedTouches[0].screenX;
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+
+            document.addEventListener('touchend', function (e) {
+                touchEndX = e.changedTouches[0].screenX;
+                touchEndY = e.changedTouches[0].screenY;
+                handleSwipe();
+            }, { passive: true });
+
+            function handleSwipe() {
+                var xDiff = touchEndX - touchStartX;
+                var yDiff = Math.abs(touchEndY - touchStartY);
+
+                // Only on mobile
+                if (window.innerWidth >= 992) return;
+
+                // Swipe must be more horizontal than vertical
+                if (Math.abs(xDiff) > yDiff) {
+                    // Swipe right to open (from left edge)
+                    if (xDiff > 50 && touchStartX < 50) {
+                        openSidebar();
+                    }
+                    // Swipe left to close (when sidebar is open)
+                    else if (xDiff < -50 && sidebar && sidebar.classList.contains('show')) {
+                        closeSidebar();
+                    }
+                }
+            }
         })();
     </script>
     @RenderSection("scripts", required: false)
