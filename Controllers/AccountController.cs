@@ -19,9 +19,14 @@ namespace HitecCM.Controllers
         // GET: Login
         public ActionResult Login()
         {
-            // If user is already logged in, redirect to home
+            // If user is already logged in, redirect based on role
             if (Session["UserID"] != null)
             {
+                var role = Session["Role"] as string;
+                if (string.Equals(role, "DSA", StringComparison.OrdinalIgnoreCase))
+                {
+                    return RedirectToAction("Index", "Events");
+                }
                 return RedirectToAction("Index", "Home");
             }
 

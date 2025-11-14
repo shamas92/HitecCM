@@ -30,16 +30,22 @@ namespace HitecCM.Controllers
             // DSA role restrictions
             if (string.Equals(role, "DSA", StringComparison.OrdinalIgnoreCase))
             {
-                // Allow access to Events, EventPhotos controllers and Home dashboard
-                bool isAllowedController = string.Equals(controller, "Events", StringComparison.OrdinalIgnoreCase) ||
-                                          string.Equals(controller, "EventPhotos", StringComparison.OrdinalIgnoreCase) ||
-                                          string.Equals(controller, "Home", StringComparison.OrdinalIgnoreCase);
-
-                // For Home controller, only allow Index action (dashboard)
-                if (string.Equals(controller, "Home", StringComparison.OrdinalIgnoreCase))
+                // Check if trying to access Home/Index
+                if (string.Equals(controller, "Home", StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(action, "Index", StringComparison.OrdinalIgnoreCase))
                 {
-                    isAllowedController = string.Equals(action, "Index", StringComparison.OrdinalIgnoreCase);
+                    // Redirect DSA users from Home/Index to Events/Index
+                    filterContext.Result = new RedirectToRouteResult(
+                        new System.Web.Routing.RouteValueDictionary {
+                            { "controller", "Events" },
+                            { "action", "Index" }
+                        });
+                    return;
                 }
+
+                // Check if accessing other restricted controllers
+                bool isAllowedController = string.Equals(controller, "Events", StringComparison.OrdinalIgnoreCase) ||
+                                          string.Equals(controller, "EventPhotos", StringComparison.OrdinalIgnoreCase);
 
                 if (!isAllowedController)
                 {
@@ -51,7 +57,7 @@ namespace HitecCM.Controllers
                     return;
                 }
             }
-            
+
             base.OnActionExecuting(filterContext);
         }
     }

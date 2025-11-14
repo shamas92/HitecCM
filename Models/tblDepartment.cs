@@ -23,6 +23,7 @@ namespace HitecCM.Models
             tblDepartmentUpcomingEvents = new HashSet<tblDepartmentUpcomingEvent>();
             tblDepartmentSuccessStories = new HashSet<tblDepartmentSuccessStory>();
             tblFaculties = new HashSet<tblFaculty>();
+            tblEvents = new HashSet<tblEvent>();
         }
 
         [Key]
@@ -86,5 +87,8 @@ namespace HitecCM.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tblFaculty> tblFaculties { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tblEvent> tblEvents { get; set; }
     }
 }

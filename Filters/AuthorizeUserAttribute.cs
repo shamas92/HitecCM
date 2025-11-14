@@ -30,10 +30,22 @@ namespace HitecCM.Filters
             // DSA role restrictions
             if (string.Equals(role, "DSA", StringComparison.OrdinalIgnoreCase))
             {
-                // Allow access only to Events controller and Home dashboard
+                // Check if trying to access Home/Index
+                if (string.Equals(controller, "Home", StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(action, "Index", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Redirect DSA users from Home/Index to Events/Index
+                    filterContext.Result = new RedirectToRouteResult(
+                        new System.Web.Routing.RouteValueDictionary {
+                            { "controller", "Events" },
+                            { "action", "Index" }
+                        });
+                    return;
+                }
+
+                // Check if accessing other restricted controllers
                 bool isAllowedController = string.Equals(controller, "Events", StringComparison.OrdinalIgnoreCase) ||
                                           string.Equals(controller, "EventPhotos", StringComparison.OrdinalIgnoreCase);
-
 
                 if (!isAllowedController)
                 {

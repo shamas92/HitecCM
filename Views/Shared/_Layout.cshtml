@@ -600,8 +600,23 @@
 </head>
 <body>
     @{
+        // 1. DEFINE CONTEXT & ROLE FIRST
         var ctrl = (string)ViewContext.RouteData.Values["controller"];
         var action = (string)ViewContext.RouteData.Values["action"];
+        
+        // Helper functions
+        Func<string, bool> isCtrl = c => string.Equals(ctrl, c, System.StringComparison.OrdinalIgnoreCase);
+        Func<string, bool> isAction = a => string.Equals(action, a, System.StringComparison.OrdinalIgnoreCase);
+
+        // Role Check
+        var role = (string)Session["Role"] ?? "User";
+        bool isDSA = string.Equals(role, "DSA", System.StringComparison.OrdinalIgnoreCase);
+
+        // 2. SERVER-SIDE ENFORCEMENT (Route Protection)
+        // If user is DSA and tries to access Home/Index (even via direct URL), redirect them.
+
+
+        // 3. DEFINE MENU ACTIVE STATES
         var admissionsCtrls = new[] { "Admissions" };
         var facultyCtrls = new[] { "Faculty" };
         var menusCtrls = new[] { "Menus", "MenuType" };
@@ -609,8 +624,7 @@
         var qacCtrls = new[] { "QAC" };
         var facilitiesCtrls = new[] { "Facilities" };
         var hrCtrls = new[] { "HR" };
-        Func<string, bool> isCtrl = c => string.Equals(ctrl, c, System.StringComparison.OrdinalIgnoreCase);
-        Func<string, bool> isAction = a => string.Equals(action, a, System.StringComparison.OrdinalIgnoreCase);
+
         bool admissionsActive = admissionsCtrls.Any(c => isCtrl(c));
         bool facultyActive = facultyCtrls.Any(c => isCtrl(c));
         bool menusActive = menusCtrls.Any(c => isCtrl(c));
@@ -620,16 +634,16 @@
         bool hrActive = hrCtrls.Any(c => isCtrl(c));
         var finActs = new[] { "FinancialAssistance", "RefundPolicy", "LatePayments", "Accommodation", "Transport", "MiscellaneousCharges" };
         bool financialMattersActive = isCtrl("Admissions") && finActs.Any(a => string.Equals(action, a, System.StringComparison.OrdinalIgnoreCase));
-        var role = (string)Session["Role"] ?? "User";
-        bool isDSA = string.Equals(role, "DSA", System.StringComparison.OrdinalIgnoreCase);
     }
-    <!-- Full-width Fixed Header -->
+
     <div class="app-header">
         <button class="btn btn-outline-secondary btn-sm mobile-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar navigation">☰</button>
-        <div class="app-brand" onclick="window.location.href='@Url.Action("Index","Home")'">
+        
+        <div class="app-brand" onclick="window.location.href='@(isDSA ? Url.Action("Index", "Events") : Url.Action("Index", "Home"))'">
             <div class="app-brand-icon"><em class="icon ni ni-dashlite"></em></div>
             <div class="app-brand-text"><small>HITEC</small><span>Content Management</span></div>
         </div>
+
         <div class="header-actions">
             <button class="action-btn" title="Chats" type="button" aria-label="Chats"><em class="icon ni ni-comments"></em></button>
             <button class="action-btn" title="Notifications" type="button" aria-label="Notifications"><em class="icon ni ni-bell"></em></button>
@@ -653,10 +667,8 @@
         </div>
     </div>
 
-    <!-- Sidebar overlay for mobile -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- Layout with fixed-width, fixed-position sidebar -->
     <div id="appLayout">
         <nav id="sidebar" aria-label="Main navigation">
             <div class="sidebar-header">MAIN</div>
@@ -878,9 +890,6 @@
                     });
                     $a.attr('aria-expanded', 'false');
                 } else {
-                    // Close other submenus at the same level (optional)
-                    // $a.closest('ul').find('.submenu-toggle[aria-expanded="true"]').not($a).trigger('click');
-
                     $panel.stop(true, true).slideDown(200, function () {
                         $(this).addClass('show');
                     });

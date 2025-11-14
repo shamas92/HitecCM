@@ -93,25 +93,91 @@ namespace HitecCM.Controllers
             return View(new tblEventPhoto { Date = DateTime.Now, Status = "Active" });
         }
 
-        // POST: EventPhotos/Create
+        // POST: EventPhotos/Create - Multi-photo upload support
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "EventID,Date,Title,Status")] tblEventPhoto model, HttpPostedFileBase photoFile)
+        public ActionResult Create([Bind(Include = "EventID,Date,Title,Status")] tblEventPhoto model, HttpPostedFileBase[] photoFiles)
         {
             if (ModelState.IsValid)
             {
-                HandlePhotoUpload(model, photoFile);
-                
-                if (string.IsNullOrEmpty(model.Photo))
+                // Check if any files were uploaded
+                if (photoFiles == null || !photoFiles.Any(f => f != null && f.ContentLength > 0))
                 {
-                    ModelState.AddModelError("Photo", "Please select a photo to upload.");
+                    ModelState.AddModelError("Photo", "Please select at least one photo to upload.");
                     PopulateEventDropdown(model);
                     return View(model);
                 }
 
-                db.tblEventPhotos.Add(model);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var uploadedCount = 0;
+                var errors = new List<string>();
+
+                // Ensure directory exists
+                var dir = Server.MapPath(PhotoDirectory);
+                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+
+                // Process each uploaded file
+                foreach (var photoFile in photoFiles.Where(f => f != null && f.ContentLength > 0))
+                {
+                    try
+                    {
+                        // Validate file extension
+                        var ext = Path.GetExtension(photoFile.FileName)?.ToLower();
+                        var allowed = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+                        if (!allowed.Contains(ext))
+                        {
+                            errors.Add($"File '{photoFile.FileName}' has invalid format. Only JPG, JPEG, PNG, GIF, WEBP are allowed.");
+                            continue;
+                        }
+
+                        // Create a new photo record for each file
+                        var newPhoto = new tblEventPhoto
+                        {
+                            EventID = model.EventID,
+                            Date = model.Date,
+                            Title = model.Title,
+                            Status = model.Status
+                        };
+
+                        // Add to database first to get the EventPhotoID
+                        db.tblEventPhotos.Add(newPhoto);
+                        db.SaveChanges();
+
+                        // Now rename the file using the EventPhotoID
+                        var fileName = $"{newPhoto.EventPhotoID}_Event{ext}";
+                        var path = Path.Combine(dir, fileName);
+                        
+                        // Save the file
+                        photoFile.SaveAs(path);
+                        
+                        // Update the photo record with the filename
+                        newPhoto.Photo = fileName;
+                        db.Entry(newPhoto).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        uploadedCount++;
+                    }
+                    catch (Exception ex)
+                    {
+                        errors.Add($"Error uploading '{photoFile.FileName}': {ex.Message}");
+                    }
+                }
+
+                // Show results
+                if (uploadedCount > 0)
+                {
+                    TempData["SuccessMessage"] = $"Successfully uploaded {uploadedCount} photo(s).";
+                    if (errors.Any())
+                    {
+                        TempData["WarningMessage"] = string.Join("<br/>", errors);
+                    }
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("", string.Join(" ", errors));
+                    PopulateEventDropdown(model);
+                    return View(model);
+                }
             }
             PopulateEventDropdown(model);
             return View(model);
@@ -231,7 +297,8 @@ namespace HitecCM.Controllers
                     catch { }
                 }
 
-                var fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + ext;
+                // Use EventPhotoID_Event format for filename
+                var fileName = $"{model.EventPhotoID}_Event{ext}";
                 var path = Path.Combine(dir, fileName);
                 photoFile.SaveAs(path);
                 model.Photo = fileName;
