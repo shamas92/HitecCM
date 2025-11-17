@@ -1,0 +1,150 @@
+@model HitecCM.Models.tblUser
+
+@{
+    ViewBag.Title = "Delete User";
+}
+
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Delete User</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Are you sure you want to delete this user?</p>
+                    </div>
+                </div>
+                <div class="nk-block-head-content">
+                    <a href="@Url.Action("Index")" class="btn btn-outline-light bg-white d-none d-sm-inline-flex">
+                        <em class="icon ni ni-arrow-left"></em>
+                        <span>Back to List</span>
+                    </a>
+                    <a href="@Url.Action("Index")" class="btn btn-icon btn-outline-light bg-white d-inline-flex d-sm-none">
+                        <em class="icon ni ni-arrow-left"></em>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered">
+                <div class="card-inner">
+                    <div class="alert alert-warning">
+                        <div class="d-flex align-items-start">
+                            <em class="icon ni ni-alert-circle" style="font-size: 1.5rem; margin-right: 0.75rem;"></em>
+                            <div>
+                                <strong>Warning!</strong> This action cannot be undone. The user will be permanently removed from the system.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 mt-2">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">User ID</label>
+                                <div class="form-control-wrap">
+                                    <input type="text" class="form-control" value="#@Model.UserID" readonly />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Login ID</label>
+                                <div class="form-control-wrap">
+                                    <input type="text" class="form-control" value="@Model.Login" readonly />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <div class="form-control-wrap">
+                                    <input type="text" class="form-control" value="@(Model.UserName ?? "-")" readonly />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Role</label>
+                                <div class="form-control-wrap">
+                                    @{
+                                        var role = "User";
+                                        if (string.Equals(Model.Login, "admin", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            role = "Admin";
+                                        }
+                                        else if (string.Equals(Model.Login, "DSA", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            role = "DSA";
+                                        }
+                                    }
+                                    <input type="text" class="form-control" value="@role" readonly />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <div class="form-control-wrap">
+                                    @if (Model.Active == true)
+                                    {
+                                        <span class="badge bg-success-dim text-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger-dim text-danger">Inactive</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            @using (Html.BeginForm("Delete", "Users", FormMethod.Post, new { role = "form" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.UserID)
+                                
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-lg btn-danger">
+                                        <em class="icon ni ni-trash"></em>
+                                        <span>Delete User</span>
+                                    </button>
+                                    <a href="@Url.Action("Index")" class="btn btn-lg btn-light ms-2">Cancel</a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .bg-success-dim {
+            background-color: #e6f4ea;
+            padding: 0.375rem 0.75rem;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .text-success {
+            color: #1c7c54 !important;
+        }
+
+        .bg-danger-dim {
+            background-color: #fdecea;
+            padding: 0.375rem 0.75rem;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .text-danger {
+            color: #c4183c !important;
+        }
+    </style>
+}

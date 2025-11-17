@@ -1,0 +1,124 @@
+@model HitecCM.Models.tblUser
+
+@{
+    ViewBag.Title = "Create User";
+}
+
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Create New User</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Add a new user to the system.</p>
+                    </div>
+                </div>
+                <div class="nk-block-head-content">
+                    <a href="@Url.Action("Index")" class="btn btn-outline-light bg-white d-none d-sm-inline-flex">
+                        <em class="icon ni ni-arrow-left"></em>
+                        <span>Back to List</span>
+                    </a>
+                    <a href="@Url.Action("Index")" class="btn btn-icon btn-outline-light bg-white d-inline-flex d-sm-none">
+                        <em class="icon ni ni-arrow-left"></em>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered">
+                <div class="card-inner">
+                    @using (Html.BeginForm("Create", "Users", FormMethod.Post, new { @class = "form-validate", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        
+                        <div class="row g-4">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="Login">Login ID <span class="text-danger">*</span></label>
+                                    <div class="form-control-wrap">
+                                        @Html.TextBoxFor(model => model.Login, new { @class = "form-control", placeholder = "Enter login ID", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
+                                    </div>
+                                    <small class="form-text text-muted">Unique identifier for login (e.g., admin, DSA, john.doe)</small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="Password">Password <span class="text-danger">*</span></label>
+                                    <div class="form-control-wrap">
+                                        @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "Enter password", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                                    </div>
+                                    <small class="form-text text-muted">Minimum 6 characters recommended</small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-label" for="UserName">Full Name <span class="text-danger">*</span></label>
+                                    <div class="form-control-wrap">
+                                        @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", placeholder = "Enter full name", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                                    </div>
+                                    <small class="form-text text-muted">Display name for the user</small>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-label">Status</label>
+                                    <div class="form-control-wrap">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="activeSwitch" name="Active" value="true" @(Model.Active == true ? "checked" : "") />
+                                            <input type="hidden" name="Active" value="false" />
+                                            <label class="custom-control-label" for="activeSwitch">Active</label>
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-muted">Inactive users cannot log in</small>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    <div class="d-flex align-items-start">
+                                        <em class="icon ni ni-info" style="font-size: 1.5rem; margin-right: 0.75rem;"></em>
+                                        <div>
+                                            <strong>Role Assignment:</strong>
+                                            <ul class="mt-2 mb-0">
+                                                <li>Login ID "admin" = <strong>Admin</strong> role (full access)</li>
+                                                <li>Login ID "DSA" = <strong>DSA</strong> role (events only)</li>
+                                                <li>Other Login IDs = <strong>User</strong> role (standard access)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-lg btn-primary">
+                                        <em class="icon ni ni-save"></em>
+                                        <span>Create User</span>
+                                    </button>
+                                    <a href="@Url.Action("Index")" class="btn btn-lg btn-light ms-2">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <style>
+        .custom-control-input:checked ~ .custom-control-label::before {
+            background-color: #6576ff;
+            border-color: #6576ff;
+        }
+    </style>
+}

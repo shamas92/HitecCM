@@ -624,6 +624,7 @@
         var qacCtrls = new[] { "QAC" };
         var facilitiesCtrls = new[] { "Facilities" };
         var hrCtrls = new[] { "HR" };
+        var usersCtrls = new[] { "Users" };
 
         bool admissionsActive = admissionsCtrls.Any(c => isCtrl(c));
         bool facultyActive = facultyCtrls.Any(c => isCtrl(c));
@@ -632,6 +633,7 @@
         bool qacActive = qacCtrls.Any(c => isCtrl(c));
         bool facilitiesActive = facilitiesCtrls.Any(c => isCtrl(c));
         bool hrActive = hrCtrls.Any(c => isCtrl(c));
+        bool usersActive = usersCtrls.Any(c => isCtrl(c));
         var finActs = new[] { "FinancialAssistance", "RefundPolicy", "LatePayments", "Accommodation", "Transport", "MiscellaneousCharges" };
         bool financialMattersActive = isCtrl("Admissions") && finActs.Any(a => string.Equals(action, a, System.StringComparison.OrdinalIgnoreCase));
     }
@@ -691,6 +693,7 @@
                     // Full menu for Admin/Other users
                     <li><a class="@(isCtrl("Home")?"active":"")" href="@Url.Action("Index","Home")"><em class="icon ni ni-dashboard"></em><span>Dashboard</span></a></li>
                     <li><a class="@(isCtrl("About")?"active":"")" href="@Url.Action("Index","About")"><em class="icon ni ni-info"></em><span>About</span></a></li>
+                    <li><a class="@(usersActive?"active":"")" href="@Url.Action("Index","Users")"><em class="icon ni ni-users"></em><span>Users</span></a></li>
                     <li><a class="@(isCtrl("Departments")?"active":"")" href="@Url.Action("Index","Departments")"><em class="icon ni ni-building"></em><span>Departments</span></a></li>
                     <li><a class="@(isCtrl("DepartmentFacilities")?"active":"")" href="@Url.Action("Index","DepartmentFacilities")"><em class="icon ni ni-building"></em><span>Department Facilities</span></a></li>
                     <li><a class="@(isCtrl("Downloads")?"active":"")" href="@Url.Action("Index","Downloads")"><em class="icon ni ni-download"></em><span>Downloads</span></a></li>
@@ -789,6 +792,9 @@
                                 <li><a class="@(isCtrl("QAC") && action=="Contacts"?"active":"")" href="@Url.Action("Contacts","QAC")">Contacts</a></li>
                             </ul>
                         </div>
+                    </li>
+                    <li>
+                        <a class="@(isCtrl("Users")?"active":"")" href="@Url.Action("Index","Users")"><em class="icon ni ni-users"></em><span>Users</span></a>
                     </li>
                 }
             </ul>

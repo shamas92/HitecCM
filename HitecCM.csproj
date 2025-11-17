@@ -146,6 +146,7 @@
     <Compile Include="Controllers\MenuTypeController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
     <Compile Include="Controllers\QACController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Filters\AnalyticsTrackingAttribute.cs" />
     <Compile Include="Filters\AuthorizeUserAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -425,6 +426,10 @@
     <Content Include="Views\EventPhotos\Create.cshtml" />
     <Content Include="Views\EventPhotos\Edit.cshtml" />
     <Content Include="Views\EventPhotos\Delete.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Users\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
