@@ -93,7 +93,7 @@
                       .note-editable ol { list-style-type: decimal !important; padding-left: 20px !important; margin-left: 0 !important; }
                       .note-editable li { display: list-item !important; margin-bottom: 5px !important; }
                       .note-modal.modal { z-index: 1055 !important; transition: none !important; animation: none !important; }
-                      .modal-backdrop { z-index: 1050; }
+                      .modal-backdrop { z-index: 1049; }
                     </style>
                   `);
                 }
