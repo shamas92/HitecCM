@@ -6,48 +6,85 @@ using System.Web;
 using System.Web.Mvc;
 using HitecCM.Models;
 using System.IO;
+using System.Collections.Generic; // added
 
 namespace HitecCM.Controllers
 {
     public class DepartmentFacilitiesController : BaseController
     {
         private Model1 db = new Model1();
+        private const string FacilityImageDir = "~/Content/img/facilities/";
+        private static readonly string[] AllowedImageExts = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+        private const int MaxImageBytes = 5 * 1024 * 1024; // 5MB
+
+        private IEnumerable<SelectListItem> GetDepartmentItems(int? selectedId = null)
+        {
+            try
+            {
+                var list = db.tblDepartments
+                    .OrderBy(d => d.Title)
+                    .Select(d => new SelectListItem
+                    {
+                        Value = d.DepartmentID.ToString(),
+                        Text = string.IsNullOrWhiteSpace(d.Title) ? ("Department " + d.DepartmentID) : d.Title,
+                        Selected = selectedId.HasValue && d.DepartmentID == selectedId.Value
+                    })
+                    .ToList();
+                return list;
+            }
+            catch
+            {
+                return new List<SelectListItem>();
+            }
+        }
 
         // GET: DepartmentFacilities
         public ActionResult Index()
         {
             var facilities = db.tblFacilites
-                //.Include(f => f.tblDepartment) // Removed: no navigation property
                 .OrderBy(f => f.C_Order)
                 .ToList();
             ViewBag.Departments = db.tblDepartments.ToDictionary(d => d.DepartmentID, d => d.Title);
             return View(facilities);
         }
 
-        // GET: DepartmentFacilities/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            tblFacilite facility = db.tblFacilites
-                //.Include(f => f.tblDepartment) // Removed: no navigation property
-                .Include(f => f.tblFacilityPhotos)
-                .FirstOrDefault(f => f.FacilityID == id);
-            if (facility == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.DepartmentTitle = facility.DepartmentID.HasValue ? db.tblDepartments.Where(d => d.DepartmentID == facility.DepartmentID).Select(d => d.Title).FirstOrDefault() : null;
-            return View(facility);
-        }
-
         // GET: DepartmentFacilities/Create
         public ActionResult Create()
         {
-            ViewBag.DepartmentID = new SelectList(db.tblDepartments, "DepartmentID", "Title");
-            return View(new tblFacilite());
+            try
+            {
+                var departments = db.tblDepartments
+                    .OrderBy(d => d.Title)
+                    .ToList(); // Force immediate execution
+
+                if (departments == null || !departments.Any())
+                {
+                    ViewBag.DepartmentItems = new List<SelectListItem>
+                    {
+                        new SelectListItem { Value = "", Text = "No departments available" }
+                    };
+                }
+                else
+                {
+                    ViewBag.DepartmentItems = departments
+                        .Select(d => new SelectListItem
+                        {
+                            Value = d.DepartmentID.ToString(),
+                            Text = !string.IsNullOrWhiteSpace(d.Title) ? d.Title : ("Department " + d.DepartmentID)
+                        })
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Error loading departments: " + ex.Message);
+                ViewBag.DepartmentItems = new List<SelectListItem>
+                {
+                    new SelectListItem { Value = "", Text = "Error loading departments" }
+                };
+            }
+            
+            return View(new tblFacilite { Active = true });
         }
 
         // POST: DepartmentFacilities/Create
@@ -58,63 +95,138 @@ namespace HitecCM.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Handle cropped image data first
-                if (!string.IsNullOrEmpty(croppedImageData) && croppedImageData.StartsWith("data:image"))
+                // Validate DepartmentID selection explicitly
+                if (!facility.DepartmentID.HasValue || !db.tblDepartments.Any(d => d.DepartmentID == facility.DepartmentID.Value))
                 {
-                    try
-                    {
-                        // Extract base64 data
-                        string base64Data = croppedImageData.Split(',')[1];
-                        byte[] imageBytes = Convert.FromBase64String(base64Data);
-
-                        // Generate filename
-                        string fileName = Guid.NewGuid().ToString() + ".jpg";
-                        string path = Path.Combine(Server.MapPath("~/Content/img/facilities/"), fileName);
-                        Directory.CreateDirectory(Server.MapPath("~/Content/img/facilities/")); // Ensure directory exists
-
-                        // Save cropped image
-                        System.IO.File.WriteAllBytes(path, imageBytes);
-                        facility.Banner = fileName;
-                    }
-                    catch (Exception ex)
-                    {
-                        // Log error and fall back to regular file upload
-                        System.Diagnostics.Debug.WriteLine("Error processing cropped image: " + ex.Message);
-                    }
+                    ModelState.AddModelError("DepartmentID", "Please select a valid department.");
+                    goto ReturnView; // repopulate dropdown
                 }
-                // Fall back to regular file upload if no cropped data
-                else if (bannerFile != null && bannerFile.ContentLength > 0)
+                try
                 {
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(bannerFile.FileName);
-                    string path = Path.Combine(Server.MapPath("~/Content/img/facilities/"), fileName);
-                    Directory.CreateDirectory(Server.MapPath("~/Content/img/facilities/")); // Ensure directory exists
-                    bannerFile.SaveAs(path);
-                    facility.Banner = fileName;
-                }
+                    db.tblFacilites.Add(facility);
+                    db.SaveChanges();
 
-                db.tblFacilites.Add(facility);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                    // Process image (cropped has priority)
+                    string finalFileName = null;
+                    string physicalDir = Server.MapPath(FacilityImageDir);
+                    if (!Directory.Exists(physicalDir)) Directory.CreateDirectory(physicalDir);
+
+                    if (!string.IsNullOrEmpty(croppedImageData) && croppedImageData.StartsWith("data:image"))
+                    {
+                        try
+                        {
+                            var base64Data = croppedImageData.Split(',')[1];
+                            var imageBytes = Convert.FromBase64String(base64Data);
+                            if (imageBytes.Length > MaxImageBytes)
+                            {
+                                ModelState.AddModelError("Banner", "Cropped image exceeds 5MB size limit.");
+                                goto ReturnView;
+                            }
+                            finalFileName = facility.FacilityID + "_FacilityPhoto.jpg"; // force jpg for cropped
+                            System.IO.File.WriteAllBytes(Path.Combine(physicalDir, finalFileName), imageBytes);
+                        }
+                        catch (Exception ex)
+                        {
+                            ModelState.AddModelError("Banner", "Error processing cropped image: " + ex.Message);
+                            goto ReturnView;
+                        }
+                    }
+                    else if (bannerFile != null && bannerFile.ContentLength > 0)
+                    {
+                        var ext = Path.GetExtension(bannerFile.FileName).ToLowerInvariant();
+                        if (!AllowedImageExts.Contains(ext))
+                        {
+                            ModelState.AddModelError("Banner", "Invalid image type. Allowed: jpg, jpeg, png, gif, webp.");
+                            goto ReturnView;
+                        }
+                        if (bannerFile.ContentLength > MaxImageBytes)
+                        {
+                            ModelState.AddModelError("Banner", "Image exceeds 5MB size limit.");
+                            goto ReturnView;
+                        }
+                        finalFileName = facility.FacilityID + "_FacilityPhoto" + ext;
+                        bannerFile.SaveAs(Path.Combine(physicalDir, finalFileName));
+                    }
+
+                    if (finalFileName != null)
+                    {
+                        facility.Banner = finalFileName;
+                        db.Entry(facility).State = EntityState.Modified; // update banner field
+                        db.SaveChanges();
+                    }
+
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Error creating facility: " + ex.Message);
+                }
             }
-
-            ViewBag.DepartmentID = new SelectList(db.tblDepartments, "DepartmentID", "Title", facility.DepartmentID);
+ReturnView:
+            // Repopulate dropdown on error
+            try
+            {
+                var departments = db.tblDepartments.OrderBy(d => d.Title).ToList();
+                ViewBag.DepartmentItems = departments
+                    .Select(d => new SelectListItem
+                    {
+                        Value = d.DepartmentID.ToString(),
+                        Text = !string.IsNullOrWhiteSpace(d.Title) ? d.Title : ("Department " + d.DepartmentID),
+                        Selected = facility.DepartmentID.HasValue && d.DepartmentID == facility.DepartmentID.Value
+                    })
+                    .ToList();
+            }
+            catch
+            {
+                ViewBag.DepartmentItems = new List<SelectListItem>();
+            }
             return View(facility);
         }
 
         // GET: DepartmentFacilities/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var facility = db.tblFacilites.Find(id);
+            if (facility == null) return HttpNotFound();
+            
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var departments = db.tblDepartments
+                    .OrderBy(d => d.Title)
+                    .ToList();
+
+                if (departments == null || !departments.Any())
+                {
+                    ViewBag.DepartmentItems = new List<SelectListItem>
+                    {
+                        new SelectListItem { Value = "", Text = "No departments available" }
+                    };
+                }
+                else
+                {
+                    ViewBag.DepartmentItems = departments
+                        .Select(d => new SelectListItem
+                        {
+                            Value = d.DepartmentID.ToString(),
+                            Text = !string.IsNullOrWhiteSpace(d.Title) ? d.Title : ("Department " + d.DepartmentID),
+                            Selected = facility.DepartmentID.HasValue && d.DepartmentID == facility.DepartmentID.Value
+                        })
+                        .ToList();
+                }
             }
-            tblFacilite facility = db.tblFacilites.Find(id);
-            if (facility == null)
+            catch (Exception ex)
             {
-                return HttpNotFound();
+                System.Diagnostics.Debug.WriteLine("Error loading departments: " + ex.Message);
+                ViewBag.DepartmentItems = new List<SelectListItem>
+                {
+                    new SelectListItem { Value = "", Text = "Error loading departments" }
+                };
             }
-            ViewBag.DepartmentID = new SelectList(db.tblDepartments, "DepartmentID", "Title", facility.DepartmentID);
-            ViewBag.DepartmentTitle = facility.DepartmentID.HasValue ? db.tblDepartments.Where(d => d.DepartmentID == facility.DepartmentID).Select(d => d.Title).FirstOrDefault() : null;
+
+            ViewBag.DepartmentTitle = facility.DepartmentID.HasValue ? 
+                db.tblDepartments.Where(d => d.DepartmentID == facility.DepartmentID).Select(d => d.Title).FirstOrDefault() : null;
+            
             return View(facility);
         }
 
@@ -126,99 +238,107 @@ namespace HitecCM.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existingFacility = db.tblFacilites.Find(facility.FacilityID);
-                if (existingFacility == null)
+                if (!facility.DepartmentID.HasValue || !db.tblDepartments.Any(d => d.DepartmentID == facility.DepartmentID.Value))
                 {
-                    return HttpNotFound();
+                    ModelState.AddModelError("DepartmentID", "Please select a valid department.");
+                    goto ReturnEdit;
                 }
+                
+                var existing = db.tblFacilites.Find(facility.FacilityID);
+                if (existing == null) return HttpNotFound();
 
-                // Store the original banner filename before updating other properties
-                string originalBannerFileName = existingFacility.Banner;
+                // Update scalar fields
+                existing.DepartmentID = facility.DepartmentID;
+                existing.Title = facility.Title;
+                existing.Details = facility.Details;
+                existing.Active = facility.Active;
+                existing.C_Order = facility.C_Order;
 
-                // Update scalar properties from the posted model to the existing entity
-                existingFacility.DepartmentID = facility.DepartmentID;
-                existingFacility.Title = facility.Title;
-                existingFacility.Details = facility.Details;
-                existingFacility.Active = facility.Active;
-                existingFacility.C_Order = facility.C_Order;
+                string physicalDir = Server.MapPath(FacilityImageDir);
+                if (!Directory.Exists(physicalDir)) Directory.CreateDirectory(physicalDir);
 
-                // Handle cropped image data first
+                bool newImageProvided = false;
+                string newFileName = null;
+
                 if (!string.IsNullOrEmpty(croppedImageData) && croppedImageData.StartsWith("data:image"))
                 {
                     try
                     {
-                        // Delete old banner if it exists (using the original filename)
-                        if (!string.IsNullOrEmpty(originalBannerFileName))
+                        var base64Data = croppedImageData.Split(',')[1];
+                        var imageBytes = Convert.FromBase64String(base64Data);
+                        if (imageBytes.Length > MaxImageBytes)
                         {
-                            string oldPath = Path.Combine(Server.MapPath("~/Content/img/facilities/"), originalBannerFileName);
-                            if (System.IO.File.Exists(oldPath))
-                            {
-                                System.IO.File.Delete(oldPath);
-                            }
+                            ModelState.AddModelError("Banner", "Cropped image exceeds 5MB size limit.");
+                            goto ReturnEdit;
                         }
-
-                        // Extract base64 data
-                        string base64Data = croppedImageData.Split(',')[1];
-                        byte[] imageBytes = Convert.FromBase64String(base64Data);
-
-                        // Generate filename
-                        string fileName = Guid.NewGuid().ToString() + ".jpg";
-                        string path = Path.Combine(Server.MapPath("~/Content/img/facilities/"), fileName);
-                        Directory.CreateDirectory(Server.MapPath("~/Content/img/facilities/")); // Ensure directory exists
-
-                        // Save cropped image
-                        System.IO.File.WriteAllBytes(path, imageBytes);
-                        existingFacility.Banner = fileName;
+                        newFileName = existing.FacilityID + "_FacilityPhoto.jpg";
+                        newImageProvided = true;
+                        DeleteOldFacilityImage(physicalDir, existing.Banner);
+                        System.IO.File.WriteAllBytes(Path.Combine(physicalDir, newFileName), imageBytes);
                     }
                     catch (Exception ex)
                     {
-                        // Log error and fall back to regular file upload
-                        System.Diagnostics.Debug.WriteLine("Error processing cropped image: " + ex.Message);
+                        ModelState.AddModelError("Banner", "Error processing cropped image: " + ex.Message);
+                        goto ReturnEdit;
                     }
                 }
-                // Fall back to regular file upload if no cropped data
                 else if (bannerFile != null && bannerFile.ContentLength > 0)
                 {
-                    // Delete old banner if it exists (using the original filename)
-                    if (!string.IsNullOrEmpty(originalBannerFileName))
-                    {
-                        string oldPath = Path.Combine(Server.MapPath("~/Content/img/facilities/"), originalBannerFileName);
-                        if (System.IO.File.Exists(oldPath))
-                        {
-                            System.IO.File.Delete(oldPath);
-                        }
-                    }
-
-                    // Save new banner
-                    string newFileName = Guid.NewGuid().ToString() + Path.GetExtension(bannerFile.FileName);
-                    string newPath = Path.Combine(Server.MapPath("~/Content/img/facilities/"), newFileName);
-                    Directory.CreateDirectory(Server.MapPath("~/Content/img/facilities/")); // Ensure directory exists
-                    bannerFile.SaveAs(newPath);
-                    existingFacility.Banner = newFileName; // Update banner on existing entity
+                    var ext = Path.GetExtension(bannerFile.FileName).ToLowerInvariant();
+                    if (!AllowedImageExts.Contains(ext)) { ModelState.AddModelError("Banner", "Invalid image type. Allowed: jpg, jpeg, png, gif, webp."); goto ReturnEdit; }
+                    if (bannerFile.ContentLength > MaxImageBytes) { ModelState.AddModelError("Banner", "Image exceeds 5MB size limit."); goto ReturnEdit; }
+                    newFileName = existing.FacilityID + "_FacilityPhoto" + ext;
+                    newImageProvided = true;
+                    DeleteOldFacilityImage(physicalDir, existing.Banner);
+                    bannerFile.SaveAs(Path.Combine(physicalDir, newFileName));
                 }
-                // If neither croppedImageData nor bannerFile is provided, existingFacility.Banner is not modified, thus retaining its old value.
+
+                if (newImageProvided)
+                {
+                    existing.Banner = newFileName;
+                }
 
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.DepartmentID = new SelectList(db.tblDepartments, "DepartmentID", "Title", facility.DepartmentID);
+ReturnEdit:
+            // Repopulate dropdown on error
+            try
+            {
+                var departments = db.tblDepartments.OrderBy(d => d.Title).ToList();
+                ViewBag.DepartmentItems = departments
+                    .Select(d => new SelectListItem
+                    {
+                        Value = d.DepartmentID.ToString(),
+                        Text = !string.IsNullOrWhiteSpace(d.Title) ? d.Title : ("Department " + d.DepartmentID),
+                        Selected = facility.DepartmentID.HasValue && d.DepartmentID == facility.DepartmentID.Value
+                    })
+                    .ToList();
+            }
+            catch
+            {
+                ViewBag.DepartmentItems = new List<SelectListItem>();
+            }
             return View(facility);
+        }
+
+        // Helper: delete old image
+        private void DeleteOldFacilityImage(string physicalDir, string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName)) return;
+            var oldPath = Path.Combine(physicalDir, fileName);
+            if (System.IO.File.Exists(oldPath))
+            {
+                try { System.IO.File.Delete(oldPath); } catch { }
+            }
         }
 
         // GET: DepartmentFacilities/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            tblFacilite facility = db.tblFacilites
-                //.Include(f => f.tblDepartment) // Removed: no navigation property
-                .FirstOrDefault(f => f.FacilityID == id);
-            if (facility == null)
-            {
-                return HttpNotFound();
-            }
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var facility = db.tblFacilites.FirstOrDefault(f => f.FacilityID == id);
+            if (facility == null) return HttpNotFound();
             ViewBag.DepartmentTitle = facility.DepartmentID.HasValue ? db.tblDepartments.Where(d => d.DepartmentID == facility.DepartmentID).Select(d => d.Title).FirstOrDefault() : null;
             return View(facility);
         }
@@ -228,23 +348,24 @@ namespace HitecCM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            tblFacilite facility = db.tblFacilites.Find(id);
+            var facility = db.tblFacilites.Find(id);
             if (facility == null)
             {
-                // Optionally return a not found status or error message
                 return Json(new { success = false, message = "Facility not found." });
             }
+
+            // Delete associated image
+            var physicalDir = Server.MapPath(FacilityImageDir);
+            DeleteOldFacilityImage(physicalDir, facility.Banner);
+
             db.tblFacilites.Remove(facility);
             db.SaveChanges();
-            return Json(new { success = true }); // Return JSON success for AJAX
+            return Json(new { success = true });
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            if (disposing) db.Dispose();
             base.Dispose(disposing);
         }
     }
