@@ -147,6 +147,7 @@
     <Compile Include="Controllers\MenuTypeController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
     <Compile Include="Controllers\QACController.cs" />
+    <Compile Include="Controllers\SchemeOfStudiesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Filters\AnalyticsTrackingAttribute.cs" />
     <Compile Include="Filters\AuthorizeUserAttribute.cs" />
@@ -437,6 +438,9 @@
     <Content Include="Views\FacultyInformation\Create.cshtml" />
     <Content Include="Views\FacultyInformation\Edit.cshtml" />
     <Content Include="Views\FacultyInformation\Delete.cshtml" />
+    <Content Include="Views\SchemeOfStudies\Index.cshtml" />
+    <Content Include="Views\SchemeOfStudies\Create.cshtml" />
+    <Content Include="Views\SchemeOfStudies\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

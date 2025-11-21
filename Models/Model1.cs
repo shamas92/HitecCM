@@ -72,6 +72,7 @@ namespace HitecCM.Models
         public virtual DbSet<tblQACSurvay> tblQACSurvays { get; set; }
         public virtual DbSet<tblQAPolicy> tblQAPolicies { get; set; }
         public virtual DbSet<tblSchemeOfStudy> tblSchemeOfStudies { get; set; }
+        public virtual DbSet<tblProgram> tblPrograms { get; set; }
         public virtual DbSet<tblSeOBECurriculum> tblSeOBECurriculums { get; set; }
         public virtual DbSet<tblSuccessStory> tblSuccessStories { get; set; }
         public virtual DbSet<tblTransport> tblTransports { get; set; }

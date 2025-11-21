@@ -1,0 +1,90 @@
+@model HitecCM.Models.tblSchemeOfStudy
+@{ ViewBag.Title = "Add Scheme"; }
+@Html.AntiForgeryToken()
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Add Scheme Entry</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Create a new scheme of study record.</p>
+                    </div>
+                </div>
+                <div class="nk-block-head-content">
+                    <a href="@Url.Action("Index")" class="btn btn-outline-light bg-white">
+                        <em class="icon ni ni-arrow-left"></em>
+                        <span>Back to List</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="nk-block">
+            <div class="card card-bordered">
+                <div class="card-inner">
+                    @using (Html.BeginForm("Create","SchemeOfStudies",FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(m=>m.DepartmentID,"Department",new{@class="form-label"})
+                                    @Html.DropDownListFor(m => m.DepartmentID, (SelectList)ViewBag.DepartmentID, "-- Select --", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m=>m.DepartmentID,"",new{@class="text-danger"})
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(m=>m.ProgramID,"Program",new{@class="form-label"})
+                                    @Html.DropDownListFor(m => m.ProgramID, (SelectList)ViewBag.ProgramID, "-- Select --", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m=>m.ProgramID,"",new{@class="text-danger"})
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(m=>m.Program,new{@class="form-label"})
+                                    @Html.TextBoxFor(m=>m.Program,new{@class="form-control",placeholder="Program name"})
+                                    @Html.ValidationMessageFor(m=>m.Program,"",new{@class="text-danger"})
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m=>m.Semester,new{@class="form-label"})
+                                    @Html.TextBoxFor(m=>m.Semester,new{@class="form-control",placeholder="Semester"})
+                                    @Html.ValidationMessageFor(m=>m.Semester,"",new{@class="text-danger"})
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m=>m.CH,"Credit Hours",new{@class="form-label"})
+                                    @Html.TextBoxFor(m=>m.CH,new{@class="form-control",placeholder="e.g. 3"})
+                                    @Html.ValidationMessageFor(m=>m.CH,"",new{@class="text-danger"})
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(m=>m.Code,"Course Code",new{@class="form-label"})
+                                    @Html.TextBoxFor(m=>m.Code,new{@class="form-control",placeholder="Code"})
+                                    @Html.ValidationMessageFor(m=>m.Code,"",new{@class="text-danger"})
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    @Html.LabelFor(m=>m.Title,"Course Title",new{@class="form-label"})
+                                    @Html.TextBoxFor(m=>m.Title,new{@class="form-control",placeholder="Title"})
+                                    @Html.ValidationMessageFor(m=>m.Title,"",new{@class="text-danger"})
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">
+                                    <em class="icon ni ni-save"></em>
+                                    <span>Save</span>
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

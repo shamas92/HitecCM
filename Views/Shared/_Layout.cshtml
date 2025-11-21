@@ -618,7 +618,7 @@
 
         // 3. DEFINE MENU ACTIVE STATES
         var admissionsCtrls = new[] { "Admissions" };
-        var facultyCtrls = new[] { "Faculty", "FacultyInformation" };
+        var facultyCtrls = new[] { "Faculty", "FacultyInformation", "SchemeOfStudies" };
         var menusCtrls = new[] { "Menus", "MenuType" };
         var eventsCtrls = new[] { "Events", "EventPhotos" };
         var qacCtrls = new[] { "QAC" };
@@ -752,6 +752,7 @@
                             <ul class="sidebar-sub">
                                 <li><a class="@(isCtrl("Faculty") && isAction("VisionMission")?"active":"")" href="@Url.Action("VisionMission","Faculty")">Vision & Mission</a></li>
                                 <li><a class="@(isCtrl("FacultyInformation")?"active":"")" href="@Url.Action("Index","FacultyInformation")">Faculty Information</a></li>
+                                <li><a class="@(isCtrl("SchemeOfStudies")?"active":"")" href="@Url.Action("Index","SchemeOfStudies")">Scheme of Studies</a></li>
                             </ul>
                         </div>
                     </li>
