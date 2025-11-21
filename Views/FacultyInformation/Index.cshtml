@@ -1,0 +1,292 @@
+@model IEnumerable<HitecCM.Models.tblFaculty>
+@Html.AntiForgeryToken()
+@{
+    ViewBag.Title = "Faculty Information";
+}
+
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Faculty Information</h3>
+                    <div class="nk-block-des text-soft">
+                        <p>Manage faculty members and their information.</p>
+                    </div>
+                </div>
+                <div class="nk-block-head-content">
+                    <div class="toggle-wrap nk-block-tools-toggle d-flex">
+                        <a href="@Url.Action("Create")" class="btn btn-primary mr-2">
+                            <em class="icon ni ni-plus"></em>
+                            <span>Add New Faculty</span>
+                        </a>
+                        <button type="button" class="btn btn-outline-light" data-toggle="collapse" data-target="#filterPanel">Filters</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="filterPanel" class="collapse mb-3 @(Request.QueryString.Count > 0 ? "show" : "")">
+            <div class="card card-bordered">
+                <div class="card-inner">
+                    @using (Html.BeginForm("Index", "FacultyInformation", FormMethod.Get))
+                    {
+                        <div class="form-row align-items-end">
+                            <div class="form-group col-md-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" id="name" name="name" value="@ViewBag.FilterName" class="form-control" placeholder="Search name" />
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="departmentId" class="form-label">Department</label>
+                                @Html.DropDownList("departmentId", (SelectList)ViewBag.FilterDepartments, "-- Any --", new { @class = "form-control" })
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="designationId" class="form-label">Designation</label>
+                                @Html.DropDownList("designationId", (SelectList)ViewBag.FilterDesignations, "-- Any --", new { @class = "form-control" })
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="form-label">Status</label>
+                                <div class="d-flex flex-wrap">
+                                    <div class="custom-control custom-checkbox mr-3">
+                                        <input type="checkbox" class="custom-control-input" id="active" name="active" value="true" @(ViewBag.FilterActive == null ? "" : (ViewBag.FilterActive == true ? "checked" : "")) />
+                                        <label class="custom-control-label" for="active">Active</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="studyLeave" name="studyLeave" value="true" @(ViewBag.FilterStudyLeave == null ? "" : (ViewBag.FilterStudyLeave == true ? "checked" : "")) />
+                                        <label class="custom-control-label" for="studyLeave">On Leave</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary mr-2"><em class="icon ni ni-search"></em><span>Apply</span></button>
+                                <a href="@Url.Action("Index")" class="btn btn-light"><em class="icon ni ni-reload"></em><span>Reset</span></a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["Success"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                </button>
+            </div>
+        }
+
+        <div class="nk-block">
+            <div class="card card-bordered card-stretch">
+                <div class="card-inner-group">
+                    <div class="card-inner p-0">
+                        <div class="table-responsive">
+                            <table class="table table-faculty">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="text-center" width="70">ID</th>
+                                        <th width="70">Photo</th>
+                                        <th width="200">Full Name</th>
+                                        <th width="180">Department</th>
+                                        <th width="160">Designation</th>
+                                        <th width="150">Email</th>
+                                        <th width="100">Phone</th>
+                                        <th class="text-center" width="80">Order</th>
+                                        <th class="text-center" width="120">Status</th>
+                                        <th class="text-center" width="90">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="faculty-row">
+                                            <td class="text-center align-middle">
+                                                <span class="faculty-id">#@item.FacultyID</span>
+                                            </td>
+                                            <td class="align-middle">
+                                                @if (!string.IsNullOrEmpty(item.Photo))
+                                                {
+                                                    <img src="@Url.Content("~/Content/img/faculty/" + item.Photo)" alt="photo" class="img-thumbnail" style="width:46px;height:46px;object-fit:cover;" />
+                                                }
+                                                else
+                                                {
+                                                    <div class="avatar-circle" style="width:46px;height:46px;font-size:0.75rem;">@((item.FullName??"?").Substring(0,1).ToUpper())</div>
+                                                }
+                                            </td>
+                                            <td class="align-middle">
+                                                <div class="faculty-name">
+                                                    <span class="fw-bold">@(item.FullName ?? "-")</span>
+                                                    @if (!string.IsNullOrEmpty(item.Qualification))
+                                                    {
+                                                        <div class="text-muted small text-truncate" style="max-width:180px;">@item.Qualification</div>
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td class="align-middle">
+                                                <span>@(item.tblDepartment?.Title ?? "-")</span>
+                                            </td>
+                                            <td class="align-middle">
+                                                @if (item.tblDesignation != null)
+                                                {
+                                                    <span>@item.tblDesignation.Designation</span>
+                                                }
+                                                else if (!string.IsNullOrEmpty(item.AdDesignation))
+                                                {
+                                                    <span>@item.AdDesignation</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>-</span>
+                                                }
+                                            </td>
+                                            <td class="align-middle">
+                                                <span class="text-break" style="max-width:140px;display:inline-block;">@(item.Email ?? "-")</span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <span>@(item.TelNo ?? "-")</span>
+                                                @if (!string.IsNullOrEmpty(item.Extension))
+                                                {
+                                                    <div class="text-muted small">Ext: @item.Extension</div>
+                                                }
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <span class="badge bg-light text-dark">@(item.OrderNo?.ToString() ?? "-")</span>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                @if (item.StudyLeave == true)
+                                                {
+                                                    <span class="badge bg-warning-dim text-warning">On Leave</span>
+                                                }
+                                                else if (item.Active == true)
+                                                {
+                                                    <span class="badge bg-success-dim text-success">Active</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger-dim text-danger">Inactive</span>
+                                                }
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <div class="dropdown">
+                                                    <a href="#" class="btn btn-sm btn-icon btn-trigger dropdown-toggle" data-toggle="dropdown">
+                                                        <em class="icon ni ni-more-h"></em>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <ul class="link-list-opt no-bdr">
+                                                            <li>
+                                                                <a href="@Url.Action("Edit", new { id = item.FacultyID })">
+                                                                    <em class="icon ni ni-edit"></em>
+                                                                    <span>Edit</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="delete-faculty" data-id="@item.FacultyID" data-name="@item.FullName">
+                                                                    <em class="icon ni ni-trash"></em>
+                                                                    <span>Delete</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" tabindex="-1" id="deleteConfirmationModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                <em class="icon ni ni-cross"></em>
+            </a>
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Confirmation</h5>
+            </div>
+            <div class="modal-body">
+                <p id="deleteModalBody"></p>
+                <input type="hidden" id="deleteFacultyId" />
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script>
+        $(document).ready(function () {
+            // Delete confirmation
+            $('.delete-faculty').click(function (e) {
+                e.preventDefault();
+                var facultyId = $(this).data('id');
+                var facultyName = $(this).data('name');
+                $('#deleteFacultyId').val(facultyId);
+                $('#deleteModalBody').text('Are you sure you want to delete "' + facultyName + '"?');
+                $('#deleteConfirmationModal').modal('show');
+            });
+
+            // Confirm delete button AJAX
+            $('#confirmDeleteButton').click(function () {
+                var facultyId = $('#deleteFacultyId').val();
+                if (!facultyId) return;
+                $.ajax({
+                    url: '/FacultyInformation/Delete/' + facultyId,
+                    type: 'POST',
+                    data: {
+                        __RequestVerificationToken: $('input[name=__RequestVerificationToken]').val(),
+                        id: facultyId
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#deleteConfirmationModal').modal('hide');
+                            location.reload();
+                        } else {
+                            alert(response.message || 'Delete failed.');
+                        }
+                    },
+                    error: function () {
+                        alert('An error occurred while deleting.');
+                    }
+                });
+            });
+
+            // Initialize dropdowns
+            $('.dropdown-toggle').dropdown();
+        });
+    </script>
+
+    <style>
+        /* Faculty Table Design */
+        .table-faculty { margin-bottom: 0; border-collapse: separate; border-spacing: 0; }
+        .table-faculty thead th { background-color: #f5f6fa; color: #364a63; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 0.75rem 0.5rem; border-bottom: 2px solid #e5e9f2; border-top: none; }
+        .table-faculty tbody td { padding: 0.75rem 0.5rem; border-bottom: 1px solid #f0f1f5; vertical-align: middle; color: #526484; font-size: 0.78rem; }
+        .table-faculty tbody tr:last-child td { border-bottom: none; }
+        /* Faculty Row */
+        .faculty-row { background-color: #fff; }
+        .faculty-row:hover { background-color: #f8f9fb; }
+        /* Faculty ID */
+        .faculty-id { display: inline-block; padding: 0.25rem 0.45rem; background-color: #f5f6fa; color: #526484; border-radius: 4px; font-weight: 600; font-size: 0.65rem; }
+        .faculty-name .fw-bold { font-weight: 600; color: #364a63; }
+        /* Badge Styling */
+        .badge { padding: 0.35rem 0.6rem; font-weight: 500; font-size: 0.65rem; border-radius: 4px; }
+        .bg-success-dim { background-color: #e6f4ea; } .text-success { color: #1c7c54 !important; }
+        .bg-danger-dim { background-color: #fdecea; } .text-danger { color: #c4183c !important; }
+        .bg-warning-dim { background-color: #fff5e6; } .text-warning { color: #f59e0b !important; }
+        .bg-light { background-color: #f5f6fa; } .text-dark { color: #364a63 !important; }
+        .avatar-circle { width: 46px; height: 46px; border-radius: 50%; background: #6576ff; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 600; }
+    </style>
+}

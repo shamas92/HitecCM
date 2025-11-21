@@ -136,6 +136,7 @@
     <Compile Include="Controllers\DepartmentFacilitiesController.cs" />
     <Compile Include="Controllers\EventPhotosController.cs" />
     <Compile Include="Controllers\FacilitiesController.cs" />
+    <Compile Include="Controllers\FacultyInformationController.cs" />
     <Compile Include="Controllers\HRController.cs" />
     <Compile Include="Controllers\PolicyController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
@@ -272,6 +273,9 @@
     <Content Include="Content\img\departments\ChairmanHIT.jpg" />
     <Content Include="Content\img\departments\NewsPaperCut1.jpg" />
     <Content Include="Content\img\departments\VC.jpg" />
+    <Content Include="Content\img\eventphotos\3374_Event.jpg" />
+    <Content Include="Content\img\eventphotos\3375_Event.jpeg" />
+    <Content Include="Content\img\eventphotos\3376_Event.jpg" />
     <Content Include="Content\img\events\20250828094732768.jpg" />
     <Content Include="Content\img\facilities\0b3bf106-a2ce-4061-b2ca-2a71777b493a.png" />
     <Content Include="Content\img\facilities\24ad06b9-9cc6-446d-ae9a-65012f0a74d0.png" />
@@ -292,6 +296,7 @@
     <Content Include="Content\img\jsTree\40px.png" />
     <Content Include="Content\img\jsTree\throbber-dark.gif" />
     <Content Include="Content\img\jsTree\throbber.gif" />
+    <Content Include="Content\img\logo.png" />
     <Content Include="Content\img\qac\Organogram.png" />
     <Content Include="Content\js\apps\calendar.js" />
     <Content Include="Content\js\apps\chats.js" />
@@ -331,7 +336,6 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\pdf\qac\NDMA Advisory.pdf" />
-    <Content Include="ROLE_BASED_ACCESS_CONTROL.md" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
@@ -429,6 +433,10 @@
     <Content Include="Views\Users\Create.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
+    <Content Include="Views\FacultyInformation\Index.cshtml" />
+    <Content Include="Views\FacultyInformation\Create.cshtml" />
+    <Content Include="Views\FacultyInformation\Edit.cshtml" />
+    <Content Include="Views\FacultyInformation\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

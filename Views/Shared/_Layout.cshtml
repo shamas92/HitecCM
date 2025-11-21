@@ -618,7 +618,7 @@
 
         // 3. DEFINE MENU ACTIVE STATES
         var admissionsCtrls = new[] { "Admissions" };
-        var facultyCtrls = new[] { "Faculty" };
+        var facultyCtrls = new[] { "Faculty", "FacultyInformation" };
         var menusCtrls = new[] { "Menus", "MenuType" };
         var eventsCtrls = new[] { "Events", "EventPhotos" };
         var qacCtrls = new[] { "QAC" };
@@ -750,7 +750,8 @@
                         <a class="submenu-toggle @(facultyActive?"active":"")" data-target="#facultyMenu" aria-expanded="@(facultyActive.ToString().ToLower())"><em class="icon ni ni-tile-thumb"></em><span>Faculty</span><span class="caret">›</span></a>
                         <div class="collapse @(facultyActive?"show":"")" id="facultyMenu">
                             <ul class="sidebar-sub">
-                                <li><a class="@( (ctrl=="Faculty")?"active":"")" href="@Url.Action("VisionMission","Faculty")">Vision & Mission</a></li>
+                                <li><a class="@(isCtrl("Faculty") && isAction("VisionMission")?"active":"")" href="@Url.Action("VisionMission","Faculty")">Vision & Mission</a></li>
+                                <li><a class="@(isCtrl("FacultyInformation")?"active":"")" href="@Url.Action("Index","FacultyInformation")">Faculty Information</a></li>
                             </ul>
                         </div>
                     </li>
@@ -790,9 +791,7 @@
                             </ul>
                         </div>
                     </li>
-                    <li>
-                        <a class="@(isCtrl("Users")?"active":"")" href="@Url.Action("Index","Users")"><em class="icon ni ni-users"></em><span>Users</span></a>
-                    </li>
+
                 }
             </ul>
         </nav>
