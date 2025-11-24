@@ -58,6 +58,7 @@ namespace HitecCM.Controllers
 
                     db.tblUsers.Add(model);
                     db.SaveChanges();
+                    TempData["Success"] = "User created successfully.";
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
@@ -105,6 +106,7 @@ namespace HitecCM.Controllers
 
                     db.Entry(model).State = EntityState.Modified;
                     db.SaveChanges();
+                    TempData["Success"] = "User updated successfully.";
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
@@ -167,6 +169,7 @@ namespace HitecCM.Controllers
                 if (Request.IsAjaxRequest())
                     return Json(new { success = true, message = "User deleted successfully" });
                 
+                TempData["Success"] = "User deleted successfully.";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)

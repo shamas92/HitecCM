@@ -137,6 +137,7 @@
     <Compile Include="Controllers\EventPhotosController.cs" />
     <Compile Include="Controllers\FacilitiesController.cs" />
     <Compile Include="Controllers\FacultyInformationController.cs" />
+    <Compile Include="Controllers\FAQsController.cs" />
     <Compile Include="Controllers\HRController.cs" />
     <Compile Include="Controllers\PolicyController.cs" />
     <Compile Include="Controllers\DownloadsController.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Controllers\DepartmentsController.cs" />
     <Compile Include="Controllers\QACController.cs" />
     <Compile Include="Controllers\SchemeOfStudiesController.cs" />
+    <Compile Include="Controllers\SuccessStoriesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Filters\AnalyticsTrackingAttribute.cs" />
     <Compile Include="Filters\AuthorizeUserAttribute.cs" />
@@ -274,23 +276,6 @@
     <Content Include="Content\img\departments\ChairmanHIT.jpg" />
     <Content Include="Content\img\departments\NewsPaperCut1.jpg" />
     <Content Include="Content\img\departments\VC.jpg" />
-    <Content Include="Content\img\eventphotos\3374_Event.jpg" />
-    <Content Include="Content\img\eventphotos\3375_Event.jpeg" />
-    <Content Include="Content\img\eventphotos\3376_Event.jpg" />
-    <Content Include="Content\img\events\20250828094732768.jpg" />
-    <Content Include="Content\img\facilities\0b3bf106-a2ce-4061-b2ca-2a71777b493a.png" />
-    <Content Include="Content\img\facilities\24ad06b9-9cc6-446d-ae9a-65012f0a74d0.png" />
-    <Content Include="Content\img\facilities\468f9d90-7b58-43f9-a915-d80ac528f9bd.png" />
-    <Content Include="Content\img\facilities\56cc4ee3-ee29-4145-aa06-2c118eec8c05.png" />
-    <Content Include="Content\img\facilities\710b2e3d-77e1-459b-ae1a-1e05a56844ed.jpg" />
-    <Content Include="Content\img\facilities\8879b21e-45b6-437c-bc7f-7986b2242ad3.png" />
-    <Content Include="Content\img\facilities\972970e7-e201-4297-b1e2-c0f7e2c38f35.png" />
-    <Content Include="Content\img\facilities\9c951408-434e-40b6-ba5a-93cf1a17cb25.jpg" />
-    <Content Include="Content\img\facilities\ad52c432-3f84-470f-8f50-be413ea3bbb3.jpg" />
-    <Content Include="Content\img\facilities\c7897dcb-1e64-40b4-845c-0b5dfc8cf389.png" />
-    <Content Include="Content\img\facilities\c95aa1a5-89ed-4e66-91c4-9d88046308a3.png" />
-    <Content Include="Content\img\facilities\ce1e59ba-7ef9-4155-b424-9fc5a8bb7a94.png" />
-    <Content Include="Content\img\facilities\efc21173-ebcf-4ba1-b011-7da9e250d750.png" />
     <Content Include="Content\img\jsTree\32px-dark.png" />
     <Content Include="Content\img\jsTree\32px.png" />
     <Content Include="Content\img\jsTree\40px-dark.png" />
@@ -401,7 +386,6 @@
     <Content Include="Views\Policy\Index.cshtml" />
     <Content Include="Views\Admissions\AcademicCalendar.cshtml" />
     <Content Include="Views\Admissions\Advertisement.cshtml" />
-    <Content Include="Views\Admissions\UniversityAct.cshtml" />
     <Content Include="Views\Admissions\AcademicDeficiencies.cshtml" />
     <Content Include="Views\Admissions\AcademicRegulations.cshtml" />
     <Content Include="Views\Admissions\MiscellaneousCharges.cshtml" />
@@ -441,9 +425,18 @@
     <Content Include="Views\SchemeOfStudies\Index.cshtml" />
     <Content Include="Views\SchemeOfStudies\Create.cshtml" />
     <Content Include="Views\SchemeOfStudies\Edit.cshtml" />
+    <Content Include="Views\SuccessStories\Create.cshtml" />
+    <Content Include="Views\SuccessStories\Edit.cshtml" />
+    <Content Include="Views\SuccessStories\Index.cshtml" />
+    <Content Include="Views\FAQs\Index.cshtml" />
+    <Content Include="Views\FAQs\Create.cshtml" />
+    <Content Include="Views\FAQs\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\img\eventphotos\" />
+    <Folder Include="Content\img\events\" />
+    <Folder Include="Content\img\facilities\" />
     <Folder Include="Content\img\menuicon\" />
   </ItemGroup>
   <ItemGroup>
