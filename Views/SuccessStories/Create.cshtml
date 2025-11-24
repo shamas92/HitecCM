@@ -1,0 +1,202 @@
+@model HitecCM.Models.tblSuccessStory
+@{ ViewBag.Title = "Add Success Story"; }
+
+<div class="nk-content-inner">
+  <div class="nk-content-body">
+    <div class="nk-block-head nk-block-head-sm">
+      <div class="nk-block-between">
+        <div class="nk-block-head-content">
+          <h3 class="nk-block-title page-title">Add Success Story</h3>
+        </div>
+        <div class="nk-block-head-content">
+          <a href="@Url.Action("Index")" class="btn btn-outline-light"><em class="icon ni ni-arrow-left"></em><span>Back</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nk-block">
+      <div class="card card-bordered">
+        <div class="card-inner">
+          @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+          {
+            @Html.AntiForgeryToken()
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Full Name</label>
+                  @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control", required="required" } })
+                  @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Registration No</label>
+                  @Html.EditorFor(model => model.RegistrationNo, new { htmlAttributes = new { @class = "form-control" } })
+                  @Html.ValidationMessageFor(model => model.RegistrationNo, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Department</label>
+                  @Html.DropDownList("DepartmentID", null, "Select Department", htmlAttributes: new { @class = "form-control" })
+                  @Html.ValidationMessageFor(model => model.DepartmentID, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Email</label>
+                  @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                  @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Mobile No</label>
+                  @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control" } })
+                  @Html.ValidationMessageFor(model => model.MobileNo, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Alt Mobile No</label>
+                  @Html.EditorFor(model => model.AltMobileNo, new { htmlAttributes = new { @class = "form-control" } })
+                  @Html.ValidationMessageFor(model => model.AltMobileNo, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Organization</label>
+                  @Html.EditorFor(model => model.Organization, new { htmlAttributes = new { @class = "form-control" } })
+                  @Html.ValidationMessageFor(model => model.Organization, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Designation</label>
+                  @Html.EditorFor(model => model.Designation, new { htmlAttributes = new { @class = "form-control" } })
+                  @Html.ValidationMessageFor(model => model.Designation, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Qualification</label>
+                  @Html.EditorFor(model => model.Qualification, new { htmlAttributes = new { @class = "form-control" } })
+                  @Html.ValidationMessageFor(model => model.Qualification, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Photo</label>
+                  <input type="file" name="photoFile" accept="image/*" class="form-control" />
+                  <small class="form-text text-muted">Upload a photo for the success story</small>
+                  @Html.ValidationMessageFor(model => model.Photo, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              
+              <div class="col-12"><hr /></div>
+              <div class="col-12"><h6 class="title">Social Links</h6></div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">LinkedIn</label>
+                  @Html.EditorFor(model => model.Linkedin, new { htmlAttributes = new { @class = "form-control" } })
+                  @Html.ValidationMessageFor(model => model.Linkedin, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Facebook</label>
+                  @Html.EditorFor(model => model.Facebook, new { htmlAttributes = new { @class = "form-control" } })
+                  @Html.ValidationMessageFor(model => model.Facebook, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Twitter</label>
+                  @Html.EditorFor(model => model.Twitter, new { htmlAttributes = new { @class = "form-control" } })
+                  @Html.ValidationMessageFor(model => model.Twitter, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Instagram</label>
+                  @Html.EditorFor(model => model.Instagram, new { htmlAttributes = new { @class = "form-control" } })
+                  @Html.ValidationMessageFor(model => model.Instagram, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Youtube</label>
+                  @Html.EditorFor(model => model.Youtube, new { htmlAttributes = new { @class = "form-control" } })
+                  @Html.ValidationMessageFor(model => model.Youtube, "", new { @class = "text-danger" })
+                </div>
+              </div>
+
+              <div class="col-12"><hr /></div>
+              
+              <div class="col-12">
+                <div class="form-group">
+                  <label class="form-label">Details</label>
+                  @Html.TextAreaFor(model => model.Details, new { @class = "form-control", rows="4" })
+                  @Html.ValidationMessageFor(model => model.Details, "", new { @class = "text-danger" })
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="form-group">
+                  <label class="form-label">Status</label>
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="activeToggle" name="Active" value="true" checked />
+                    <input type="hidden" name="Active" value="false" />
+                    <label class="custom-control-label" for="activeToggle">
+                      <span class="switch-text">Active</span>
+                    </label>
+                  </div>
+                  <small class="form-text text-muted">Toggle to change the active status of this success story</small>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="form-group">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts{
+<script>
+$(function(){
+  // Toggle switch text update
+  $('#activeToggle').on('change', function(){
+    var isChecked = $(this).is(':checked');
+    $(this).siblings('label').find('.switch-text').text(isChecked ? 'Active' : 'Inactive');
+  });
+});
+</script>
+<style>
+.custom-switch .custom-control-label::before {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.custom-switch .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.custom-switch .custom-control-label::after {
+  background-color: #fff;
+}
+
+.switch-text {
+  margin-left: 10px;
+  font-weight: 500;
+}
+</style>
+}

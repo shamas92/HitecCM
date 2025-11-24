@@ -1,0 +1,242 @@
+@model IEnumerable<HitecCM.Models.tblSuccessStory>
+@{ ViewBag.Title = "Success Stories"; }
+@Html.AntiForgeryToken()
+
+<div class="nk-content-inner">
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Success Stories</h3>
+                    <div class="nk-block-des text-soft"><p>Manage success stories.</p></div>
+                </div>
+                <div class="nk-block-head-content">
+                    <div class="toggle-wrap nk-block-tools-toggle d-flex">
+                        <a href="@Url.Action("Create")" class="btn btn-primary mr-2"><em class="icon ni ni-plus"></em><span>Add New</span></a>
+                        <button type="button" class="btn btn-outline-light" data-toggle="collapse" data-target="#filterPanel">Filters</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="filterPanel" class="collapse mb-3 @(Request.QueryString.Count>0 ? "show" : "")">
+            <div class="card card-bordered">
+                <div class="card-inner">
+                    @using (Html.BeginForm("Index", "SuccessStories", FormMethod.Get))
+                    {
+                        <div class="form-row align-items-end">
+                            <div class="form-group col-md-3">
+                                <label class="form-label">Name</label>
+                                <input type="text" name="name" value="@ViewBag.FilterName" class="form-control" placeholder="Search by name" />
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="form-label">Registration No</label>
+                                <input type="text" name="registrationNo" value="@ViewBag.FilterRegistrationNo" class="form-control" placeholder="Search by registration" />
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="form-label">Organization</label>
+                                <input type="text" name="organization" value="@ViewBag.FilterOrganization" class="form-control" placeholder="Search by organization" />
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="form-label">Designation</label>
+                                <input type="text" name="designation" value="@ViewBag.FilterDesignation" class="form-control" placeholder="Search by designation" />
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="form-label">Department</label>
+                                @Html.DropDownList("departmentId", (SelectList)ViewBag.Departments, "-- Any --", new { @class = "form-control" })
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="form-label">Status</label>
+                                <select name="active" class="form-control">
+                                    <option value="">-- Any --</option>
+                                    <option value="true" @(ViewBag.FilterActive == true ? "selected" : "")>Active</option>
+                                    <option value="false" @(ViewBag.FilterActive == false ? "selected" : "")>Inactive</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary mr-2"><em class="icon ni ni-search"></em><span>Apply</span></button>
+                                <a href="@Url.Action("Index")" class="btn btn-light"><em class="icon ni ni-reload"></em><span>Reset</span></a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show">
+                @TempData["Success"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        <div class="nk-block">
+            <div class="card card-bordered card-stretch">
+                <div class="card-inner p-0">
+                    <div class="table-responsive">
+                        <table class="table table-faculty">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th style="width:70px" class="text-center">ID</th>
+                                    <th style="width:80px" class="text-center">Photo</th>
+                                    <th style="width:200px">Full Name</th>
+                                    <th>Organization</th>
+                                    <th>Designation</th>
+                                    <th style="width:80px" class="text-center">Active</th>
+                                    <th style="width:110px" class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="text-center"><span class="badge bg-light text-dark">@item.ID</span></td>
+                                            <td class="text-center">
+                                                @if (!string.IsNullOrEmpty(item.Photo))
+                                                {
+                                                    <img src="@Url.Content("~/Content/img/departments/SuccessStories/" + item.Photo)"
+                                                         alt="Photo" class="img-thumbnail photo-thumbnail"
+                                                         style="width:50px; height:50px; object-fit:cover; cursor:pointer;"
+                                                         data-toggle="modal" data-target="#photoModal"
+                                                         data-photo="@Url.Content("~/Content/img/departments/SuccessStories/" + item.Photo)"
+                                                         data-name="@item.FullName" />
+                                                }
+                                                else
+                                                {
+                                                    <div class="avatar-circle" style="width:50px; height:50px; margin:0 auto; cursor:pointer;"
+                                                         data-toggle="modal" data-target="#photoModal"
+                                                         data-photo="" data-name="@item.FullName">
+                                                        @((item.FullName ?? "?").Length > 0 ? item.FullName.Substring(0, 1).ToUpper() : "?")
+                                                    </div>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="user-card">
+                                                    <div class="user-info">
+                                                        <span class="tb-lead">@item.FullName <span class="dot dot-success d-md-none ml-1"></span></span>
+                                                        <span>@item.RegistrationNo</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>@(item.Organization ?? "-")</td>
+                                            <td>@(item.Designation ?? "-")</td>
+                                            <td class="text-center">
+                                                <span class="badge badge-dot @(item.Active == true ? "badge-success" : "badge-danger") toggle-status"
+                                                      data-id="@item.ID"
+                                                      style="cursor: pointer;"
+                                                      title="Click to toggle status">
+                                                    @(item.Active == true ? "Active" : "Inactive")
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="dropdown">
+                                                    <a href="#" class="btn btn-sm btn-icon btn-trigger dropdown-toggle" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <ul class="link-list-opt no-bdr">
+                                                            <li><a href="@Url.Action("Edit", new { id = item.ID })"><em class="icon ni ni-edit"></em><span>Edit</span></a></li>
+                                                            <li><a href="#" class="del-item" data-id="@item.ID" data-title="@item.FullName"><em class="icon ni ni-trash"></em><span>Delete</span></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="delModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Confirm Delete</h5><button type="button" class="close" data-dismiss="modal">&times;</button></div>
+      <div class="modal-body"><p id="delText"></p><input type="hidden" id="delId" /></div>
+      <div class="modal-footer bg-light">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmDelBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Photo Modal -->
+<div class="modal fade" id="photoModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="photoModalTitle">Success Story Photo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="photoModalImage" src="" alt="Photo" class="img-fluid rounded" style="max-height: 500px;" />
+        <p id="photoModalCaption" class="mt-2 text-muted"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts{
+<script>
+$(function(){
+  $('.del-item').on('click',function(e){e.preventDefault();$('#delId').val($(this).data('id'));$('#delText').text('Delete '+($(this).data('title')||'this item')+'?');$('#delModal').modal('show');});
+  $('#confirmDelBtn').on('click',function(){var id=$('#delId').val();if(!id)return;$.post('@Url.Action("Delete")',{id:id,'__RequestVerificationToken':$('input[name=__RequestVerificationToken]').val()},function(r){if(r && r.success){location.reload();}else{alert((r&&r.message)||'Delete failed');}});});
+  
+  // Toggle status functionality
+  $('.toggle-status').on('click', function(){
+    var $badge = $(this);
+    var id = $badge.data('id');
+    var currentActive = $badge.hasClass('badge-success');
+    
+    if(confirm('Are you sure you want to ' + (currentActive ? 'deactivate' : 'activate') + ' this success story?')) {
+      $.post('@Url.Action("ToggleStatus")', {id: id, '__RequestVerificationToken': $('input[name=__RequestVerificationToken]').val()}, function(r){
+        if(r && r.success) {
+          if(r.active) {
+            $badge.removeClass('badge-danger').addClass('badge-success').text('Active');
+          } else {
+            $badge.removeClass('badge-success').addClass('badge-danger').text('Inactive');
+          }
+        } else {
+          alert((r && r.message) || 'Status update failed');
+        }
+      });
+    }
+  });
+  
+  // Photo modal functionality
+  $('.photo-thumbnail, .avatar-circle').on('click', function(){
+    var photoSrc = $(this).data('photo');
+    var name = $(this).data('name');
+    
+    if(photoSrc && photoSrc.trim() !== '') {
+      $('#photoModalImage').attr('src', photoSrc);
+      $('#photoModalCaption').text(name || 'Success Story Photo');
+      $('#photoModalTitle').text(name ? name + ' - Photo' : 'Success Story Photo');
+    } else {
+      // Show placeholder for no photo
+      $('#photoModalImage').attr('src', 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY2Ii8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iMC4zNWVtIiBmaWxsPSIjOUI5QkE0IiBmb250LXNpemU9IjE0Ij5ObyBQaG90bzwvdGV4dD4KPC9zdmc+');
+      $('#photoModalCaption').text(name ? name + ' (No photo available)' : 'No photo available');
+      $('#photoModalTitle').text('No Photo Available');
+    }
+  });
+});
+</script>
+<style>
+.table-faculty { margin-bottom:0; border-collapse:separate; border-spacing:0; }
+.table-faculty thead th { background:#f5f6fa; font-size:.7rem; text-transform:uppercase; letter-spacing:.5px; font-weight:600; color:#364a63; padding:.65rem .55rem; border-bottom:2px solid #e5e9f2; }
+.table-faculty tbody td { padding:.6rem .55rem; font-size:.75rem; color:#526484; border-bottom:1px solid #f0f1f5; }
+.badge { font-size:.65rem; padding:.35rem .55rem; }
+.toggle-status:hover { opacity: 0.8; }
+.photo-thumbnail:hover { transform: scale(1.05); transition: transform 0.2s ease; }
+.avatar-circle { width: 50px; height: 50px; border-radius: 50%; background: #6576ff; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 600; margin: 0 auto; transition: transform 0.2s ease; }
+.avatar-circle:hover { transform: scale(1.05); }
+</style>
+}
