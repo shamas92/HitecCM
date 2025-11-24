@@ -1,0 +1,66 @@
+@model HitecCM.Models.tblFAQ
+@{ ViewBag.Title = "Edit FAQ"; }
+
+<div class="nk-content-inner">
+  <div class="nk-content-body">
+    <div class="nk-block-head nk-block-head-sm">
+      <div class="nk-block-between">
+        <div class="nk-block-head-content">
+          <h3 class="nk-block-title page-title">Edit FAQ</h3>
+          <div class="nk-block-des text-soft">
+            <p>Update the frequently asked question.</p>
+          </div>
+        </div>
+        <div class="nk-block-head-content">
+          <a href="@Url.Action("Index")" class="btn btn-outline-light">
+            <em class="icon ni ni-arrow-left"></em>
+            <span>Back to List</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nk-block">
+      <div class="card card-bordered">
+        <div class="card-inner">
+          @using (Html.BeginForm())
+          {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.FAQID)
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Department</label>
+                  @Html.DropDownList("DepartmentID", null, "All Departments", htmlAttributes: new { @class = "form-control" })
+                  @Html.ValidationMessageFor(model => model.DepartmentID, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Question <span class="text-danger">*</span></label>
+                  @Html.TextBoxFor(model => model.Question, new { @class = "form-control", placeholder = "Enter the FAQ question", required = "required" })
+                  @Html.ValidationMessageFor(model => model.Question, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <label class="form-label">Answer <span class="text-danger">*</span></label>
+                  @Html.TextAreaFor(model => model.Answer, new { @class = "form-control", rows = "6", placeholder = "Enter the detailed answer", required = "required" })
+                  @Html.ValidationMessageFor(model => model.Answer, "", new { @class = "text-danger" })
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <button type="submit" class="btn btn-primary">
+                    <em class="icon ni ni-save"></em>
+                    <span>Update FAQ</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

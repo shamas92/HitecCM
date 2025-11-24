@@ -25,6 +25,15 @@
                 </div>
             </div>
         </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show">
+                @TempData["Success"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
         <div class="nk-block">
             <div class="card card-bordered card-stretch">
                 <div class="card-inner-group">
@@ -118,6 +127,11 @@
     @Scripts.Render("~/bundles/bootstrap")
     <script>
         $(document).ready(function () {
+            // Auto-hide success messages after 5 seconds
+            setTimeout(function () {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+
             // Delete confirmation
             $('.delete-facility').click(function (e) {
                 e.preventDefault();

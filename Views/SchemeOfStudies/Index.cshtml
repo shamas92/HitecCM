@@ -3,104 +3,114 @@
 @Html.AntiForgeryToken()
 
 <div class="nk-content-inner">
-  <div class="nk-content-body">
-    <div class="nk-block-head nk-block-head-sm">
-      <div class="nk-block-between">
-        <div class="nk-block-head-content">
-          <h3 class="nk-block-title page-title">Scheme of Studies</h3>
-          <div class="nk-block-des text-soft"><p>Manage scheme of studies entries.</p></div>
-        </div>
-        <div class="nk-block-head-content">
-          <div class="toggle-wrap nk-block-tools-toggle d-flex">
-            <a href="@Url.Action("Create")" class="btn btn-primary mr-2"><em class="icon ni ni-plus"></em><span>Add New</span></a>
-            <button type="button" class="btn btn-outline-light" data-toggle="collapse" data-target="#filterPanel">Filters</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="filterPanel" class="collapse mb-3 @(Request.QueryString.Count>0 ? "show" : "")">
-      <div class="card card-bordered"><div class="card-inner">
-        @using (Html.BeginForm("Index","SchemeOfStudies",FormMethod.Get)) {
-          <div class="form-row align-items-end">
-            <div class="form-group col-md-3">
-              <label class="form-label">Program</label>
-              <input type="text" name="program" value="@ViewBag.FilterProgram" class="form-control" placeholder="Program" />
-            </div>
-            <div class="form-group col-md-2">
-              <label class="form-label">Semester</label>
-              <input type="text" name="semester" value="@ViewBag.FilterSemester" class="form-control" placeholder="Semester" />
-            </div>
-            <div class="form-group col-md-2">
-              <label class="form-label">Course Code</label>
-              <input type="text" name="code" value="@ViewBag.FilterCode" class="form-control" placeholder="Code" />
-            </div>
-            <div class="form-group col-md-3">
-              <label class="form-label">Department</label>
-              @Html.DropDownList("departmentId", (SelectList)ViewBag.Departments, "-- Any --", new { @class = "form-control" })
-            </div>
-            <div class="form-group col-md-2">
-              <label class="form-label">Program Ref</label>
-              @Html.DropDownList("programId", (SelectList)ViewBag.Programs, "-- Any --", new { @class = "form-control" })
-            </div>
-            <div class="form-group col-md-12 d-flex justify-content-end">
-              <button type="submit" class="btn btn-primary mr-2"><em class="icon ni ni-search"></em><span>Apply</span></button>
-              <a href="@Url.Action("Index")" class="btn btn-light"><em class="icon ni ni-reload"></em><span>Reset</span></a>
-            </div>
-          </div>
-        }
-      </div></div>
-    </div>
-
-    @if (TempData["Success"]!=null){<div class="alert alert-success alert-dismissible fade show">@TempData["Success"]</div>}
-
-    <div class="nk-block">
-      <div class="card card-bordered card-stretch">
-        <div class="card-inner p-0">
-          <div class="table-responsive">
-            <table class="table table-faculty">
-              <thead class="thead-light">
-                <tr>
-                  <th style="width:70px" class="text-center">ID</th>
-                  <th style="width:140px">Program</th>
-                  <th style="width:100px">Semester</th>
-                  <th style="width:90px">Code</th>
-                  <th>Title</th>
-                  <th style="width:70px">CH</th>
-                  <th style="width:110px" class="text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-              @if(Model!=null){
-                foreach(var item in Model){
-                <tr>
-                  <td class="text-center"><span class="badge bg-light text-dark">@item.ID</span></td>
-                  <td>@(item.Program ?? "-")</td>
-                  <td>@(item.Semester ?? "-")</td>
-                  <td>@(item.Code ?? "-")</td>
-                  <td>@(item.Title ?? "-")</td>
-                  <td>@(item.CH ?? "-")</td>
-                  <td class="text-center">
-                    <div class="dropdown">
-                      <a href="#" class="btn btn-sm btn-icon btn-trigger dropdown-toggle" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
-                      <div class="dropdown-menu dropdown-menu-right">
-                        <ul class="link-list-opt no-bdr">
-                          <li><a href="@Url.Action("Edit", new { id = item.ID })"><em class="icon ni ni-edit"></em><span>Edit</span></a></li>
-                          <li><a href="#" class="del-item" data-id="@item.ID" data-title="@item.Title"><em class="icon ni ni-trash"></em><span>Delete</span></a></li>
-                        </ul>
-                      </div>
+    <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+            <div class="nk-block-between">
+                <div class="nk-block-head-content">
+                    <h3 class="nk-block-title page-title">Scheme of Studies</h3>
+                    <div class="nk-block-des text-soft"><p>Manage scheme of studies entries.</p></div>
+                </div>
+                <div class="nk-block-head-content">
+                    <div class="toggle-wrap nk-block-tools-toggle d-flex">
+                        <a href="@Url.Action("Create")" class="btn btn-primary mr-2"><em class="icon ni ni-plus"></em><span>Add New</span></a>
+                        <button type="button" class="btn btn-outline-light" data-toggle="collapse" data-target="#filterPanel">Filters</button>
                     </div>
-                  </td>
-                </tr>
-                }
-              }
-              </tbody>
-            </table>
-          </div>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <div id="filterPanel" class="collapse mb-3 @(Request.QueryString.Count>0 ? "show" : "")">
+            <div class="card card-bordered">
+                <div class="card-inner">
+                    @using (Html.BeginForm("Index", "SchemeOfStudies", FormMethod.Get))
+                    {
+                        <div class="form-row align-items-end">
+                            <div class="form-group col-md-3">
+                                <label class="form-label">Program</label>
+                                <input type="text" name="program" value="@ViewBag.FilterProgram" class="form-control" placeholder="Program" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="form-label">Semester</label>
+                                <input type="text" name="semester" value="@ViewBag.FilterSemester" class="form-control" placeholder="Semester" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="form-label">Course Code</label>
+                                <input type="text" name="code" value="@ViewBag.FilterCode" class="form-control" placeholder="Code" />
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="form-label">Department</label>
+                                @Html.DropDownList("departmentId", (SelectList)ViewBag.Departments, "-- Any --", new { @class = "form-control" })
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="form-label">Program Ref</label>
+                                @Html.DropDownList("programId", (SelectList)ViewBag.Programs, "-- Any --", new { @class = "form-control" })
+                            </div>
+                            <div class="form-group col-md-12 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary mr-2"><em class="icon ni ni-search"></em><span>Apply</span></button>
+                                <a href="@Url.Action("Index")" class="btn btn-light"><em class="icon ni ni-reload"></em><span>Reset</span></a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show">
+                @TempData["Success"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        <div class="nk-block">
+            <div class="card card-bordered card-stretch">
+                <div class="card-inner p-0">
+                    <div class="table-responsive">
+                        <table class="table table-faculty">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th style="width:70px" class="text-center">ID</th>
+                                    <th style="width:140px">Program</th>
+                                    <th style="width:100px">Semester</th>
+                                    <th style="width:90px">Code</th>
+                                    <th>Title</th>
+                                    <th style="width:70px">CH</th>
+                                    <th style="width:110px" class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="text-center"><span class="badge bg-light text-dark">@item.ID</span></td>
+                                            <td>@(item.Program ?? "-")</td>
+                                            <td>@(item.Semester ?? "-")</td>
+                                            <td>@(item.Code ?? "-")</td>
+                                            <td>@(item.Title ?? "-")</td>
+                                            <td>@(item.CH ?? "-")</td>
+                                            <td class="text-center">
+                                                <div class="dropdown">
+                                                    <a href="#" class="btn btn-sm btn-icon btn-trigger dropdown-toggle" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <ul class="link-list-opt no-bdr">
+                                                            <li><a href="@Url.Action("Edit", new { id = item.ID })"><em class="icon ni ni-edit"></em><span>Edit</span></a></li>
+                                                            <li><a href="#" class="del-item" data-id="@item.ID" data-title="@item.Title"><em class="icon ni ni-trash"></em><span>Delete</span></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="modal fade" id="delModal" tabindex="-1" role="dialog">

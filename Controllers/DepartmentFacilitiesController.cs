@@ -155,6 +155,7 @@ namespace HitecCM.Controllers
                         db.SaveChanges();
                     }
 
+                    TempData["Success"] = "Facility created successfully.";
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
@@ -299,6 +300,7 @@ ReturnView:
                 }
 
                 db.SaveChanges();
+                TempData["Success"] = "Facility updated successfully.";
                 return RedirectToAction("Index");
             }
 ReturnEdit:

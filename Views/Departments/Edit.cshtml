@@ -132,5 +132,19 @@
                 preview.style.display = 'none';
             }
         }
+
+        // Update file input labels when files are selected
+        $(document).ready(function() {
+            $('.custom-file-input').on('change', function() {
+                var fileName = $(this).val().split('\\').pop();
+                $(this).siblings('.custom-file-label').addClass('selected').html(fileName || 'Choose file');
+            });
+        });
     </script>
-} 
+    <style>
+        .custom-file-label.selected {
+            color: #495057;
+            font-weight: 500;
+        }
+    </style>
+}

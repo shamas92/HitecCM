@@ -19,18 +19,24 @@
                 <div class="card-inner">
                     @if (TempData["Success"] != null)
                     {
-                        <div class="alert alert-success">@TempData["Success"]</div>
+                        <div class="alert alert-success alert-dismissible fade show">
+                            @TempData["Success"]
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     }
                     @if (TempData["Error"] != null)
                     {
-                        <div class="alert alert-danger">@TempData["Error"]</div>
+                        <div class="alert alert-danger">
+                            @TempData["Error"]
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     }
                     @using (Html.BeginForm("Advertisement", "Admissions", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(m => m.AdID)
                         @Html.HiddenFor(m => m.ImagePath)
-                        
+
                         <div class="form-group mb-3">
                             @Html.Label("Advertisement Image", htmlAttributes: new { @class = "form-label" })
                             <div class="form-control-wrap">
@@ -45,7 +51,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group mt-4 text-left">
                             <button type="submit" class="btn btn-primary px-5">Save</button>
                         </div>
@@ -74,9 +80,9 @@
                 preview.style.display = 'none';
             }
         }
-        
+
         // Update custom file input label when file is selected
-        $('.custom-file-input').on('change', function() {
+        $('.custom-file-input').on('change', function () {
             var fileName = $(this).val().split('\\').pop();
             $(this).siblings('.custom-file-label').addClass("selected").html(fileName);
         });
