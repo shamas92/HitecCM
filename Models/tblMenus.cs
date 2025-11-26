@@ -32,6 +32,8 @@ namespace HitecCM.Models
 
         public string SvgIcon { get; set; }
 
+        public bool Status { get; set; }
+
         // Navigation properties
         [ForeignKey("MenuTypeID")]
         public virtual tblMenuType MenuType { get; set; }

@@ -62,6 +62,18 @@
                         </div>
 
                         <div class="form-group">
+                            @Html.LabelFor(model => model.Status, "Status", new { @class = "form-label" })
+                            <div class="custom-control custom-switch">
+                                @{
+                                    var statusId = "Status";
+                                }
+                                @Html.CheckBoxFor(model => model.Status, new { @class = "custom-control-input", id = statusId })
+                                <label class="custom-control-label" for="@statusId">@(Model != null && Model.Status ? "Active" : "Inactive")</label>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
                             <label class="form-label">SVG Icon</label>
                             <div class="form-control-wrap">
                                 <div class="custom-file">
@@ -94,6 +106,23 @@
                 var fileName = $(this).val().split('\\').pop();
                 $(this).siblings('.custom-file-label').addClass("selected").html(fileName);
             });
+
+            // Toggle status label text based on checkbox state
+            var $statusCheckbox = $('#Status');
+            function updateStatusLabel() {
+                var $label = $('label[for="Status"].custom-control-label');
+                if ($statusCheckbox.is(':checked')) {
+                    $label.text('Active');
+                    $label.removeClass('text-danger').addClass('text-success');
+                } else {
+                    $label.text('Inactive');
+                    $label.removeClass('text-success').addClass('text-danger');
+                }
+            }
+            if ($statusCheckbox.length) {
+                updateStatusLabel();
+                $statusCheckbox.on('change', updateStatusLabel);
+            }
         });
     </script>
 }

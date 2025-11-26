@@ -51,21 +51,21 @@ namespace HitecCM.Controllers
             try
             {
                 PopulateDropdowns();
-                return View(new tblMenus());
+                return View(new tblMenus { Status = true });
             }
             catch (Exception ex)
             {
                 // If there's an error, return a simple view without dropdowns
                 ViewBag.ParentMenus = new SelectList(new List<SelectListItem>(), "Value", "Text");
                 ViewBag.MenuTypes = new SelectList(new List<SelectListItem>(), "Value", "Text");
-                return View(new tblMenus());
+                return View(new tblMenus { Status = true });
             }
         }
 
         // POST: Menus/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MenuName,MenuLink,SortingOrder,ParentMenuID,MenuTypeID")] tblMenus menu, HttpPostedFileBase svgIconFile)
+        public ActionResult Create([Bind(Include = "MenuName,MenuLink,SortingOrder,ParentMenuID,MenuTypeID,Status")] tblMenus menu, HttpPostedFileBase svgIconFile)
         {
             if (ModelState.IsValid)
             {
@@ -128,7 +128,7 @@ namespace HitecCM.Controllers
         // POST: Menus/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "MenuID,MenuName,MenuLink,SortingOrder,ParentMenuID,MenuTypeID,SvgIcon")] tblMenus menu, HttpPostedFileBase svgIconFile)
+        public ActionResult Edit([Bind(Include = "MenuID,MenuName,MenuLink,SortingOrder,ParentMenuID,MenuTypeID,SvgIcon,Status")] tblMenus menu, HttpPostedFileBase svgIconFile)
         {
             if (ModelState.IsValid)
             {

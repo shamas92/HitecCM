@@ -40,6 +40,7 @@
                                         <th>Sorting Order</th>
                                         <th>Parent Menu</th>
                                         <th>Menu Type</th>
+                                        <th>Status</th>
                                         <th class="text-end">Actions</th>
                                     </tr>
                                 </thead>
@@ -81,6 +82,9 @@
                                             </td>
                                             <td>
                                                 @(item.MenuType?.MenuTypeName ?? "-")
+                                            </td>
+                                            <td>
+                                                <span class="@(item.Status ? "text-success" : "text-danger")">@(item.Status ? "Active" : "Inactive")</span>
                                             </td>
                                             <td class="nk-tb-col nk-tb-col-tools">
                                                 <ul class="gx-1">
